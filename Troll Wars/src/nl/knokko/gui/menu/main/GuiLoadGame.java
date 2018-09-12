@@ -1,73 +1,40 @@
 package nl.knokko.gui.menu.main;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
+
+import org.lwjgl.util.vector.Vector2f;
 
 import nl.knokko.gamestate.StateMainMenu;
+import nl.knokko.gui.GuiBase;
 import nl.knokko.gui.button.ButtonLink;
-import nl.knokko.gui.component.menu.GuiMenu;
-import nl.knokko.gui.component.text.TextButton;
-import nl.knokko.gui.render.GuiRenderer;
-import nl.knokko.gui.texture.GuiTexture;
-import nl.knokko.gui.util.TextBuilder;
-import nl.knokko.gui.util.TextBuilder.HorAlignment;
-import nl.knokko.gui.util.TextBuilder.Properties;
-import nl.knokko.gui.util.TextBuilder.VerAlignment;
+import nl.knokko.gui.button.ButtonText;
+import nl.knokko.gui.button.IButton;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
+import nl.knokko.render.main.GuiRenderer;
+import nl.knokko.texture.Texture;
+import nl.knokko.util.color.Color;
+import nl.knokko.util.resources.Resources;
 import nl.knokko.util.resources.Saver;
 import nl.knokko.util.resources.Saver.SaveTime;
 
-public class GuiLoadGame extends GuiMenu {
+public class GuiLoadGame extends GuiBase {
 	
-	public static final Properties BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, Color.BLACK, new Color(150, 0, 150), new Color(50, 0, 50), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
-	public static final Properties HOVER_BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, new Color(50, 50, 50), new Color(250, 0, 250), new Color(80, 0, 80), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
-	public static final Properties SELECTED_BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, new Color(50, 50, 50), new Color(250, 0, 250), Color.YELLOW, HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
+	public static final Color BUTTON_COLOR = new Color(150, 0, 150);
+	public static final Color BORDER_COLOR = new Color(50, 0, 50);
 	
 	private final StateMainMenu state;
 	
-	//private ArrayList<ButtonSaveFile> savesButtons;
-	//private ArrayList<ButtonSaveTime> timesButtons;
+	private ArrayList<ButtonSaveFile> savesButtons;
+	private ArrayList<ButtonSaveTime> timesButtons;
+	private ArrayList<IButton> saveOptionButtons;
+	private ArrayList<IButton> timeOptionButtons;
 	
-	private SavesButtons savesButtons;
-	private TimesButtons timesButtons;
+	private ButtonSaveFile selectedSave;
+	private ButtonSaveTime selectedTime;
 	
-	private class SavesButtons extends GuiMenu {
-
-		@Override
-		protected void addComponents() {
-			String[] saves = Saver.getSaveFiles();
-			for(int index = 0; index < saves.length; index++)
-				addComponent(new ButtonSaveFile(saves[index]), 0.05f, 0.725f - index * 0.125f, 0.35f, 0.825f - index * 0.125f);
-		}
-		
-		protected void refresh(){
-			components.clear();
-			addComponents();
-		}
-	}
-	
-	private class TimesButtons extends GuiMenu {
-
-		@Override
-		protected void addComponents() {}
-		
-		protected void refresh(){
-			components.clear();
-			if(selectedSave != null){
-				SaveTime[] saves = Saver.getSaveTimes(selectedSave);
-				for(int index = 0; index < saves.length; index++)
-					addComponent(new ButtonSaveTime(saves[index].getText(), saves[index].getMilliTime()), 0.35f, 0.725f - index * 0.125f, 0.65f, 0.825f - index * 0.125f);
-			}
-			//for(int i = 0; i < times.length; i++)
-				//timesButtons.add(new ButtonSaveTime(new Vector2f(0f, 0.55f - i * 0.25f), times[i].getText(), times[i].getMilliTime()));
-		}
-	}
-	
-	private String selectedSave;
-	private long selectedTime;
+	private Texture selectTexture = Resources.createBorderTexture(new Color(0, 0, 200), 0.3f, 0.1f, 5);
 	
 	private float saveScroll = 0f;
 	private float timeScroll = 0f;
@@ -77,22 +44,40 @@ public class GuiLoadGame extends GuiMenu {
 	}
 	
 	@Override
-	protected void addComponents(){
-		savesButtons = new SavesButtons();
-		timesButtons = new TimesButtons();
-		addComponent(timesButtons, 0.35f, 0f, 0.65f, 0.8f);
-		addComponent(savesButtons, 0.05f, 0f, 0.35f, 0.8f);
-		addComponent(new ButtonSaveFileOption("open", new OpenSaveFileAction()), 0.4f, 0.875f, 0.6f, 0.975f);
-		addComponent(new ButtonSaveFileOption("delete", new DeleteSaveFileAction()), 0.675f, 0.875f, 0.975f, 0.975f);
-		addComponent(new ButtonSaveTimeOption("load", new LoadSaveTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.725f, 0.975f, 0.825f);
-		addComponent(new ButtonSaveTimeOption("delete", new DeleteSaveTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.6f, 0.975f, 0.7f);
-		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.475f, 0.975f, 0.575f);
-		addComponent(new ButtonLink("back", state, state.getGuiMainMenu(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.025f, 0.875f, 0.325f, 0.975f);
+	public void addButtons(){
+		saveOptionButtons = new ArrayList<IButton>();
+		timeOptionButtons = new ArrayList<IButton>();
+		savesButtons = new ArrayList<ButtonSaveFile>();
+		timesButtons = new ArrayList<ButtonSaveTime>();
+		addButton(new ButtonLink(new Vector2f(-0.65f ,0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Back", state.getGuiMainMenu(), state));
 		addSavesButtons();
 	}
 	
-	public void refresh(){
-		addSavesButtons();
+	@Override
+	public void render(GuiRenderer renderer){
+		renderer.start(this);
+		renderer.render(textures, buttons, this, false);
+		for(ButtonSaveFile but : savesButtons){
+			float y = but.getCentre().y + saveScroll;
+			if(y < 0.6f && y > -1.1f){
+				renderer.renderTextures(new Vector2f(-0.6f, y), but.getSize(), but.getTextures());
+				if(but == selectedSave)
+					renderer.renderTextures(new Vector2f(-0.6f, y), but.getSize(), selectTexture);
+			}
+		}
+		for(ButtonSaveTime but : timesButtons){
+			float y = but.getCentre().y + timeScroll;
+			if(y < 0.6f && y > -1.1f){
+				renderer.renderTextures(new Vector2f(0f, y), but.getSize(), but.getTextures());
+				if(but == selectedTime)
+					renderer.renderTextures(new Vector2f(0f, y), but.getSize(), selectTexture);
+			}
+		}
+		for(IButton button : saveOptionButtons)
+			renderer.renderButtonTexture(button, button.getTextures(), this);
+		for(IButton button : timeOptionButtons)
+			renderer.renderButtonTexture(button, button.getTextures(), this);
+		renderer.stop();
 	}
 	
 	@Override
@@ -118,10 +103,44 @@ public class GuiLoadGame extends GuiMenu {
 		}
 	}
 	
+	@Override
+	protected void leftClick(float x, float y){
+		if(x <= -0.3f && y < 0.7f){
+			for(ButtonSaveFile button : savesButtons)
+				if(button.isHit(x, y))
+					button.leftClick(x, y);
+		}
+		else if(x <= 0.3f && y < 0.7f){
+			for(ButtonSaveTime button : timesButtons)
+				if(button.isHit(x, y))
+					button.leftClick(x, y);
+		}
+		else {
+			super.leftClick(x, y);
+			for(int i = 0; i < saveOptionButtons.size(); i++)
+				if(saveOptionButtons.get(i).isHit(x, y))
+					saveOptionButtons.get(i).leftClick(x, y);
+			for(int i = 0; i < timeOptionButtons.size(); i++)
+				if(timeOptionButtons.get(i).isHit(x, y))
+					timeOptionButtons.get(i).leftClick(x, y);
+		}
+	}
+	
 	private void addSavesButtons(){
+		timesButtons.clear();
 		selectedSave = null;
-		savesButtons.refresh();
-		timesButtons.refresh();
+		saveOptionButtons.clear();
+		timeOptionButtons.clear();
+		savesButtons.clear();
+		String[] saves = Saver.getSaveFiles();
+		for(int i = 0; i < saves.length; i++)
+			savesButtons.add(new ButtonSaveFile(new Vector2f(-0.6f, 0.55f - i * 0.25f), saves[i]));
+	}
+	
+	private void setSaveTimes(SaveTime[] times){
+		timesButtons.clear();
+		for(int i = 0; i < times.length; i++)
+			timesButtons.add(new ButtonSaveTime(new Vector2f(0f, 0.55f - i * 0.25f), times[i].getText(), times[i].getMilliTime()));
 	}
 	
 	private static String recoverName(String save){
@@ -154,161 +173,90 @@ public class GuiLoadGame extends GuiMenu {
 		return s;
 	}
 	
-	private class ButtonSaveFile extends TextButton {
+	private class ButtonSaveFile extends ButtonText {
 		
 		private final String save;
-		private final GuiTexture selectedTexture;
 
-		public ButtonSaveFile(final String save) {
-			super(recoverName(save), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new Runnable(){
+		public ButtonSaveFile(Vector2f centre, String save) {
+			super(centre, new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, recoverName(save));
+			this.save = save;
+		}
+
+		@Override
+		public void leftClick(float x, float y) {
+			selectedSave = this;
+			saveOptionButtons.clear();
+			saveOptionButtons.add(new ButtonText(new Vector2f(0f, 0.85f), new Vector2f(0.2f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "open"){
 
 				@Override
-				public void run() {
-					selectedSave = save;
+				public void leftClick(float x, float y) {
+					setSaveTimes(Saver.getSaveTimes(save));
 				}
 			});
-			this.save = save;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(save, SELECTED_BUTTON_PROPERTIES, IMAGE_WIDTH, IMAGE_HEIGHT));
+			saveOptionButtons.add(new ButtonText(new Vector2f(0.65f, 0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.RED, "delete"){
+
+				@Override
+				public void leftClick(float x, float y) {
+					Saver.deleteSaveFile(save);
+					addSavesButtons();
+				}
+			});
 		}
 		
 		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedSave == save)
-				renderer.renderTexture(selectedTexture, 0, 0, 1, 1);
-			else
-				super.render(renderer);
-		}
-	}
-	
-	private class ButtonSaveFileOption extends TextButton {
-
-		public ButtonSaveFileOption(String text, Runnable action) {
-			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new SaveFileAction(action));
+		public boolean isHit(float x, float y){
+			return super.isHit(x, y - saveScroll);
 		}
 		
-		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedSave != null)
-				super.render(renderer);
-		}
 	}
 	
-	private class SaveFileAction implements Runnable {
-		
-		private final Runnable action;
-		
-		private SaveFileAction(Runnable action){
-			this.action = action;
-		}
-
-		@Override
-		public void run() {
-			if(selectedSave != null)
-				action.run();
-		}
-	}
-	
-	private class OpenSaveFileAction implements Runnable {
-
-		@Override
-		public void run() {
-			timesButtons.refresh();
-		}
-	}
-	
-	private class DeleteSaveFileAction implements Runnable {
-
-		@Override
-		public void run() {
-			Saver.deleteSaveFile(selectedSave);
-			addSavesButtons();
-		}
-	}
-	
-	private class ButtonSaveTime extends TextButton {
+	private class ButtonSaveTime extends ButtonText {
 		
 		private final long time;
-		
-		private final GuiTexture selectedTexture;
 
-		public ButtonSaveTime(String text, final long time) {
-			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new Runnable(){
+		public ButtonSaveTime(Vector2f centre, String text, long time) {
+			super(centre, new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, text);
+			this.time = time;
+		}
+
+		@Override
+		public void leftClick(float x, float y) {
+			selectedTime = this;
+			timeOptionButtons.clear();
+			timeOptionButtons.add(new ButtonText(new Vector2f(0.65f, 0.55f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "load"){
 
 				@Override
-				public void run() {
-					selectedTime = time;
+				public void leftClick(float x, float y) {
+					Game.loadGame(recoverName(selectedSave.save), time);
 				}
 			});
-			this.time = time;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(text, SELECTED_BUTTON_PROPERTIES, IMAGE_WIDTH, IMAGE_HEIGHT));
-		}
-		
-		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedTime == time)
-				renderer.renderTexture(selectedTexture, 0, 0, 1, 1);
-			else
-				super.render(renderer);
-		}
-	}
-	
-	private class ButtonSaveTimeOption extends TextButton {
-		
-		public ButtonSaveTimeOption(String text, Runnable action, Properties properties, Properties hoverProperties) {
-			super("load", properties, hoverProperties, new SaveTimeAction(action));
-		}
-		
-		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedTime != 0)
-				super.render(renderer);
-		}
-	}
-	
-	private class SaveTimeAction implements Runnable {
-		
-		private final Runnable action;
-		
-		private SaveTimeAction(Runnable action){
-			this.action = action;
-		}
+			timeOptionButtons.add(new ButtonText(new Vector2f(0.65f, 0.3f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.RED, "delete"){
 
-		@Override
-		public void run() {
-			if(selectedTime != 0)
-				action.run();
+				@Override
+				public void leftClick(float x, float y) {
+					Saver.deleteSaveTime(selectedSave.save, time);
+					setSaveTimes(Saver.getSaveTimes(selectedSave.save));
+					timeOptionButtons.clear();
+				}
+			});
+			timeOptionButtons.add(new ButtonText(new Vector2f(0.65f, 0.05f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "delete older"){
+
+				@Override
+				public void leftClick(float x, float y) {
+					for(ButtonSaveTime but : timesButtons){
+						if(but.time < time)
+							Saver.deleteSaveTime(selectedSave.save, but.time);
+					}
+					setSaveTimes(Saver.getSaveTimes(selectedSave.save));
+					timeOptionButtons.clear();
+				}
+			});
 		}
 		
-	}
-	
-	private class LoadSaveTimeAction implements Runnable {
-
 		@Override
-		public void run() {
-			Game.loadGame(recoverName(selectedSave), selectedTime);
+		public boolean isHit(float x, float y){
+			return super.isHit(x, y - timeScroll);
 		}
-	}
-	
-	private class DeleteSaveTimeAction implements Runnable {
-
-		@Override
-		public void run() {
-			Saver.deleteSaveTime(selectedSave, selectedTime);
-			timesButtons.refresh();
-		}
-	}
-	
-	private class DeleteOlderTimeAction implements Runnable {
-
-		@Override
-		public void run() {
-			List<SubComponent> timeComponents = timesButtons.getComponents();
-			for(SubComponent component : timeComponents){
-				long time = ((ButtonSaveTime)component.getComponent()).time;
-				if(time < selectedTime)
-					Saver.deleteSaveTime(selectedSave, time);
-			}
-			timesButtons.refresh();
-		}
+		
 	}
 }

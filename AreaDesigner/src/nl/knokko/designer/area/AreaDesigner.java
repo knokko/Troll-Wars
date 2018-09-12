@@ -16,12 +16,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.area.Area;
 import nl.knokko.area.TileMap;
-import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.Gui;
+import nl.knokko.input.KeyInput;
 import nl.knokko.input.MouseClickEvent;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
 import nl.knokko.main.GameScreen;
+import nl.knokko.render.main.GuiRenderer;
 import nl.knokko.render.tile.TileModels;
 import nl.knokko.render.tile.TileRenderer;
 import nl.knokko.shaders.WorldShader;
@@ -46,10 +48,11 @@ public class AreaDesigner {
 	
 	private static Area area;
 	private static Camera camera;
-	private static GuiComponent gui;
+	private static Gui gui;
 	private static Random random;
 	
 	private static TileRenderer tileRenderer;
+	private static GuiRenderer guiRenderer;
 	
 	private static int targetX = 0;
 	private static int targetY = 0;
@@ -104,6 +107,7 @@ public class AreaDesigner {
 		load();
 		//camera = new CameraFlying(new Vector3f(WIDTH * 32, 80, DEPTH * 32), 90, 0);
 		tileRenderer = new TileRenderer();
+		guiRenderer = new GuiRenderer();
 		gui = new GuiAreaDesigner();
 		random = new Random();
 		Mouse.setGrabbed(true);

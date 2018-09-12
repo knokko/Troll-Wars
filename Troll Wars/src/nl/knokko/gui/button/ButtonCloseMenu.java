@@ -1,20 +1,19 @@
 package nl.knokko.gui.button;
 
-import nl.knokko.gui.component.text.TextButton;
-import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.main.Game;
+import nl.knokko.util.color.Color;
 
-public class ButtonCloseMenu extends TextButton {
-	
-	private static final Runnable CLICK_ACTION = new Runnable(){
+import org.lwjgl.util.vector.Vector2f;
 
-		@Override
-		public void run() {
-			Game.removeState();
-		}
-	};
-	
-	public ButtonCloseMenu(Properties properties, Properties hoverProperties){
-		super("Back to game", properties, hoverProperties, CLICK_ACTION);
+public class ButtonCloseMenu extends ButtonText {
+
+	public ButtonCloseMenu(Vector2f centre, Vector2f size, Color buttonColor, Color borderColor) {
+		super(centre, size, buttonColor, borderColor, Color.BLACK, "Back to game");
 	}
+
+	@Override
+	public void leftClick(float x, float y) {
+		Game.removeState();
+	}
+
 }

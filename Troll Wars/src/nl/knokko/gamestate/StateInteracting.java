@@ -1,22 +1,22 @@
 package nl.knokko.gamestate;
 
-import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.Gui;
 import nl.knokko.main.Game;
 
 public class StateInteracting implements GameState {
 	
-	private GuiComponent gui;
+	private Gui gui;
 
 	public StateInteracting() {}
 
 	@Override
 	public void update() {
-		
+		gui.update();
 	}
 
 	@Override
 	public void render() {
-		
+		gui.render(Game.getGuiRenderer());
 	}
 
 	@Override
@@ -42,15 +42,9 @@ public class StateInteracting implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {
+	public void setCurrentGui(Gui gui) {
 		this.gui = gui;
-		gui.setState(Game.getGuiState());
-		gui.init();
-	}
-	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return gui;
+		gui.addButtons();
 	}
 
 	@Override

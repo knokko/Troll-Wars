@@ -4,14 +4,14 @@ import nl.knokko.texture.Texture;
 
 import org.lwjgl.util.vector.Vector2f;
 
-public class OldGuiTexture {
+public class GuiTexture {
 	
 	private final Vector2f centre;
 	private final Vector2f size;
 	
 	private final Texture texture;
 
-	public OldGuiTexture(Vector2f centre, Vector2f size, Texture texture) {
+	public GuiTexture(Vector2f centre, Vector2f size, Texture texture) {
 		this.texture = texture;
 		this.centre = centre;
 		this.size = size;

@@ -2,13 +2,13 @@ package nl.knokko.input;
 
 public class MouseScrollEvent {
 	
-	private float deltaScroll;
+	private int deltaScroll;
 
-	public MouseScrollEvent(float deltaScroll) {
+	public MouseScrollEvent(int deltaScroll) {
 		this.deltaScroll = deltaScroll;
 	}
 	
-	public float getDeltaScroll(){
+	public int getDeltaScroll(){
 		return deltaScroll;
 	}
 }

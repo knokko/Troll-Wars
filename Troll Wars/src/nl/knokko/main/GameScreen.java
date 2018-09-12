@@ -1,5 +1,6 @@
 package nl.knokko.main;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
 
 public class GameScreen {
@@ -9,7 +10,6 @@ public class GameScreen {
 	private static int updateCalls;
 	
 	public static void openScreen(){
-		/*
 		try {
 			ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 			int size = getSize();
@@ -20,26 +20,19 @@ public class GameScreen {
 		} catch (LWJGLException ex) {
 			ex.printStackTrace();
 		}
-		*/
-		Game.getWindow().open("Troll Wars", 800, 800, true);
 	}
 	
 	public static void updateScreen(){
-		/*
 		long startTime = System.nanoTime();
 		Display.update();
 		long endTime = System.nanoTime();
 		updateTime += endTime - startTime;
 		updateCalls++;
 		Display.sync(fps());
-		*/
-		Game.getWindow().render();
-		Display.sync(fps());
 	}
 	
 	public static void closeScreen(){
-		Game.getWindow().close();
-		//Display.destroy();
+		Display.destroy();
 		System.out.println("Average screen update time is " + (updateTime / updateCalls) / 1000 + " microseconds.");
 	}
 	
@@ -53,5 +46,9 @@ public class GameScreen {
 	
 	public static int getHeight(){
 		return Display.getHeight();
+	}
+	
+	private static int getSize(){
+		return 800;
 	}
 }

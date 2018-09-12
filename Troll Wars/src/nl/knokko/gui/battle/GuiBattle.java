@@ -9,13 +9,15 @@ import nl.knokko.battle.move.BattleMove;
 import nl.knokko.battle.move.FightMoveOption;
 import nl.knokko.battle.move.ItemMoveOption;
 import nl.knokko.battle.move.MoveSkipTurn;
-import nl.knokko.gui.component.menu.GuiMenu;
-import nl.knokko.gui.component.text.TextButton;
-import nl.knokko.gui.texture.OldGuiTexture;
+import nl.knokko.gui.Gui;
+import nl.knokko.gui.button.ButtonText;
+import nl.knokko.gui.button.IButton;
+import nl.knokko.gui.texture.GuiTexture;
 import nl.knokko.input.MouseClickEvent;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
+import nl.knokko.render.main.GuiRenderer;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.color.ColorAlpha;
@@ -25,23 +27,20 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class GuiBattle extends GuiMenu {
+public class GuiBattle implements Gui {
 	
-	protected static final java.awt.Color BUTTON_COLOR = new java.awt.Color(80, 0, 220);
-	protected static final java.awt.Color BORDER_COLOR = new java.awt.Color(30, 0, 100);
-	protected static final java.awt.Color BUTTON_HOVER_COLOR = new java.awt.Color(100, 0, 255);
-	protected static final java.awt.Color BORDER_HOVER_COLOR = new java.awt.Color(40, 0, 120);
+	protected static final Color BUTTON_COLOR = new Color(100, 0, 250);
 	
 	protected final Battle battle;
 	
 	protected State state;
 	
-	protected TextButton stopButton;
-	protected TextButton runButton;
+	protected ButtonText stopButton;
+	protected ButtonText runButton;
 	protected ButtonText fightButton;
 	protected ButtonText itemButton;
-	protected TextButton waitButton;
-	protected TextButton armButton;
+	protected ButtonText waitButton;
+	protected ButtonText armButton;
 	
 	protected FightCategoryButton[] fightCategoryButtons;
 	protected ButtonText fightCategoryReturnButton;
@@ -58,8 +57,8 @@ public class GuiBattle extends GuiMenu {
 	protected SelectTargetButton[] opponentButtons;
 	protected ButtonText targetReturnButton;
 	
-	protected OldGuiTexture fightCategoryBackground;
-	protected OldGuiTexture fightMoveBackground;
+	protected GuiTexture fightCategoryBackground;
+	protected GuiTexture fightMoveBackground;
 	
 	protected int scroll;
 	
@@ -129,7 +128,7 @@ public class GuiBattle extends GuiMenu {
 		renderer.renderButtonTexture(button, button.getTextures(), this);
 	}
 	
-	protected void render(OldGuiTexture texture, GuiRenderer renderer){
+	protected void render(GuiTexture texture, GuiRenderer renderer){
 		renderer.renderGuiTexture(texture, this);
 	}
 	
@@ -379,7 +378,67 @@ public class GuiBattle extends GuiMenu {
 
 	@Override
 	public void addButtons() {
-		
+		stopButton = new ButtonText(new Vector2f(0.5f, 0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Save and stop"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				Game.stop(true);
+			}
+		};
+		runButton = new ButtonText(new Vector2f(-0.8f, 0.85f), new Vector2f(0.15f, 0.1f), BUTTON_COLOR, Color.RED, Color.RED, "Run"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				Game.getBattle().run();
+			}
+		};
+		fightButton = new ButtonText(new Vector2f(0.6f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Fight"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				toSelectMoveCatState();
+			}
+		};
+		fightCategoryReturnButton = new ButtonText(new Vector2f(0.6f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Cancel"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				toSelectActionState();
+				hasCategories = null;
+			}
+		};
+		itemButton = new ButtonText(new Vector2f(0f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Consume Item"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				toSelectItemCatState();
+			}
+		};
+		itemCategoryReturnButton = new ButtonText(new Vector2f(0f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Cancel"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				toSelectActionState();
+				hasCategories = null;
+			}
+			
+		};
+		waitButton = new ButtonText(new Vector2f(-0.7f, -0.85f), new Vector2f(0.2f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Wait"){
+
+			@Override
+			public void leftClick(float x, float y) {
+				battle.selectPlayerMove(new MoveSkipTurn());
+				toWaitingState();
+			}
+		};
+		fightCategoryButtons = new FightCategoryButton[FightMoveOption.Category.values().length];
+		for(int i = 0; i < fightCategoryButtons.length; i++)
+			fightCategoryButtons[i] = new FightCategoryButton(FightMoveOption.Category.values()[i]);
+		itemCategoryButtons = new ItemCategoryButton[ItemMoveOption.Category.values().length];
+		for(int i = 0; i < itemCategoryButtons.length; i++)
+			itemCategoryButtons[i] = new ItemCategoryButton(ItemMoveOption.Category.values()[i]);
+		fightCategoryBackground = new GuiTexture(new Vector2f(0.6f, -0.6f), new Vector2f(0.25f, 0.4f), Resources.createFilledTexture(Color.ORANGE));
+		fightMoveBackground = new GuiTexture(new Vector2f(0.1f, -0.1f), new Vector2f(0.25f, 0.65f), Resources.createFilledTexture(Color.BLUE));
 	}
 
 	@Override
@@ -403,12 +462,9 @@ public class GuiBattle extends GuiMenu {
 	
 	protected static final float SCROLL_SCALE = 0.002f;
 	
-	protected static final java.awt.Color FIGHT_CATEGORY_BUTTON_COLOR = new java.awt.Color(150, 100, 0);
-	protected static final java.awt.Color FIGHT_CATEGORY_BORDER_COLOR = new java.awt.Color(50, 50, 0);
-	protected static final java.awt.Color FIGHT_CATEGORY_TEXT_COLOR = new java.awt.Color(50, 50, 0);
-	protected static final java.awt.Color FIGHT_CATEGORY_HOVER_BUTTON_COLOR = new java.awt.Color(200, 140, 0);
-	protected static final java.awt.Color FIGHT_CATEGORY_HOVER_BORDER_COLOR = new java.awt.Color(80, 80, 0);
-	protected static final java.awt.Color FIGHT_CATEGORY_HOVER_TEXT_COLOR = new java.awt.Color(80, 80, 0);
+	protected static final Color FIGHT_CATEGORY_BUTTON_COLOR = new Color(150, 100, 0);
+	protected static final Color FIGHT_CATEGORY_BORDER_COLOR = new Color(50, 50, 0);
+	protected static final Color FIGHT_CATEGORY_TEXT_COLOR = new Color(50, 50, 0);
 	
 	protected class FightCategoryButton extends ButtonText {
 		
@@ -561,70 +617,5 @@ public class GuiBattle extends GuiMenu {
 			else
 				throw new IllegalStateException("Invalid state for target button: " + state);
 		}
-	}
-
-	@Override
-	protected void addComponents() {
-		stopButton = new ButtonText(new Vector2f(0.5f, 0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Save and stop"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				Game.stop(true);
-			}
-		};
-		runButton = new ButtonText(new Vector2f(-0.8f, 0.85f), new Vector2f(0.15f, 0.1f), BUTTON_COLOR, Color.RED, Color.RED, "Run"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				Game.getBattle().run();
-			}
-		};
-		fightButton = new ButtonText(new Vector2f(0.6f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Fight"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				toSelectMoveCatState();
-			}
-		};
-		fightCategoryReturnButton = new ButtonText(new Vector2f(0.6f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Cancel"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				toSelectActionState();
-				hasCategories = null;
-			}
-		};
-		itemButton = new ButtonText(new Vector2f(0f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Consume Item"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				toSelectItemCatState();
-			}
-		};
-		itemCategoryReturnButton = new ButtonText(new Vector2f(0f, -0.85f), new Vector2f(0.25f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Cancel"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				toSelectActionState();
-				hasCategories = null;
-			}
-			
-		};
-		waitButton = new ButtonText(new Vector2f(-0.7f, -0.85f), new Vector2f(0.2f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, "Wait"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				battle.selectPlayerMove(new MoveSkipTurn());
-				toWaitingState();
-			}
-		};
-		fightCategoryButtons = new FightCategoryButton[FightMoveOption.Category.values().length];
-		for(int i = 0; i < fightCategoryButtons.length; i++)
-			fightCategoryButtons[i] = new FightCategoryButton(FightMoveOption.Category.values()[i]);
-		itemCategoryButtons = new ItemCategoryButton[ItemMoveOption.Category.values().length];
-		for(int i = 0; i < itemCategoryButtons.length; i++)
-			itemCategoryButtons[i] = new ItemCategoryButton(ItemMoveOption.Category.values()[i]);
-		fightCategoryBackground = new OldGuiTexture(new Vector2f(0.6f, -0.6f), new Vector2f(0.25f, 0.4f), Resources.createFilledTexture(Color.ORANGE));
-		fightMoveBackground = new OldGuiTexture(new Vector2f(0.1f, -0.1f), new Vector2f(0.25f, 0.65f), Resources.createFilledTexture(Color.BLUE));
 	}
 }

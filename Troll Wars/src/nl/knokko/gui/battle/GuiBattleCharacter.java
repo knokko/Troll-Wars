@@ -14,7 +14,7 @@ import nl.knokko.equipment.Equipment;
 import nl.knokko.gui.Gui;
 import nl.knokko.gui.button.ButtonText;
 import nl.knokko.gui.button.IButton;
-import nl.knokko.gui.texture.OldGuiTexture;
+import nl.knokko.gui.texture.GuiTexture;
 import nl.knokko.input.MouseClickEvent;
 import nl.knokko.input.MouseInput;
 import nl.knokko.items.Item;
@@ -38,10 +38,10 @@ public class GuiBattleCharacter implements Gui {
 	protected final BattleCreature character;
 	protected final GuiBattle returnGui;
 	
-	protected OldGuiTexture backGround;
-	protected OldGuiTexture baseBackGround;
-	protected OldGuiTexture equipmentBackGround;
-	protected OldGuiTexture elementsBackGround;
+	protected GuiTexture backGround;
+	protected GuiTexture baseBackGround;
+	protected GuiTexture equipmentBackGround;
+	protected GuiTexture elementsBackGround;
 	
 	protected ButtonText returnButton;
 	protected ButtonText baseButton;
@@ -84,7 +84,7 @@ public class GuiBattleCharacter implements Gui {
 				leftClick(click.getX(), click.getY());
 	}
 	
-	protected void render(GuiRenderer renderer, OldGuiTexture texture){
+	protected void render(GuiRenderer renderer, GuiTexture texture){
 		renderer.renderGuiTexture(texture, this);
 	}
 	
@@ -136,7 +136,7 @@ public class GuiBattleCharacter implements Gui {
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(dx, dy, width - 2 * dx, height - 2 * dy);
 		g.dispose();
-		backGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(backGroundImage, false)));
+		backGround = new GuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(backGroundImage, false)));
 		BufferedImage baseImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = baseImage.createGraphics();
 		g.setFont(STATUS_FONT);
@@ -186,7 +186,7 @@ public class GuiBattleCharacter implements Gui {
 		g.setColor(Color.TURN_SPEED.toAWTColor());
 		g.drawString("Speed: " + character.getTurnSpeed(), width * 0.6f, height * 0.8f);
 		g.dispose();
-		baseBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(baseImage, true)));
+		baseBackGround = new GuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(baseImage, true)));
 		BufferedImage equipmentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = equipmentImage.createGraphics();
 		Equipment equipment = character.getEquipment();
@@ -200,7 +200,7 @@ public class GuiBattleCharacter implements Gui {
 		drawItemTexture(g, equipment.getLeftShoe(), width * 0.4f, height * 0.7f);
 		drawItemTexture(g, equipment.getRightShoe(), width * 0.8f, height * 0.7f);
 		g.dispose();
-		equipmentBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(equipmentImage, true)));
+		equipmentBackGround = new GuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(equipmentImage, true)));
 		BufferedImage elementImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = elementImage.createGraphics();
 		g.setColor(Color.BLACK.toAWTColor());
@@ -221,7 +221,7 @@ public class GuiBattleCharacter implements Gui {
 		drawElement(g, BattleElement.SPIRITUAL, es, width, height * 0.75f);
 		drawElement(g, BattleElement.PSYCHIC, es, width, height * 0.8f);
 		g.dispose();
-		elementsBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(elementImage, true)));
+		elementsBackGround = new GuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(elementImage, true)));
 	}
 	
 	private void drawBar(Graphics2D g, int width, int height, float part, float y){

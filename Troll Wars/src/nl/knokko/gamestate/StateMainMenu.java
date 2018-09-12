@@ -1,32 +1,30 @@
 package nl.knokko.gamestate;
 
-import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.Gui;
 import nl.knokko.gui.menu.main.*;
 import nl.knokko.main.Game;
 
 public class StateMainMenu implements GameState {
 	
-	private final GuiComponent[] guis;
+	private final Gui[] guis;
 	
-	private GuiComponent currentGui;
+	private Gui currentGui;
 
 	public StateMainMenu() {
-		guis = new GuiComponent[]{new GuiMainMenu(this), new GuiNewGame(this), new GuiLoadGame(this), new GuiMainOptions(this), new GuiMainHelp(this)};
-		for(GuiComponent gui : guis){
-			gui.setState(Game.getGuiState());
-			gui.init();
-		}
+		guis = new Gui[]{new GuiMainMenu(this), new GuiNewGame(this), new GuiLoadGame(this), new GuiMainOptions(this), new GuiMainHelp(this)};
+		for(Gui gui : guis)
+			gui.addButtons();
 		currentGui = getGuiMainMenu();
 	}
 
 	@Override
 	public void update() {
-		
+		currentGui.update();
 	}
 
 	@Override
 	public void render() {
-		
+		currentGui.render(Game.getGuiRenderer());
 	}
 
 	@Override
@@ -52,32 +50,27 @@ public class StateMainMenu implements GameState {
 	}
 	
 	@Override
-	public void setCurrentGui(GuiComponent gui){
+	public void setCurrentGui(Gui gui){
 		currentGui = gui;
 	}
 	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return currentGui;
-	}
-	
-	public GuiComponent getGuiMainMenu(){
+	public Gui getGuiMainMenu(){
 		return guis[0];
 	}
 	
-	public GuiComponent getGuiNewGame(){
+	public Gui getGuiNewGame(){
 		return guis[1];
 	}
 	
-	public GuiComponent getGuiLoadGame(){
+	public Gui getGuiLoadGame(){
 		return guis[2];
 	}
 	
-	public GuiComponent getGuiOptions(){
+	public Gui getGuiOptions(){
 		return guis[3];
 	}
 	
-	public GuiComponent getGuiHelpMenu(){
+	public Gui getGuiHelpMenu(){
 		return guis[4];
 	}
 

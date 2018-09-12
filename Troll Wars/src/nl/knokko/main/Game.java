@@ -14,13 +14,7 @@ import nl.knokko.battle.BattleDefault;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.gamestate.*;
 import nl.knokko.gui.button.ButtonText;
-import nl.knokko.gui.component.AbstractGuiComponent;
-import nl.knokko.gui.component.GuiComponent;
-import nl.knokko.gui.component.state.GuiComponentState;
-import nl.knokko.gui.component.state.RelativeComponentState;
 import nl.knokko.gui.trading.GuiTrading;
-import nl.knokko.gui.window.GLGuiWindow;
-import nl.knokko.gui.window.WindowListener;
 import nl.knokko.input.KeyInput;
 import nl.knokko.input.MouseInput;
 import nl.knokko.inventory.ArrayInventory;
@@ -31,6 +25,7 @@ import nl.knokko.players.Players;
 import nl.knokko.render.battle.Battle2dRenderer;
 import nl.knokko.render.battle.EffectRenderer;
 import nl.knokko.render.main.CreatureRenderer;
+import nl.knokko.render.main.GuiRenderer;
 import nl.knokko.render.tile.TileModels;
 import nl.knokko.render.tile.TileRenderer;
 import nl.knokko.story.battle.StoryBattleManager;
@@ -58,6 +53,7 @@ public class Game {
 	
 	private static GameState[] states;
 	
+	private static GuiRenderer guiRenderer;
 	private static TileRenderer tileRenderer;
 	private static CreatureRenderer creatureRenderer;
 	private static EffectRenderer effectRenderer;
@@ -72,9 +68,6 @@ public class Game {
 	private static EventManager eventManager;
 	private static EventHandler eventHandler;
 	private static StoryBattleManager storyBattleManager;
-	
-	private static GLGuiWindow window;
-	private static CurrentGuiComponent guiComponent;
 	
 	private static Matrix4f projectionMatrix;
 	
@@ -102,13 +95,10 @@ public class Game {
 	private static void prepare(){
 		gameFolder = new File(FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "TrollWars");
 		gameFolder.mkdirs();
+		nl.knokko.util.resources.Natives.prepare(gameFolder);
 	}
 	
 	private static void open(){
-		window = new GLGuiWindow();
-		guiComponent = new CurrentGuiComponent();
-		window.setMainComponent(guiComponent);
-		window.setWindowListener(new GameWindowListener());
 		GameScreen.openScreen();
 	}
 	
@@ -130,6 +120,7 @@ public class Game {
 		updatingStates = new ArrayList<GameState>();
 		renderingStates = new ArrayList<GameState>();
 		addState(getMainMenu());
+		guiRenderer = new GuiRenderer();
 		tileRenderer = new TileRenderer();
 		creatureRenderer = new CreatureRenderer();
 		effectRenderer = new EffectRenderer();
@@ -141,23 +132,19 @@ public class Game {
 	}
 	
 	private static void update(){
-		MouseInput.update();
-		KeyInput.update();
-		window.update();
 		for(int i = 0; i < updatingStates.size(); i++)
 			updatingStates.get(i).update();
+		MouseInput.update();
+		KeyInput.update();
 	}
 	
 	private static void render(){
-		/*
 		long startTime = System.nanoTime();
 		for(int i = renderingStates.size() - 1; i >= 0; i--)
 			renderingStates.get(i).render();
 		long endTime = System.nanoTime();
 		renderTime += (endTime - startTime);
 		renderTicks++;
-		GameScreen.updateScreen();
-		*/
 		GameScreen.updateScreen();
 	}
 	
@@ -167,14 +154,14 @@ public class Game {
 			save();
 		for(GameState state : currentStates)
 			state.close();
+		guiRenderer.cleanUp();
 		Resources.cleanUp();
 		System.out.println("average button init time is " + (ButtonText.totalTime / ButtonText.instances) / 1000 + " microseconds");
 		System.out.println("average render time is " + (renderTime / renderTicks) / 1000 + " microseconds");
 	}
 	
 	private static void close(){
-		//GameScreen.closeScreen();
-		window.close();
+		GameScreen.closeScreen();
 	}
 	
 	public static void save(){
@@ -253,6 +240,10 @@ public class Game {
 		return (StateDialogue) states[5];
 	}
 	
+	public static GuiRenderer getGuiRenderer(){
+		return guiRenderer;
+	}
+	
 	public static TileRenderer getTileRenderer(){
 		return tileRenderer;
 	}
@@ -300,14 +291,6 @@ public class Game {
 	
 	public static EventHandler getEventHandler(){
 		return eventHandler;
-	}
-	
-	public static GLGuiWindow getWindow(){
-		return window;
-	}
-	
-	public static GuiComponentState getGuiState(){
-		return new RelativeComponentState.Static(guiComponent.getState(), 0, 0, 1, 1);
 	}
 	
 	public static DialogueFunctions getDialogueFunctions(){
@@ -417,181 +400,4 @@ public class Game {
         projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
         projectionMatrix.m33 = 0;
     }
-	
-	private static class CurrentGuiComponent extends AbstractGuiComponent {
-		
-		private GuiComponent get(){
-			for(GameState state : renderingStates){
-				GuiComponent gui = state.getCurrentGui();
-				if(gui != null)
-					return gui;
-			}
-			return null;
-		}
-
-		@Override
-		public void init() {}
-
-		@Override
-		public void update() {
-			GuiComponent component = get();
-			if(component != null)
-				component.update();
-		}
-
-		@Override
-		public void render(nl.knokko.gui.render.GuiRenderer renderer) {
-			GuiComponent component = get();
-			if(component != null)
-				component.render(renderer);
-		}
-
-		@Override
-		public void click(float x, float y, int button) {
-			GuiComponent component = get();
-			if(component != null)
-				component.click(x, y, button);
-		}
-
-		@Override
-		public void clickOut(int button) {
-			GuiComponent component = get();
-			if(component != null)
-				component.clickOut(button);
-		}
-
-		@Override
-		public boolean scroll(float amount) {
-			MouseInput.addScroll(amount);
-			GuiComponent component = get();
-			if(component != null)
-				return component.scroll(amount);
-			return false;
-		}
-
-		@Override
-		public void keyPressed(int keyCode) {
-			GuiComponent component = get();
-			if(component != null)
-				component.keyPressed(keyCode);
-			KeyInput.addPress(keyCode);
-		}
-
-		@Override
-		public void keyPressed(char character) {
-			GuiComponent component = get();
-			if(component != null)
-				component.keyPressed(character);
-			KeyInput.addPress(character);
-		}
-
-		@Override
-		public void keyReleased(int keyCode) {
-			GuiComponent component = get();
-			if(component != null)
-				component.keyReleased(keyCode);
-			KeyInput.addRelease(keyCode);
-		}
-	}
-	
-	private static class GameWindowListener implements WindowListener {
-
-		@Override
-		public boolean preUpdate() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void postUpdate() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean preRender() {
-			for(int i = renderingStates.size() - 1; i >= 0; i--)
-				renderingStates.get(i).render();
-			return false;
-		}
-
-		@Override
-		public void postRender() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean preClick(float x, float y, int button) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void postClick(float x, float y, int button) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public float preScroll(float amount) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public void postScroll(float amount) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean preKeyPressed(char character) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void postKeyPressed(char character) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean preKeyPressed(int keyCode) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void postKeyPressed(int keyCode) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean preKeyReleased(int keyCode) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void postKeyReleased(int keyCode) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void preClose() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void postClose() {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
 }

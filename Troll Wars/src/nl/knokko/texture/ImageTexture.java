@@ -2,15 +2,11 @@ package nl.knokko.texture;
 
 import java.awt.image.BufferedImage;
 
-import nl.knokko.gui.texture.GuiTexture;
-import nl.knokko.main.Game;
 import nl.knokko.util.resources.Resources;
 
 public class ImageTexture extends Texture {
 	
 	private final BufferedImage image;
-	
-	private GuiTexture guiTexture;
 
 	public ImageTexture(BufferedImage image) {
 		this(image, true);
@@ -23,11 +19,5 @@ public class ImageTexture extends Texture {
 	
 	public BufferedImage getImage(){
 		return image;
-	}
-	
-	public GuiTexture getGuiTexture(){
-		if(guiTexture == null)
-			guiTexture = Game.getWindow().getTextureLoader().loadTexture(image);
-		return guiTexture;
 	}
 }

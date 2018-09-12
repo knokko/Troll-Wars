@@ -6,11 +6,21 @@ public class MouseClickEvent {
 	private final float y;
 	
 	private final int button;
+	private final boolean pressed;
 
-	public MouseClickEvent(float x, float y, int button) {
+	public MouseClickEvent(float x, float y, int button, boolean state) {
 		this.x = x;
 		this.y = y;
 		this.button = button;
+		this.pressed = state;
+	}
+	
+	public boolean wasPressed(){
+		return pressed;
+	}
+	
+	public boolean wasReleased(){
+		return !pressed;
 	}
 	
 	public float getX(){

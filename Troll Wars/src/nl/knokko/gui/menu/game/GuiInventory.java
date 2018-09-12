@@ -3,17 +3,17 @@ package nl.knokko.gui.menu.game;
 import org.lwjgl.util.vector.Vector2f;
 
 import nl.knokko.gamestate.StateGameMenu;
+import nl.knokko.gui.GuiBase;
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.button.ButtonLink;
-import nl.knokko.gui.component.menu.GuiMenu;
-import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.inventory.InventoryTypeBase;
 import nl.knokko.main.Game;
+import nl.knokko.render.main.GuiRenderer;
 import nl.knokko.texture.SizedTexture;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.resources.Resources;
 
-public class GuiInventory extends GuiMenu {
+public class GuiInventory extends GuiBase {
 	
 	private static final Color BUTTON_COLOR = new Color(100, 150, 0);
 	private static final Color BORDER_COLOR = new Color(40, 50, 0);
@@ -32,7 +32,7 @@ public class GuiInventory extends GuiMenu {
 	}
 	
 	@Override
-	protected void addComponents(){
+	public void addButtons(){
 		/*
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, 0.7f), null));
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, 0.45f), InventoryTypeBase.MATERIAL));
@@ -45,6 +45,7 @@ public class GuiInventory extends GuiMenu {
 	
 	@Override
 	public void render(GuiRenderer renderer){
+		renderer.start(this);
 		renderer.render(textures, buttons, this, false);
 		if(!hasTextures){
 			hasTextures = true;
@@ -58,10 +59,11 @@ public class GuiInventory extends GuiMenu {
 			renderer.renderTextures(new Vector2f(0.35f, 1 - equipmentTexture.getRelativeHeight()), new Vector2f(0.2f, equipmentTexture.getRelativeHeight()), equipmentTexture);
 		if(consumablesTexture != null)
 			renderer.renderTextures(new Vector2f(0.8f, 1 - consumablesTexture.getRelativeHeight()), new Vector2f(0.2f, consumablesTexture.getRelativeHeight()), consumablesTexture);
+		renderer.stop();
 	}
 	
 	@Override
-	public Color getBackgroundColor(){
+	public Color getBackGroundColor(){
 		return BACKGROUND_COLOR;
 	}
 	

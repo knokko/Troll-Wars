@@ -1,35 +1,35 @@
 package nl.knokko.gamestate;
 
-import nl.knokko.gui.component.GuiComponent;
-import nl.knokko.gui.keycode.KeyCode;
+import org.lwjgl.input.Keyboard;
+
+import nl.knokko.gui.Gui;
 import nl.knokko.gui.menu.game.*;
+import nl.knokko.input.KeyInput;
 import nl.knokko.main.Game;
 
 public class StateGameMenu implements GameState {
 	
-	private final GuiComponent[] guis;
+	private final Gui[] guis;
 	
-	private GuiComponent currentGui;
+	private Gui currentGui;
 
 	public StateGameMenu() {
-		guis = new GuiComponent[]{new GuiGameMenu(this), new GuiInventory(this), new GuiPlayerMenu(this), new GuiPlayerEquipment(this)};
-		for(GuiComponent gui : guis){
-			gui.setState(Game.getGuiState());
-			gui.init();
-		}
+		guis = new Gui[]{new GuiGameMenu(this), new GuiInventory(this), new GuiPlayerMenu(this), new GuiPlayerEquipment(this)};
+		for(Gui gui : guis)
+			gui.addButtons();
 		setCurrentGui(getGameMenu());
 	}
 
 	@Override
 	public void update() {
-		//currentGui.update();
-		if(Game.getWindow().getInput().isKeyDown(KeyCode.KEY_ESCAPE))
+		currentGui.update();
+		if(KeyInput.wasKeyPressed(Keyboard.KEY_ESCAPE))
 			Game.removeState();
 	}
 
 	@Override
 	public void render() {
-		//currentGui.render(Game.getGuiRenderer());
+		currentGui.render(Game.getGuiRenderer());
 	}
 
 	@Override
@@ -57,20 +57,17 @@ public class StateGameMenu implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {
+	public void setCurrentGui(Gui gui) {
 		currentGui = gui;
+		if(currentGui != null)
+			currentGui.open();
 	}
 	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return currentGui;
-	}
-	
-	public GuiComponent getGameMenu(){
+	public Gui getGameMenu(){
 		return guis[0];
 	}
 	
-	public GuiComponent getInventory(){
+	public Gui getInventory(){
 		return guis[1];
 	}
 	
@@ -78,7 +75,7 @@ public class StateGameMenu implements GameState {
 		return (GuiPlayerMenu) guis[2];
 	}
 	
-	public GuiComponent getPlayerEquipment(){
+	public Gui getPlayerEquipment(){
 		return guis[3];
 	}
 

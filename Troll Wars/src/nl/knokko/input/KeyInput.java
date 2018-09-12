@@ -2,36 +2,22 @@ package nl.knokko.input;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
+
 public final class KeyInput {
 	
 	private static ArrayList<KeyPressedEvent> presses = new ArrayList<KeyPressedEvent>();
-	private static ArrayList<KeyPressedCharEvent> charPresses = new ArrayList<KeyPressedCharEvent>();
 	private static ArrayList<KeyReleasedEvent> releases = new ArrayList<KeyReleasedEvent>();
 	
 	public static void update(){
 		presses.clear();
-		charPresses.clear();
 		releases.clear();
-		/*
 		while(Keyboard.next()){
 			if(Keyboard.getEventKeyState())
 				presses.add(new KeyPressedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
 			else
 				releases.add(new KeyReleasedEvent(Keyboard.getEventKey()));
 		}
-		*/
-	}
-	
-	public static void addPress(int keyCode){
-		presses.add(new KeyPressedEvent(keyCode));
-	}
-	
-	public static void addPress(char character){
-		charPresses.add(new KeyPressedCharEvent(character));
-	}
-	
-	public static void addRelease(int keyCode){
-		releases.add(new KeyReleasedEvent(keyCode));
 	}
 	
 	/**
@@ -41,15 +27,21 @@ public final class KeyInput {
 		return presses;
 	}
 	
-	public static ArrayList<KeyPressedCharEvent> getCurrentCharPresses(){
-		return charPresses;
-	}
-	
 	/**
 	 * @return an ArrayList that contains all keys that were released during the current tick
 	 */
 	public static ArrayList<KeyReleasedEvent> getCurrentReleases(){
 		return releases;
+	}
+	
+	/**
+	 * Checks if the specified key is currently pressed.
+	 * @param key The key code to check for
+	 * @return true if the specified key is down at the moment, false otherwise
+	 * @see org.lwjgl.input.Keyboard
+	 */
+	public static boolean isKeydown(int key){
+		return Keyboard.isKeyDown(key);
 	}
 	
 	/**

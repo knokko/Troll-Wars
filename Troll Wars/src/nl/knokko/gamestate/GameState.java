@@ -1,6 +1,6 @@
 package nl.knokko.gamestate;
 
-import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.Gui;
 
 public interface GameState {
 	
@@ -52,7 +52,5 @@ public interface GameState {
 	 * Other states should ignore this method.
 	 * @param gui
 	 */
-	void setCurrentGui(GuiComponent gui);
-	
-	GuiComponent getCurrentGui();
+	void setCurrentGui(Gui gui);
 }

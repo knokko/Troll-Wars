@@ -1,6 +1,6 @@
 package nl.knokko.gamestate;
 
-import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.Gui;
 import nl.knokko.main.Game;
 import nl.knokko.story.dialogue.Dialogue;
 import nl.knokko.story.dialogues.Dialogues;
@@ -72,12 +72,7 @@ public class StateDialogue implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {}
-	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return null;
-	}
+	public void setCurrentGui(Gui gui) {}
 	
 	public void setCurrentDialogue(Dialogue dialogue){
 		current = dialogue;

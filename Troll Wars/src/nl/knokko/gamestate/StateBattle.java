@@ -2,8 +2,8 @@ package nl.knokko.gamestate;
 
 import nl.knokko.battle.Battle;
 import nl.knokko.battle.BattleDefault;
+import nl.knokko.gui.Gui;
 import nl.knokko.gui.battle.GuiBattle;
-import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.main.Game;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
@@ -13,7 +13,7 @@ public class StateBattle implements GameState {
 	
 	private static final Class<?>[] CLASS_MAP = {BattleDefault.class};
 	
-	private GuiComponent gui;
+	private Gui gui;
 	private Battle battle;
 
 	public StateBattle() {}
@@ -22,7 +22,7 @@ public class StateBattle implements GameState {
 	public void update() {
 		if(battle != null){
 			battle.update();
-			//gui.update();
+			gui.update();
 		}
 		else
 			Game.removeState();
@@ -32,7 +32,7 @@ public class StateBattle implements GameState {
 	public void render() {
 		if(battle != null){
 			battle.render();
-			//gui.render(Game.getGuiRenderer());
+			gui.render(Game.getGuiRenderer());
 		}
 	}
 
@@ -62,15 +62,9 @@ public class StateBattle implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {
+	public void setCurrentGui(Gui gui) {
 		this.gui = gui;
-		gui.setState(Game.getGuiState());
-		gui.init();
-	}
-	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return gui;
+		gui.addButtons();
 	}
 	
 	public void save(){
@@ -87,8 +81,7 @@ public class StateBattle implements GameState {
 			battle = (Battle) CLASS_MAP[buffer.readByte() + 128].newInstance();
 			battle.load(buffer);
 			gui = new GuiBattle(battle);
-			gui.setState(Game.getGuiState());
-			gui.init();
+			gui.addButtons();
 		} catch(Exception ex){
 			throw new IllegalArgumentException("Couldn't load battle:", ex);
 		}
@@ -97,8 +90,7 @@ public class StateBattle implements GameState {
 	public void setBattle(Battle battle){
 		this.battle = battle;
 		this.gui = new GuiBattle(battle);
-		this.gui.setState(Game.getGuiState());
-		this.gui.init();
+		this.gui.addButtons();
 	}
 	
 	public Battle getBattle(){

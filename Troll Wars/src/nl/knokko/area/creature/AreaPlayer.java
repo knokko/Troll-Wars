@@ -3,8 +3,10 @@ package nl.knokko.area.creature;
 import java.util.List;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
+
 import nl.knokko.area.Block;
-import nl.knokko.gui.keycode.KeyCode;
+import nl.knokko.input.KeyInput;
 import nl.knokko.main.Game;
 import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.Facing;
@@ -27,15 +29,15 @@ public class AreaPlayer extends AreaTroll {
 	@Override
 	protected void updateCreature() {
 		float yaw = Game.getArea().getCamera().getDegYaw();
-		if(Game.getWindow().getInput().isKeyDown(Game.getOptions().keyNorth))
+		if(KeyInput.isKeydown(Game.getOptions().keyNorth))
 			tryMove(yaw);
-		if(Game.getWindow().getInput().isKeyDown(Game.getOptions().keyEast))
+		if(KeyInput.isKeydown(Game.getOptions().keyEast))
 			tryMove(yaw + 90);
-		if(Game.getWindow().getInput().isKeyDown(Game.getOptions().keySouth))
+		if(KeyInput.isKeydown(Game.getOptions().keySouth))
 			tryMove(yaw + 180);
-		if(Game.getWindow().getInput().isKeyDown(Game.getOptions().keyWest))
+		if(KeyInput.isKeydown(Game.getOptions().keyWest))
 			tryMove(yaw + 270);
-		if(Game.getWindow().getInput().isKeyDown(Game.getOptions().keyInteract)){
+		if(KeyInput.isKeydown(Game.getOptions().keyInteract)){
 			if(moveX != 0 || moveZ != 0)
 				return;
 			Facing facing = Facing.fromYaw(rotationY);
@@ -61,7 +63,7 @@ public class AreaPlayer extends AreaTroll {
 					ac.interact();
 			}
 		}
-		if(Game.getWindow().getInput().isKeyDown(KeyCode.KEY_P))
+		if(KeyInput.isKeydown(Keyboard.KEY_P))
 			System.out.println("Player position is (" + position.getTileX() + "," + position.getTileY() + "," + position.getTileZ() + ")");
 	}
 	

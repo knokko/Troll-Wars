@@ -1,13 +1,14 @@
 package nl.knokko.gamestate;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import nl.knokko.area.Area;
 import nl.knokko.area.AreaDoor.Location;
 import nl.knokko.area.creature.AreaPlayer;
 import nl.knokko.areas.AreaRargia;
-import nl.knokko.gui.component.GuiComponent;
-import nl.knokko.gui.keycode.KeyCode;
+import nl.knokko.gui.Gui;
+import nl.knokko.input.KeyInput;
 import nl.knokko.main.Game;
 import nl.knokko.render.main.CreatureRenderer;
 import nl.knokko.render.tile.TileRenderer;
@@ -44,7 +45,7 @@ public class StateArea implements GameState {
 		area.update();
 		if(Game.getCurrentState() == this)
 			camera.update();
-		if(Game.getCurrentState() == this && Game.getWindow().getInput().isKeyDown(KeyCode.KEY_ESCAPE))
+		if(Game.getCurrentState() == this && KeyInput.wasKeyPressed(Keyboard.KEY_ESCAPE))
 			Game.addState(Game.getGameMenu());
 	}
 
@@ -87,12 +88,7 @@ public class StateArea implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {}
-	
-	@Override
-	public GuiComponent getCurrentGui(){
-		return null;
-	}
+	public void setCurrentGui(Gui gui) {}
 	
 	public void transferPlayer(short areaID, Location destination, float yaw){
 		area.disable();

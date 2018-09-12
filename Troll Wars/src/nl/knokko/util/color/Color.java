@@ -2,11 +2,10 @@ package nl.knokko.util.color;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import nl.knokko.gui.color.GuiColor;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 
-public class Color implements Comparable<Color>, GuiColor {
+public class Color implements Comparable<Color> {
 	
 	public static final Color BLACK = new Color(0, 0, 0);
 	public static final Color DARK_GRAY = new Color(63, 63, 63);

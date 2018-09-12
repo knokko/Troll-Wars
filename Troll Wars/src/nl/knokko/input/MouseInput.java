@@ -2,22 +2,23 @@ package nl.knokko.input;
 
 import java.util.ArrayList;
 
+import nl.knokko.main.GameScreen;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 public final class MouseInput {
 	
-	//private static byte clickCooldown;
+	private static byte clickCooldown;
 	
-	//private static ArrayList<MouseMoveEvent> moves = new ArrayList<MouseMoveEvent>();
+	private static ArrayList<MouseMoveEvent> moves = new ArrayList<MouseMoveEvent>();
 	private static ArrayList<MouseClickEvent> clicks = new ArrayList<MouseClickEvent>();
 	private static ArrayList<MouseScrollEvent> scrolls = new ArrayList<MouseScrollEvent>();
 	
 	public static void update(){
-		//moves.clear();
+		moves.clear();
 		clicks.clear();
 		scrolls.clear();
-		/*
 		while(Mouse.next()){
 			if(Mouse.getEventDWheel() != 0)
 				scrolls.add(new MouseScrollEvent(Mouse.getEventDWheel()));
@@ -30,13 +31,11 @@ public final class MouseInput {
 		}
 		if(clickCooldown > 0)
 			clickCooldown--;
-			*/
 	}
 	
-	/*
 	public static ArrayList<MouseMoveEvent> getMouseMoves(){
 		return moves;
-	}*/
+	}
 	
 	public static ArrayList<MouseClickEvent> getMouseClicks(){
 		return clicks;
@@ -44,14 +43,6 @@ public final class MouseInput {
 	
 	public static ArrayList<MouseScrollEvent> getMouseScrolls(){
 		return scrolls;
-	}
-	
-	public static void addScroll(float amount){
-		scrolls.add(new MouseScrollEvent(amount));
-	}
-	
-	public void addClick(float x, float y, int button){
-		clicks.add(new MouseClickEvent(x, y, button));
 	}
 	
 	public static int getCurrentX(){

@@ -462,8 +462,7 @@ public class DialogueDesigner {
 		
 		@Override
 		public void paint(Graphics g){
-			//TODO time for exporting...
-			//TODO Use my GUI library instead of custom packages for Troll Wars
+			//TODO time for marking a start part and exporting...
 			g.setFont(FONT);
 			g.setColor(BACKGROUND);
 			g.fillRect(0, OFFSET_Y, frame.getWidth(), frame.getHeight() - OFFSET_Y);

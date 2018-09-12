@@ -1,29 +1,24 @@
 package nl.knokko.gui.button;
 
 import nl.knokko.gamestate.GameState;
-import nl.knokko.gui.component.GuiComponent;
-import nl.knokko.gui.component.text.TextButton;
-import nl.knokko.gui.util.TextBuilder.Properties;
+import nl.knokko.gui.Gui;
+import nl.knokko.util.color.Color;
 
-public class ButtonLink extends TextButton {
+import org.lwjgl.util.vector.Vector2f;
+
+public class ButtonLink extends ButtonText {
 	
-	public ButtonLink(String text, GameState state, GuiComponent link, Properties properties, Properties hoverProperties){
-		super(text, properties, hoverProperties, new ClickAction(link, state));
+	protected Gui link;
+	private GameState state;
+
+	public ButtonLink(Vector2f centre, Vector2f size, Color buttonColor, Color borderColor, Color textColor, String text, Gui link, GameState state) {
+		super(centre, size, buttonColor, borderColor, textColor, text);
+		this.link = link;
+		this.state = state;
 	}
-	
-	private static class ClickAction implements Runnable {
-		
-		private final GuiComponent link;
-		private final GameState state;
-		
-		private ClickAction(GuiComponent link, GameState state){
-			this.link = link;
-			this.state = state;
-		}
 
-		@Override
-		public void run() {
-			state.setCurrentGui(link);
-		}
+	@Override
+	public void leftClick(float x, float y) {
+		state.setCurrentGui(link);
 	}
 }
