@@ -1,0 +1,31 @@
+package nl.knokko.texture.painter;
+
+import nl.knokko.texture.pattern.PatternAverage;
+import nl.knokko.texture.pattern.TexturePattern;
+import nl.knokko.util.bits.BitInput;
+import nl.knokko.util.bits.BitOutput;
+import nl.knokko.util.color.Color;
+
+public class BonePainter extends ModelPainter {
+	
+	private final Color color;
+
+	public BonePainter(Color color) {
+		super(new PatternAverage(color, 0.1f, System.nanoTime()));
+		this.color = color;
+	}
+	
+	public BonePainter(BitInput buffer){
+		this(Color.fromSimpleBits(buffer));
+	}
+
+	@Override
+	public void save(BitOutput buffer) {
+		//buffer.addSimpleColor(color);
+		color.toSimpleBits(buffer);
+	}
+	
+	public TexturePattern getPattern(){
+		return patterns[0];
+	}
+}

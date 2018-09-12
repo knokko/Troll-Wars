@@ -1,0 +1,17 @@
+#version 400 core
+
+in float modelPositionX;
+
+uniform float progress;
+
+uniform vec3 fullColor;
+uniform vec3 emptyColor;
+
+out vec4 out_Color;
+
+void main(void){
+	if(modelPositionX / 2 + 0.5 >= progress)
+		out_Color = vec4(emptyColor.rgb, 1.0);
+	else
+		out_Color = vec4(fullColor.rgb, 1.0);
+}

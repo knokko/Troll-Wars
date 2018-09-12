@@ -1,0 +1,16 @@
+#version 400 core
+
+in vec3 modelPosition;
+in vec2 textureCoords;
+
+out vec2 passTextureCoords;
+out vec3 pos;
+
+uniform vec3 tilePosition;
+uniform mat4 viewMatrix;
+
+void main(void){
+	pos = modelPosition + tilePosition;
+	gl_Position = viewMatrix * vec4(pos.xyz,1.0);
+	passTextureCoords = textureCoords;
+}

@@ -1,0 +1,13 @@
+#version 140
+
+in vec2 modelPosition;
+
+out vec2 textureCoords;
+
+uniform vec2 centrePosition;
+uniform vec2 scale;
+
+void main(void){
+	gl_Position = vec4(modelPosition.x * scale.x + centrePosition.x, modelPosition.y * scale.y + centrePosition.y, 0.0, 1.0);
+	textureCoords = vec2((modelPosition.x+1.0)/2.0, 1 - (modelPosition.y+1.0)/2.0);
+}

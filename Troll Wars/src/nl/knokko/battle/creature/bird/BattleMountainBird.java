@@ -1,0 +1,150 @@
+package nl.knokko.battle.creature.bird;
+
+import nl.knokko.animation.body.AnimatorBird;
+import nl.knokko.animation.body.BattleAnimationHelper;
+import nl.knokko.battle.Battle;
+import nl.knokko.battle.creature.BattleCreature;
+import nl.knokko.battle.creature.MovingBattleCreature;
+import nl.knokko.battle.creature.SimpleBattleCreature;
+import nl.knokko.battle.element.ElementalStatistics;
+import nl.knokko.battle.element.SimpleElementStats;
+import nl.knokko.battle.move.BattleMove;
+import nl.knokko.battle.move.FightMoveOption;
+import nl.knokko.battle.move.ItemMoveOption;
+import nl.knokko.battle.move.ItemMoveOption.Category;
+import nl.knokko.battle.move.physical.bird.MoveBirdClawAttack;
+import nl.knokko.battle.move.physical.bird.MoveBirdPickAttack;
+import nl.knokko.battle.render.properties.BattleRenderProperties;
+import nl.knokko.battle.render.properties.BirdRenderProperties;
+import nl.knokko.inventory.Inventory;
+import nl.knokko.model.body.BodyBird;
+import nl.knokko.texture.painter.BirdPainter;
+import nl.knokko.texture.painter.ModelPainter;
+import nl.knokko.util.bits.BitInput;
+import nl.knokko.util.bits.BitOutput;
+import nl.knokko.util.resources.Resources;
+
+public class BattleMountainBird extends SimpleBattleCreature implements MovingBattleCreature {
+	
+	protected BodyBird body;
+	protected BirdPainter painter;
+	
+	protected float hitRadius;
+
+	public BattleMountainBird(int level, BodyBird body, BirdPainter painter) {
+		super("Mountain Bird", 300 + 100 * level, 150 + 100 * level, 40 + 10 * level, 40 + 10 * level, 15 + 2 * level, body, painter);
+	}
+
+	public BattleMountainBird(BitInput buffer) {
+		super(buffer);
+	}
+
+	@Override
+	public short getID() {
+		return BattleCreature.Registry.ID_BIRD;
+	}
+
+	@Override
+	public ElementalStatistics getElementStats() {
+		return SimpleElementStats.BIRD;
+	}
+
+	@Override
+	public int getArmor() {
+		return 0;
+	}
+
+	@Override
+	public int getResistance() {
+		return 0;
+	}
+
+	@Override
+	public boolean isPlayerControlled() {
+		return false;
+	}
+
+	@Override
+	public BattleMove chooseMove(Battle battle, BattleCreature[] ownTeam, BattleCreature[] opposingTeam) {
+		if(Math.random() < 0.5)
+			return new MoveBirdClawAttack(this, Battle.Selector.selectRandom(opposingTeam), models.get(0).getChildren()[3], models.get(0).getChildren()[4], body.bellyHeight() / 2, body.legLength());
+		return new MoveBirdPickAttack(this, Battle.Selector.selectRandom(opposingTeam), models.get(0), models.get(0).getChildren()[0], body.snailLength());
+	}
+
+	@Override
+	public ItemMoveOption[] getItems() {
+		return null;
+	}
+
+	@Override
+	public ItemMoveOption[] getItems(Category category) {
+		return null;
+	}
+
+	@Override
+	public FightMoveOption[] getMoves() {
+		return null;
+	}
+
+	@Override
+	public FightMoveOption[] getMoves(nl.knokko.battle.move.FightMoveOption.Category category) {
+		return null;
+	}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
+	}
+
+	@Override
+	protected BattleAnimationHelper createAnimator() {
+		return new BattleAnimationHelper(body.legLength(), new AnimatorBird());
+	}
+
+	@Override
+	protected void addBody(Object body, ModelPainter texture) {
+		this.body = (BodyBird) body;
+		this.painter = (BirdPainter) texture;
+		models.add(Resources.createModelBird(this.body, painter));
+		hitRadius = Math.max(Math.max(this.body.bellyDepth(), this.body.bellyHeight()), this.body.bellyWidth()) / 2 + this.body.legLength();
+	}
+
+	@Override
+	protected void addBody(BitInput bits) {
+		body = BodyBird.Models.loadInstance(bits);
+		painter = new BirdPainter(bits);
+		models.add(Resources.createModelBird(body, painter));
+		hitRadius = Math.max(Math.max(body.bellyDepth(), body.bellyHeight()), body.bellyWidth()) / 2 + body.legLength();
+	}
+
+	@Override
+	protected void saveBody(BitOutput bits) {
+		body.save(bits);
+		painter.save(bits);
+	}
+	
+	@Override
+	protected int getYOffset(){
+		return (int) body.legLength();
+	}
+
+	@Override
+	public String getActiveArm() {
+		return null;
+	}
+
+	@Override
+	public void swapArm() {
+		throw new UnsupportedOperationException("Birds can't swap arms.");
+	}
+
+	@Override
+	public float getSpeed() {
+		return BattleCreature.MoveSpeed.BIRD;
+	}
+
+	@Override
+	protected BattleRenderProperties createRenderProperties() {
+		return new BirdRenderProperties(this, body);
+	}
+}

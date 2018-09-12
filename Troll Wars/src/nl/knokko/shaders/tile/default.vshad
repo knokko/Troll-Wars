@@ -1,0 +1,23 @@
+#version 400 core
+
+in vec3 modelPosition;
+in vec2 textureCoords;
+in vec3 reflectedLightDirection;
+in float brightness;
+
+uniform vec3 tilePosition;
+uniform mat4 viewMatrix;
+
+out vec2 passTextureCoords;
+out vec3 toCameraVector;
+out vec3 passRefLightDirection;
+out float passBrightness;
+
+void main(void){
+	vec3 worldPosition = modelPosition + tilePosition;
+	gl_Position = viewMatrix * vec4(worldPosition, 1.0);
+	passTextureCoords = textureCoords;
+	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition;
+	passRefLightDirection = reflectedLightDirection;
+	passBrightness = brightness;
+}

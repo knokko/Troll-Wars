@@ -1,0 +1,56 @@
+package nl.knokko.story.event;
+
+import nl.knokko.util.bits.BitInput;
+import nl.knokko.util.bits.BitOutput;
+
+public class IntroHumanEvent implements StoryEvent {
+	
+	public static final byte STATE_NOT_MET = 0;
+	public static final byte STATE_LEFT = 1;
+	public static final byte STATE_FOUGHT_ALONE = 2;
+	public static final byte STATE_FOUGHT_WITH_TROLLS = 3;
+	public static final byte STATE_FOUGHT_WITH_DEMON = 4;
+	public static final byte STATE_SHOW_MYRMORA = 5;
+	public static final byte STATE_LEFT_HAS_TROLLS = 6;
+	
+	private static final byte BITCOUNT = 3;
+	
+	private byte state;
+
+	public IntroHumanEvent() {}
+
+	@Override
+	public void save(BitOutput bits) {
+		bits.addNumber(state, BITCOUNT, false);
+	}
+
+	@Override
+	public void load(BitInput bits) {
+		state = (byte) bits.readNumber(BITCOUNT, false);
+	}
+
+	@Override
+	public void initNewGame() {
+		state = STATE_NOT_MET;
+	}
+	
+	public byte getState(){
+		return state;
+	}
+	
+	public void setState(byte newState){
+		state = newState;
+	}
+	
+	public boolean isOver(){
+		return state == STATE_FOUGHT_ALONE || state == STATE_FOUGHT_WITH_TROLLS || state == STATE_FOUGHT_WITH_DEMON;
+	}
+	
+	public boolean wasHelpedByTrolls(){
+		return state == STATE_FOUGHT_WITH_TROLLS;
+	}
+	
+	public boolean wasHelpedByDemon(){
+		return state == STATE_FOUGHT_WITH_DEMON;
+	}
+}

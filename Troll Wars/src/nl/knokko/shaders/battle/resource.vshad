@@ -1,0 +1,14 @@
+#version 400 core
+
+in vec2 modelPosition;
+
+out float modelPositionX;
+
+uniform vec2 scale;
+uniform vec3 worldPosition;
+uniform mat4 projViewMatrix;
+
+void main(void){
+	gl_Position = projViewMatrix * vec4(worldPosition.xyz, 1.0) + vec4(modelPosition.x * scale.x, modelPosition.y * scale.y, 0.0, 0.0);
+	modelPositionX = modelPosition.x;
+}

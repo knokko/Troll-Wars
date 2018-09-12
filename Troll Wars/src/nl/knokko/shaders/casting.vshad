@@ -1,0 +1,10 @@
+#version 400 core
+
+in vec3 position;
+
+uniform vec3 handPosition;
+uniform mat4 viewMatrix;
+
+void main(void){
+	gl_Position = viewMatrix * vec4(handPosition.x + position.x, handPosition.y + position.y, handPosition.z + position.z, 1.0);
+}

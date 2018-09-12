@@ -1,0 +1,22 @@
+The health starts at maxHealth or the current health.
+Health will be reduced when the creature is attacked.
+When the health is zero or lesser, the creature will faint.
+
+The mana starts at maxMana or the current mana.
+Some moves cost mana to cast.
+When there is not enough mana left, not all moves can be used.
+
+The focus starts at 0.
+Casting some spells successfully increases focus.
+Getting attacked reduces focus.
+The more focus, the stronger magic moves will be.
+
+The energy starts at maxEnergy.
+Some moves cost energy to use.
+Energy regenerates a little every turn.
+When there is not enough energy left, not all moves can be used.
+
+The rage starts at 0.
+Some moves require rage, cost rage or are stronger with more rage.
+Getting attacked increases rage.
+Attacking reduces rage.

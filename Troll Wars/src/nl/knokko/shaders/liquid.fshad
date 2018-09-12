@@ -1,0 +1,27 @@
+#version 400 core
+
+in vec2 passTextureCoords;
+in vec3 pos;
+
+out vec4 out_Color;
+
+uniform sampler2D textureSampler;
+uniform float rand;
+
+float random(in float seed, in float x, in float y, in float z){
+	x = floor(x);
+	y = floor(y);
+	z = floor(z);
+	seed = seed + tan(z * 0.297 * cos(x)) + tan((y * 0.71 - sin(z)) - 34);
+	return fract(seed);
+}
+
+void main(void){
+	vec4 color = texture(textureSampler,passTextureCoords);
+	float random = random(rand,pos.x,pos.y,pos.z);
+	float r = 1.0 + random * 0.5;
+	color = vec4(color.x * r, color.y * r, color.z * r, color.a);
+	if(random >= 0.95)
+		color += vec4(0.12,0.12,0.12,0.0);
+	out_Color = color;
+}

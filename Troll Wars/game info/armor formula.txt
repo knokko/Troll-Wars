@@ -1,0 +1,6 @@
+00 armor --> 100%
+10 armor --> 50%
+20 armor --> 25%
+30 armor --> 12.5%
+
+formula: newDamage = originalDamage / 2^(activeArmor / 10)
