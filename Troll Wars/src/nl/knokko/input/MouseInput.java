@@ -1,6 +1,7 @@
 package nl.knokko.input;
 
 import java.util.ArrayList;
+import nl.knokko.main.Game;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -9,14 +10,22 @@ public final class MouseInput {
 	
 	//private static byte clickCooldown;
 	
-	//private static ArrayList<MouseMoveEvent> moves = new ArrayList<MouseMoveEvent>();
-	private static ArrayList<MouseClickEvent> clicks = new ArrayList<MouseClickEvent>();
-	private static ArrayList<MouseScrollEvent> scrolls = new ArrayList<MouseScrollEvent>();
+	private static final ArrayList<MouseMoveEvent> MOVES = new ArrayList<MouseMoveEvent>();
+	private static final ArrayList<MouseClickEvent> CLICKS = new ArrayList<MouseClickEvent>();
+	private static final ArrayList<MouseScrollEvent> SCROLLS = new ArrayList<MouseScrollEvent>();
+        
+        private static float prevMouseX = Float.NaN;
+        private static float prevMouseY = Float.NaN;
 	
 	public static void update(){
-		//moves.clear();
-		clicks.clear();
-		scrolls.clear();
+		MOVES.clear();
+		CLICKS.clear();
+		SCROLLS.clear();
+                float x = Game.getGuiState().getMouseX();
+                float y = Game.getGuiState().getMouseY();
+                if(prevMouseX == prevMouseX && prevMouseY == prevMouseY && x != prevMouseX || y != prevMouseY)
+                    MOVES.add(new MouseMoveEvent(x, y, x - prevMouseX, y - prevMouseY));
+                
 		/*
 		while(Mouse.next()){
 			if(Mouse.getEventDWheel() != 0)
@@ -31,27 +40,28 @@ public final class MouseInput {
 		if(clickCooldown > 0)
 			clickCooldown--;
 			*/
+                prevMouseX = x;
+                prevMouseY = y;
 	}
 	
-	/*
 	public static ArrayList<MouseMoveEvent> getMouseMoves(){
-		return moves;
-	}*/
+		return MOVES;
+	}
 	
 	public static ArrayList<MouseClickEvent> getMouseClicks(){
-		return clicks;
+		return CLICKS;
 	}
 	
 	public static ArrayList<MouseScrollEvent> getMouseScrolls(){
-		return scrolls;
+		return SCROLLS;
 	}
 	
 	public static void addScroll(float amount){
-		scrolls.add(new MouseScrollEvent(amount));
+		SCROLLS.add(new MouseScrollEvent(amount));
 	}
 	
 	public void addClick(float x, float y, int button){
-		clicks.add(new MouseClickEvent(x, y, button));
+		CLICKS.add(new MouseClickEvent(x, y, button));
 	}
 	
 	public static int getCurrentX(){

@@ -1,13 +1,11 @@
 package nl.knokko.view.camera;
 
-import nl.knokko.gui.keycode.KeyCode;
 import nl.knokko.input.KeyInput;
 import nl.knokko.main.Game;
 import nl.knokko.render.main.WorldRenderer;
 import nl.knokko.util.Maths;
 import nl.knokko.util.position.AreaPosition;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 public class CameraPlayer implements Camera {
@@ -84,18 +82,18 @@ public class CameraPlayer implements Camera {
 	}
 
 	@Override
-	public void update() {//TODO fix all the key input and add isKeyDown method
-		if(KeyInput.isKeydown(Game.getOptions().keyCameraRight))
+	public void update() {
+		if(KeyInput.isKeyDown(Game.getOptions().keyCameraRight))
 			yaw++;
-		if(KeyInput.isKeydown(Game.getOptions().keyCameraLeft))
+		if(KeyInput.isKeyDown(Game.getOptions().keyCameraLeft))
 			yaw--;
-		if(KeyInput.isKeydown(Game.getOptions().keyCameraUp) && pitch < 90)
+		if(KeyInput.isKeyDown(Game.getOptions().keyCameraUp) && pitch < 90)
 			pitch++;
-		if(KeyInput.isKeydown(Game.getOptions().keyCameraDown) && pitch > 20)
+		if(KeyInput.isKeyDown(Game.getOptions().keyCameraDown) && pitch > 20)
 			pitch--;
-		if(KeyInput.isKeydown(KeyCode.KEY_MINUS_BASE))
+		if(KeyInput.isKeyDown(Game.getOptions().keyZoomOut))
 			distance += 2;
-		if(KeyInput.isKeydown(KeyCode.KEY_EQUALS) && distance > 20)
+		if(KeyInput.isKeyDown(Game.getOptions().keyZoomIn) && distance > 20)
 			distance -= 2;
 		//TODO make sure the camera doesn't move outside the area/cave
 	}

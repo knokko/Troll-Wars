@@ -81,19 +81,19 @@ public class CameraBattle implements Camera {
 
 	@Override
 	public void update() {
-		if(KeyInput.isKeydown(Game.getOptions().keyEast)){
+		if(KeyInput.isKeyDown(Game.getOptions().keyEast)){
 			yaw++;
 			if(yaw >= 360)
 				yaw -= 360;
 		}
-		if(KeyInput.isKeydown(Game.getOptions().keyWest)){
+		if(KeyInput.isKeyDown(Game.getOptions().keyWest)){
 			yaw--;
 			if(yaw < 0)
 				yaw += 360;
 		}
-		if(KeyInput.isKeydown(Game.getOptions().keyNorth))
+		if(KeyInput.isKeyDown(Game.getOptions().keyNorth))
 			y++;
-		if(KeyInput.isKeydown(Game.getOptions().keySouth))
+		if(KeyInput.isKeyDown(Game.getOptions().keySouth))
 			y--;
 	}
 }

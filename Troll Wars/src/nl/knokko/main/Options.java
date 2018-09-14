@@ -1,6 +1,6 @@
 package nl.knokko.main;
 
-import org.lwjgl.input.Keyboard;
+import nl.knokko.gui.keycode.KeyCode;
 
 public class Options {
 	
@@ -13,17 +13,20 @@ public class Options {
 	
 	private Difficulty difficulty = Difficulty.INTRO;
 	
-	public int keyNorth = Keyboard.KEY_UP;
-	public int keyEast = Keyboard.KEY_RIGHT;
-	public int keySouth = Keyboard.KEY_DOWN;
-	public int keyWest = Keyboard.KEY_LEFT;
+	public int keyNorth = KeyCode.KEY_UP;
+	public int keyEast = KeyCode.KEY_RIGHT;
+	public int keySouth = KeyCode.KEY_DOWN;
+	public int keyWest = KeyCode.KEY_LEFT;
 	
-	public int keyCameraRight = Keyboard.KEY_D;
-	public int keyCameraLeft = Keyboard.KEY_A;
-	public int keyCameraUp = Keyboard.KEY_W;
-	public int keyCameraDown = Keyboard.KEY_S;
+	public int keyCameraRight = KeyCode.KEY_D;
+	public int keyCameraLeft = KeyCode.KEY_A;
+	public int keyCameraUp = KeyCode.KEY_W;
+	public int keyCameraDown = KeyCode.KEY_S;
+        
+        public int keyZoomIn = KeyCode.KEY_MINUS_BASE;
+        public int keyZoomOut = KeyCode.KEY_EQUALS;
 	
-	public int keyInteract = Keyboard.KEY_SPACE;
+	public int keyInteract = KeyCode.KEY_SPACE;
 	
 	public int pixelsPerMeter = 2;
 	

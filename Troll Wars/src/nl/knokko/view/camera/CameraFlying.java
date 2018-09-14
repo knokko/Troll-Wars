@@ -9,7 +9,6 @@ import nl.knokko.util.Maths;
 import nl.knokko.util.position.SpawnPosition;
 import nl.knokko.gui.keycode.KeyCode;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 public class CameraFlying implements Camera {
@@ -92,42 +91,42 @@ public class CameraFlying implements Camera {
 	public void update(){
 		ArrayList<MouseMoveEvent> moves = MouseInput.getMouseMoves();
 		for(MouseMoveEvent event : moves){
-			yaw += event.getDeltaX();
+			yaw += event.getDeltaX() * 500;
 			while(yaw >= 360)
 				yaw -= 360;
 			while(yaw < 0)
 				yaw += 360;
-			pitch -= event.getDeltaY();
+			pitch -= event.getDeltaY() * 500;
 			while(pitch >= 360)
 				pitch -= 360;
 			while(pitch < 0)
 				pitch += 360;
 		}
-		float speed = KeyInput.isKeydown(KeyCode.KEY_T) ? 15 : 5;
-		if(KeyInput.isKeydown(KeyCode.KEY_CAPSLOCK))
+		float speed = KeyInput.isKeyDown(KeyCode.KEY_T) ? 15 : 5;
+		if(KeyInput.isKeyDown(KeyCode.KEY_CAPSLOCK))
 			speed = 0.5f;
 		Vector3f forward = Maths.getRotationVector(pitch, yaw, 0);
-		if(KeyInput.isKeydown(KeyCode.KEY_W)){
+		if(KeyInput.isKeyDown(KeyCode.KEY_W)){
 			position.x += forward.x * speed;
 			position.y += forward.y * speed;
 			position.z += forward.z * speed;
 		}
-		if(KeyInput.isKeydown(KeyCode.KEY_D)){
+		if(KeyInput.isKeyDown(KeyCode.KEY_D)){
 			position.x -= forward.z * speed;
 			position.z += forward.x * speed;
 		}
-		if(KeyInput.isKeydown(KeyCode.KEY_S)){
+		if(KeyInput.isKeyDown(KeyCode.KEY_S)){
 			position.x -= forward.x * speed;
 			position.y -= forward.y * speed;
 			position.z -= forward.z * speed;
 		}
-		if(KeyInput.isKeydown(KeyCode.KEY_A)){
+		if(KeyInput.isKeyDown(KeyCode.KEY_A)){
 			position.x += forward.z * speed;
 			position.z -= forward.x * speed;
 		}
-		if(KeyInput.isKeydown(KeyCode.KEY_SPACE))
+		if(KeyInput.isKeyDown(KeyCode.KEY_SPACE))
 			position.y += speed;
-		if(KeyInput.isKeydown(KeyCode.KEY_SHIFT))
+		if(KeyInput.isKeyDown(KeyCode.KEY_SHIFT))
 			position.y -= speed;
 	}
 }

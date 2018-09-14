@@ -13,7 +13,6 @@ import nl.knokko.battle.Battle;
 import nl.knokko.battle.BattleDefault;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.gamestate.*;
-import nl.knokko.gui.button.ButtonText;
 import nl.knokko.gui.component.AbstractGuiComponent;
 import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.state.GuiComponentState;
@@ -168,7 +167,6 @@ public class Game {
 		for(GameState state : currentStates)
 			state.close();
 		Resources.cleanUp();
-		System.out.println("average button init time is " + (ButtonText.totalTime / ButtonText.instances) / 1000 + " microseconds");
 		System.out.println("average render time is " + (renderTime / renderTicks) / 1000 + " microseconds");
 	}
 	
@@ -592,6 +590,16 @@ public class Game {
 			// TODO Auto-generated method stub
 			
 		}
+
+                @Override
+                public boolean preRunLoop() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void postRunLoop() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
 		
 	}
 }

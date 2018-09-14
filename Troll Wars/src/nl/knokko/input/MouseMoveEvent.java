@@ -2,40 +2,40 @@ package nl.knokko.input;
 
 public class MouseMoveEvent {
 	
-	private final int ax;
-	private final int ay;
+	private final float ax;
+	private final float ay;
 	
-	private final int dx;
-	private final int dy;
+	private final float dx;
+	private final float dy;
 
-	public MouseMoveEvent(int ax, int ay, int dx, int dy) {
+	public MouseMoveEvent(float ax, float ay, float dx, float dy) {
 		this.ax = ax;
 		this.ay = ay;
 		this.dx = dx;
 		this.dy = dy;
 	}
 	
-	public int getToX(){
+	public float getToX(){
 		return ax;
 	}
 	
-	public int getToY(){
+	public float getToY(){
 		return ay;
 	}
 	
-	public int getFromX(){
+	public float getFromX(){
 		return ax - dx;
 	}
 	
-	public int getFromY(){
+	public float getFromY(){
 		return ay - dy;
 	}
 	
-	public int getDeltaX(){
+	public float getDeltaX(){
 		return dx;
 	}
 	
-	public int getDeltaY(){
+	public float getDeltaY(){
 		return dy;
 	}
 }

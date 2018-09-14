@@ -3,7 +3,6 @@ package nl.knokko.render.battle;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.render.properties.BattleRenderProperties;
 import nl.knokko.model.type.AbstractModel;
-import nl.knokko.render.main.GuiRenderer;
 import nl.knokko.view.camera.Camera;
 
 import org.lwjgl.opengl.GL11;

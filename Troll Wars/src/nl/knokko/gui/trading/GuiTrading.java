@@ -2,12 +2,12 @@ package nl.knokko.gui.trading;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.component.inventory.ComponentInventory;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.keycode.KeyCode;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.input.KeyInput;
 import nl.knokko.inventory.trading.TradeOffer;
@@ -51,7 +51,7 @@ public class GuiTrading extends GuiMenu {
 	@Override
 	public void update(){
 		super.update();
-		if(KeyInput.wasKeyPressed(Keyboard.KEY_ESCAPE)){
+		if(KeyInput.wasKeyPressed(KeyCode.KEY_ESCAPE)){
 			if(selectedOfferTexture == null)
 				Game.removeState();
 			else {
