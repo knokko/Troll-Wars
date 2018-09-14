@@ -7,6 +7,7 @@ import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseMoveEvent;
 import nl.knokko.util.Maths;
 import nl.knokko.util.position.SpawnPosition;
+import nl.knokko.gui.keycode.KeyCode;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
@@ -102,31 +103,31 @@ public class CameraFlying implements Camera {
 			while(pitch < 0)
 				pitch += 360;
 		}
-		float speed = KeyInput.isKeydown(Keyboard.KEY_T) ? 15 : 5;
-		if(KeyInput.isKeydown(Keyboard.KEY_RSHIFT))
+		float speed = KeyInput.isKeydown(KeyCode.KEY_T) ? 15 : 5;
+		if(KeyInput.isKeydown(KeyCode.KEY_CAPSLOCK))
 			speed = 0.5f;
 		Vector3f forward = Maths.getRotationVector(pitch, yaw, 0);
-		if(KeyInput.isKeydown(Keyboard.KEY_W)){
+		if(KeyInput.isKeydown(KeyCode.KEY_W)){
 			position.x += forward.x * speed;
 			position.y += forward.y * speed;
 			position.z += forward.z * speed;
 		}
-		if(KeyInput.isKeydown(Keyboard.KEY_D)){
+		if(KeyInput.isKeydown(KeyCode.KEY_D)){
 			position.x -= forward.z * speed;
 			position.z += forward.x * speed;
 		}
-		if(KeyInput.isKeydown(Keyboard.KEY_S)){
+		if(KeyInput.isKeydown(KeyCode.KEY_S)){
 			position.x -= forward.x * speed;
 			position.y -= forward.y * speed;
 			position.z -= forward.z * speed;
 		}
-		if(KeyInput.isKeydown(Keyboard.KEY_A)){
+		if(KeyInput.isKeydown(KeyCode.KEY_A)){
 			position.x += forward.z * speed;
 			position.z -= forward.x * speed;
 		}
-		if(KeyInput.isKeydown(Keyboard.KEY_SPACE))
+		if(KeyInput.isKeydown(KeyCode.KEY_SPACE))
 			position.y += speed;
-		if(KeyInput.isKeydown(Keyboard.KEY_LSHIFT))
+		if(KeyInput.isKeydown(KeyCode.KEY_SHIFT))
 			position.y -= speed;
 	}
 }
