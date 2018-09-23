@@ -47,7 +47,7 @@ public class GuiBattleCharacter extends GuiMenu {
 	}
 
 	@Override
-	public void addComponents() {
+	protected void addComponents() {
             showState = State.BASIC;
             Properties buttonProperties = Properties.createButton(BUTTON_COLOR, BUTTON_BORDER_COLOR);
             Properties borderProperties = Properties.createButton(HOVER_COLOR, HOVER_BORDER_COLOR);
