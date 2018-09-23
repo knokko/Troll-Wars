@@ -3,32 +3,32 @@ package nl.knokko.gui.battle;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-import org.lwjgl.util.vector.Vector2f;
 
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.element.BattleElement;
 import nl.knokko.battle.element.ElementalStatistics;
 import nl.knokko.equipment.Equipment;
-import nl.knokko.gui.Gui;
-import nl.knokko.gui.button.ButtonText;
-import nl.knokko.gui.button.IButton;
-import nl.knokko.gui.texture.OldGuiTexture;
-import nl.knokko.input.MouseClickEvent;
-import nl.knokko.input.MouseInput;
+import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.simple.ConditionalImageComponent;
+import nl.knokko.gui.component.simple.SimpleImageComponent;
+import nl.knokko.gui.component.text.ActivatableTextButton;
+import nl.knokko.gui.component.text.TextButton;
+import nl.knokko.gui.util.Condition;
+import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.items.Item;
 import nl.knokko.main.Game;
 import nl.knokko.main.GameScreen;
-import nl.knokko.render.main.GuiRenderer;
-import nl.knokko.texture.Texture;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources;
 
-public class GuiBattleCharacter implements Gui {
-	
-	protected static final Vector2f MAIN_SCALE = new Vector2f(0.3f, 0.1f);
-	protected static final Color MAIN_COLOR = new Color(120, 80, 0);
+public class GuiBattleCharacter extends GuiMenu {
+        
+        protected static final java.awt.Color BUTTON_COLOR = new java.awt.Color(120, 80, 0);
+        protected static final java.awt.Color BUTTON_BORDER_COLOR = new java.awt.Color(40, 20, 0);
+        protected static final java.awt.Color HOVER_COLOR = new java.awt.Color(180, 110, 20);
+        protected static final java.awt.Color HOVER_BORDER_COLOR = new java.awt.Color(60, 30, 0);
+        protected static final java.awt.Color ACTIVE_COLOR = new java.awt.Color(100, 65, 0);
+        protected static final java.awt.Color ACTIVE_BORDER_COLOR = new java.awt.Color(50, 25, 0);
+        
 	protected static final java.awt.Color BACKGROUND_COLOR = new java.awt.Color(150, 75, 0);
 	protected static final java.awt.Color BACKGROUND_EDGE = new java.awt.Color(100, 50, 0);
 	protected static final Font STATS_FONT = new Font("TimesRoman", Font.BOLD, 25);
@@ -38,90 +38,66 @@ public class GuiBattleCharacter implements Gui {
 	protected final BattleCreature character;
 	protected final GuiBattle returnGui;
 	
-	protected OldGuiTexture backGround;
-	protected OldGuiTexture baseBackGround;
-	protected OldGuiTexture equipmentBackGround;
-	protected OldGuiTexture elementsBackGround;
-	
-	protected ButtonText returnButton;
-	protected ButtonText baseButton;
-	protected ButtonText equipmentButton;
-	protected ButtonText elementsButton;
-	
-	protected State state;
+	protected State showState;
 
 	public GuiBattleCharacter(GuiBattle returnGui, BattleCreature character) {
 		this.character = character;
 		this.returnGui = returnGui;
-		this.state = State.BASIC;
+		this.showState = State.BASIC;
 	}
 
 	@Override
-	public void render(GuiRenderer r) {
-		r.start(this);
-		render(r, backGround);
-		if(state == State.BASIC)
-			render(r, baseBackGround);
-		if(state == State.EQUIPMENT)
-			render(r, equipmentBackGround);
-		if(state == State.ELEMENTS)
-			render(r, elementsBackGround);
-		render(r, returnButton);
-		if(state != State.BASIC)
-			render(r, baseButton);
-		if(state != State.EQUIPMENT)
-			render(r, equipmentButton);
-		if(state != State.ELEMENTS)
-			render(r, elementsButton);
-		r.stop();
-	}
-
-	@Override
-	public void update() {
-		ArrayList<MouseClickEvent> clicks = MouseInput.getMouseClicks();
-		for(MouseClickEvent click : clicks)
-			if(click.getButton() == 0)
-				leftClick(click.getX(), click.getY());
-	}
-	
-	protected void render(GuiRenderer renderer, OldGuiTexture texture){
-		renderer.renderGuiTexture(texture, this);
-	}
-	
-	protected void render(GuiRenderer renderer, IButton button){
-		renderer.renderButtonTexture(button, button.getTextures(), this);
-	}
-
-	@Override
-	public void addButtons() {
-		returnButton = new ButtonText(new Vector2f(-0.6f, 0.7f), MAIN_SCALE, MAIN_COLOR, Color.BLACK, Color.BLACK, "Close"){
-			
-			@Override
-			public void leftClick(float x, float y){
-				Game.getBattle().setCurrentGui(returnGui);
-			}
-		};
-		baseButton = new ButtonText(new Vector2f(-0.6f, 0.0f), MAIN_SCALE, MAIN_COLOR, Color.BLACK, Color.BLACK, "Basic Info"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				state = State.BASIC;
-			}
-		};
-		equipmentButton = new ButtonText(new Vector2f(-0.6f, -0.3f), MAIN_SCALE, MAIN_COLOR, Color.BLACK, Color.BLACK, "Equipment"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				state = State.EQUIPMENT;
-			}
-		};
-		elementsButton = new ButtonText(new Vector2f(-0.6f, -0.6f), MAIN_SCALE, MAIN_COLOR, Color.BLACK, Color.BLACK, "Elements"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				state = State.ELEMENTS;
-			}
-		};
+	public void addComponents() {
+            showState = State.BASIC;
+            Properties buttonProperties = Properties.createButton(BUTTON_COLOR, BUTTON_BORDER_COLOR);
+            Properties borderProperties = Properties.createButton(HOVER_COLOR, HOVER_BORDER_COLOR);
+            Properties activeProperties = Properties.createButton(ACTIVE_COLOR, ACTIVE_BORDER_COLOR);
+                addComponent(new TextButton("Close", Properties.createButton(BUTTON_COLOR, BUTTON_BORDER_COLOR), Properties.createButton(HOVER_COLOR, HOVER_BORDER_COLOR), new Runnable(){
+                
+                    @Override
+                    public void run() {
+                        Game.getBattle().setCurrentGui(returnGui);
+                    }
+                }), 0.05f, 0.8f, 0.35f, 0.9f);
+                addComponent(new ActivatableTextButton("Basic Info", buttonProperties, borderProperties, activeProperties, new Runnable(){
+                    
+                    @Override
+                    public void run() {
+                        showState = State.BASIC;
+                    }  
+                }, new Condition(){
+                    
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.BASIC;
+                    }
+                }), 0.05f, 0.45f, 0.35f, 0.55f);
+                addComponent(new ActivatableTextButton("Equipment", buttonProperties, borderProperties, activeProperties, new Runnable(){
+                    
+                    @Override
+                    public void run() {
+                        showState = State.EQUIPMENT;
+                    }  
+                }, new Condition(){
+                    
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.EQUIPMENT;
+                    }
+                }), 0.05f, 0.3f, 0.35f, 0.4f);
+                addComponent(new ActivatableTextButton("Elements", buttonProperties, borderProperties, activeProperties, new Runnable(){
+                    
+                    @Override
+                    public void run() {
+                        showState = State.ELEMENTS;
+                    }  
+                }, new Condition(){
+                    
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.ELEMENTS;
+                    }
+                }), 0.05f, 0.15f, 0.35f, 0.25f);
 		int width = (int) (1.0f * GameScreen.getWidth());
 		int height = (int) (1.0f * GameScreen.getHeight());
 		BufferedImage backGroundImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
@@ -136,7 +112,7 @@ public class GuiBattleCharacter implements Gui {
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(dx, dy, width - 2 * dx, height - 2 * dy);
 		g.dispose();
-		backGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(backGroundImage, false)));
+                addComponent(new SimpleImageComponent(state.getWindow().getTextureLoader().loadTexture(backGroundImage)), 0, 0, 1, 1);
 		BufferedImage baseImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = baseImage.createGraphics();
 		g.setFont(STATUS_FONT);
@@ -186,7 +162,12 @@ public class GuiBattleCharacter implements Gui {
 		g.setColor(Color.TURN_SPEED.toAWTColor());
 		g.drawString("Speed: " + character.getTurnSpeed(), width * 0.6f, height * 0.8f);
 		g.dispose();
-		baseBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(baseImage, true)));
+                addComponent(new ConditionalImageComponent(state.getWindow().getTextureLoader().loadTexture(baseImage), new Condition(){
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.BASIC;
+                    }
+                }), 0, 0, 1, 1);
 		BufferedImage equipmentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		g = equipmentImage.createGraphics();
 		Equipment equipment = character.getEquipment();
@@ -200,9 +181,14 @@ public class GuiBattleCharacter implements Gui {
 		drawItemTexture(g, equipment.getLeftShoe(), width * 0.4f, height * 0.7f);
 		drawItemTexture(g, equipment.getRightShoe(), width * 0.8f, height * 0.7f);
 		g.dispose();
-		equipmentBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(equipmentImage, true)));
-		BufferedImage elementImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		g = elementImage.createGraphics();
+                addComponent(new ConditionalImageComponent(state.getWindow().getTextureLoader().loadTexture(equipmentImage), new Condition(){
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.EQUIPMENT;
+                    }
+                }), 0, 0, 1, 1);
+		BufferedImage elementsImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		g = elementsImage.createGraphics();
 		g.setColor(Color.BLACK.toAWTColor());
 		g.setFont(ELEMENT_FONT);
 		g.drawString("Element", width * 0.4f, height * 0.2f);
@@ -221,7 +207,12 @@ public class GuiBattleCharacter implements Gui {
 		drawElement(g, BattleElement.SPIRITUAL, es, width, height * 0.75f);
 		drawElement(g, BattleElement.PSYCHIC, es, width, height * 0.8f);
 		g.dispose();
-		elementsBackGround = new OldGuiTexture(new Vector2f(), new Vector2f(1.0f, 1.0f), new Texture(Resources.loadTexture(elementImage, true)));
+                addComponent(new ConditionalImageComponent(state.getWindow().getTextureLoader().loadTexture(elementsImage), new Condition(){
+                    @Override
+                    public boolean isTrue() {
+                        return showState == State.ELEMENTS;
+                    }
+                }), 0, 0, 1, 1);
 	}
 	
 	private void drawBar(Graphics2D g, int width, int height, float part, float y){
@@ -240,31 +231,6 @@ public class GuiBattleCharacter implements Gui {
 	private void drawItemTexture(Graphics2D g, Item item, float x, float y){
 		if(item != null)
 			g.drawImage(item.getTexture().getImage(), (int) x, (int) y, (int) x + 64, (int) y + 64, 0, 0, 32, 32, null);
-	}
-
-	@Override
-	public void open() {
-		state = State.BASIC;
-	}
-
-	@Override
-	public Color getBackGroundColor() {
-		return null;
-	}
-	
-	protected void leftClick(float x, float y){
-		if(click(returnButton, x, y)) return;
-		if(click(baseButton, x, y)) return;
-		if(click(equipmentButton, x, y)) return;
-		if(click(elementsButton, x, y)) return;
-	}
-	
-	protected boolean click(IButton button, float x, float y){
-		if(button.isHit(x, y)){
-			button.leftClick(x, y);
-			return true;
-		}
-		return false;
 	}
 	
 	protected static enum State {
