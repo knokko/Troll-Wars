@@ -74,6 +74,7 @@ public class GuiBattle extends GuiMenu {
 	
 	@Override
 	public void render(GuiRenderer renderer){
+		//TEST
 		renderer.start(this);
 		if(state != State.WAITING)
 			render(stopButton, renderer);
