@@ -9,8 +9,10 @@ import nl.knokko.battle.move.BattleMove;
 import nl.knokko.battle.move.FightMoveOption;
 import nl.knokko.battle.move.ItemMoveOption;
 import nl.knokko.battle.move.MoveSkipTurn;
+import nl.knokko.gui.component.WrapperComponent;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.simple.ConditionalColorComponent;
+import nl.knokko.gui.component.text.ActivatableTextButton;
 import nl.knokko.gui.component.text.ConditionalTextButton;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.render.GuiRenderer;
@@ -24,7 +26,6 @@ import nl.knokko.main.Game;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.color.ColorAlpha;
-import nl.knokko.util.resources.Resources;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -43,20 +44,9 @@ public class GuiBattle extends GuiMenu {
 	protected final Battle battle;
 	
 	protected State state;
-	
-	protected TextButton stopButton;
-	protected TextButton runButton;
-	protected ButtonText fightButton;
-	protected ButtonText itemButton;
-	protected TextButton waitButton;
-	protected TextButton armButton;
-	
-	protected FightCategoryButton[] fightCategoryButtons;
-	protected ButtonText fightCategoryReturnButton;
+        
+        protected ArmComponent armComponent = new ArmComponent();
 	protected FightMoveButton[] fightMoveButtons;
-	
-	protected ItemCategoryButton[] itemCategoryButtons;
-	protected ButtonText itemCategoryReturnButton;
 	protected ItemMoveButton[] itemMoveButtons;
 	
 	protected FightMoveOption selectedMove;
@@ -65,9 +55,6 @@ public class GuiBattle extends GuiMenu {
 	protected SelectTargetButton[] playerButtons;
 	protected SelectTargetButton[] opponentButtons;
 	protected ButtonText targetReturnButton;
-	
-	protected OldGuiTexture fightCategoryBackground;
-	protected OldGuiTexture fightMoveBackground;
 	
 	protected int scroll;
 	
@@ -82,128 +69,32 @@ public class GuiBattle extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addComponent(new ConditionalColorComponent(Color.ORANGE, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE;
-			}
-		}), 0.675f, 0f, 0.925f, 0.4f);
-		addComponent(new ConditionalColorComponent(Color.BLUE, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state == State.SELECT_MOVE;
-			}
-			
-		}), 0.425f, 0.125f, 0.675f, 0.775f);
-		addComponent(new ConditionalTextButton("Stop", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				Game.stop(true);
-			}
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state != State.WAITING;
-			}
-			
-		}), 0.6f, 0.875f, 0.9f, 0.975f);
-		addComponent(new ConditionalTextButton("Run", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				Game.getBattle().run();
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return battle.canRun();
-			}
-			
-		}), 0.025f, 0.875f, 0.175f, 0.975f);
-		addComponent(new ConditionalTextButton("Fight", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				toSelectMoveCatState();
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return hasFightMoves && (state == State.SELECT_ACTION || state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM);
-			}
-			
-		}), 0.675f, 0.025f, 0.925f, 0.125f);
-		addComponent(new ConditionalTextButton("Cancel", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				toSelectActionState();
-				hasCategories = null;
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE;
-			}
-			
-		}), 0.675f, 0.025f, 0.925f, 0.125f);
-		addComponent(new ConditionalTextButton("Items", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				toSelectItemCatState();
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return hasItemMoves && (state == State.SELECT_ACTION || state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE);
-			}
-			
-		}), 0.375f, 0.025f, 0.625f, 0.125f);
-		addComponent(new ConditionalTextButton("Cancel", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				toSelectActionState();
-				hasCategories = null;
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM;
-			}
-			
-		}), 0.375f, 0.025f, 0.625f, 0.125f);
-		addComponent(new ConditionalTextButton("Wait", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-			@Override
-			public void run() {
-				battle.selectPlayerMove(new MoveSkipTurn());
-				toWaitingState();
-			}
-			
-		}, new Condition(){
-
-			@Override
-			public boolean isTrue() {
-				return state == State.SELECT_ACTION || state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE || state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM;
-			}
-			
-		}), 0.05f, 0.025f, 0.25f, 0.125f);
+		addComponent(new ConditionalColorComponent(Color.ORANGE, () -> state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE), 0.675f, 0f, 0.925f, 0.4f);
+		addComponent(new ConditionalColorComponent(Color.BLUE, () -> state == State.SELECT_MOVE), 0.425f, 0.125f, 0.675f, 0.775f);
+		addComponent(new ConditionalTextButton("Stop", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    Game.stop(true);
+                }, () -> state != State.WAITING), 0.6f, 0.875f, 0.9f, 0.975f);
+		addComponent(new ConditionalTextButton("Run", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    Game.getBattle().run();
+                }, () -> battle.canRun()), 0.025f, 0.875f, 0.175f, 0.975f);
+		addComponent(new ConditionalTextButton("Fight", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    toSelectMoveCatState();
+                }, () -> hasFightMoves && (state == State.SELECT_ACTION || state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM)), 0.675f, 0.025f, 0.925f, 0.125f);
+		addComponent(new ConditionalTextButton("Cancel", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    toSelectActionState();
+                    hasCategories = null;
+                }, () -> state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE), 0.675f, 0.025f, 0.925f, 0.125f);
+		addComponent(new ConditionalTextButton("Items", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    toSelectItemCatState();
+                }, () -> hasItemMoves && (state == State.SELECT_ACTION || state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE)), 0.375f, 0.025f, 0.625f, 0.125f);
+		addComponent(new ConditionalTextButton("Cancel", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    toSelectActionState();
+                    hasCategories = null;
+                }, () -> state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM), 0.375f, 0.025f, 0.625f, 0.125f);
+		addComponent(new ConditionalTextButton("Wait", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    battle.selectPlayerMove(new MoveSkipTurn());
+                    toWaitingState();
+                }, () -> state == State.SELECT_ACTION || state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE || state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM), 0.05f, 0.025f, 0.25f, 0.125f);
 		FightMoveOption.Category[] fightCategories = FightMoveOption.Category.values();
 		for(int index = 0; index < fightCategories.length; index++){
 			addComponent(new FightCategoryButton(fightCategories[index]), 0.675f, 0.125f + (fightCategories.length - 1 - index) * 0.05f, 0.925f, 0.225f + (fightCategories.length - 1 - index) * 0.05f);
@@ -212,14 +103,12 @@ public class GuiBattle extends GuiMenu {
 		for(int index = 0; index < itemCategories.length; index++){
 			addComponent(new ItemCategoryButton(itemCategories[index]), 0.375f, 0.125f + (itemCategories.length - 1 - index) * 0.05f, 0.625f, 0.225f + (itemCategories.length - 1 - index) * 0.05f);
 		}
+                addComponent(armComponent, 0.3f, 0.875f, 0.5f, 0.975f);
 	}
 	
 	@Override
 	public void render(GuiRenderer renderer){
 		super.render(renderer);
-		if(state == State.SELECT_ACTION && armButton != null){//TODO try to add armButton like a component instead of hardcoding like this (same for other buttons)
-			armButton.render(renderer.getArea(0.3f, 0.875f, 0.5f, 0.975f));
-		}
 		if(state == State.SELECT_MOVE){
 			render(renderer, fightMoveButtons);
 		}
@@ -263,36 +152,6 @@ public class GuiBattle extends GuiMenu {
 	}
 	
 	protected void leftClick(float x, float y){
-		if(state != State.WAITING)
-			if(click(stopButton, x, y)) return;
-		if(battle.canRun())
-			if(click(runButton, x, y)) return;
-		if(state == State.SELECT_ACTION || state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE || state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM){
-			if(click(waitButton, x, y)) return;
-		}
-		if(state == State.SELECT_ACTION){
-			if(hasFightMoves)
-				if(click(fightButton, x, y)) return;
-			if(hasItemMoves)
-				if(click(itemButton, x, y)) return;
-			if(armButton != null && click(armButton, x, y)) return;
-		}
-		if(state == State.SELECT_MOVE_CATEGORY || state == State.SELECT_MOVE){
-			for(int i = 0; i < fightCategoryButtons.length; i++)
-				if(hasCategories[i])
-					if(click(fightCategoryButtons[i], x, y)) return;
-			if(click(fightCategoryReturnButton, x, y)) return;
-			if(hasItemMoves)
-				if(click(itemButton, x, y)) return;
-		}
-		if(state == State.SELECT_ITEM_CATEGORY || state == State.SELECT_ITEM){
-			for(int i = 0; i < itemCategoryButtons.length; i++)
-				if(hasCategories[i])
-					if(click(itemCategoryButtons[i], x, y)) return;
-			if(click(itemCategoryReturnButton, x, y)) return;
-			if(hasFightMoves)
-				if(click(fightButton, x, y)) return;
-		}
 		if(state == State.SELECT_MOVE){
 			click(x, y, fightMoveButtons);
 		}
@@ -419,25 +278,11 @@ public class GuiBattle extends GuiMenu {
 		state = State.SELECT_ACTION;
 		String arm = battle.getChoosingPlayer().getActiveArm();
 		if(arm != null){
-			/*
-			armButton = new ButtonText(new Vector2f(-0.2f, 0.85f), new Vector2f(0.2f, 0.1f), BUTTON_COLOR, Color.BLACK, Color.BLACK, arm){
-
-				@Override
-				public void leftClick(float x, float y) {
-					battle.getChoosingPlayer().swapArm();
-					toSelectActionState();
-				}
-			};*/
-			//TODO arm button
-			armButton = new TextButton(arm, BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-				@Override
-				public void run() {
-					battle.getChoosingPlayer().swapArm();
-					toSelectActionState();
-				}
-			});
+                    armComponent.setText(arm);
 		}
+                else {
+                    armComponent.setNoArms();
+                }
 		hasItemMoves = false;
 		ItemMoveOption[] items = battle.getChoosingPlayer().getItems();
 		for(ItemMoveOption item : items){
@@ -519,62 +364,88 @@ public class GuiBattle extends GuiMenu {
 		SELECT_ITEM_CATEGORY,
 		SELECT_ITEM;
 	}
+        
+        protected static final Properties FIGHT_PROPERTIES = Properties.createButton(new java.awt.Color(150, 100, 0), new java.awt.Color(50, 50, 0), new java.awt.Color(50, 50, 0));
+	protected static final Properties FIGHT_HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(200, 140, 0), new java.awt.Color(80, 80, 0), new java.awt.Color(80, 80, 0));
 	
 	protected class FightCategoryButton extends ConditionalTextButton {
-		
-		protected static final Properties PROPERTIES = Properties.createButton(new java.awt.Color(150, 100, 0), new java.awt.Color(50, 50, 0), new java.awt.Color(50, 50, 0));
-		protected static final Properties HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(200, 140, 0), new java.awt.Color(80, 80, 0), new java.awt.Color(80, 80, 0));
 		
 		protected final FightMoveOption.Category category;
 		
 		protected FightCategoryButton(FightMoveOption.Category category){
-			super(category.getDisplayName(), PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-				@Override
-				public void run() {
-					toSelectMoveState(FightCategoryButton.this.category);
-				}
-				
-			}, new Condition(){
-
-				@Override
-				public boolean isTrue() {
-					return (GuiBattle.this.state == State.SELECT_MOVE_CATEGORY || GuiBattle.this.state == State.SELECT_MOVE) && GuiBattle.this.hasCategories[FightCategoryButton.this.category.ordinal()];
-				}
-			});
+			super(category.getDisplayName(), FIGHT_PROPERTIES, FIGHT_HOVER_PROPERTIES, new FightCategoryClickAction(), new FightCategoryCondition());
 			this.category = category;
+                        ((FightCategoryClickAction)this.clickAction).button = this;
+                        ((FightCategoryCondition)this.condition).button = this;
 		}
+                
+                protected GuiBattle getBattle(){
+                    return GuiBattle.this;
+                }
 	}
+        
+        protected static class FightCategoryClickAction implements Runnable {
+            
+            protected FightCategoryButton button;
+            
+            @Override
+            public void run(){
+                button.getBattle().toSelectMoveState(button.category);
+            }
+        }
+        
+        protected static class FightCategoryCondition implements Condition {
+            
+            protected FightCategoryButton button;
+            
+            @Override
+            public boolean isTrue(){
+                return (button.getBattle().state == State.SELECT_MOVE_CATEGORY || button.getBattle().state == State.SELECT_MOVE) && button.getBattle().hasCategories[button.category.ordinal()];
+            }
+        }
 	
 	protected static final Color ITEM_CATEGORY_BUTTON_COLOR = new Color(0, 150, 150);
 	protected static final Color ITEM_CATEGORY_BORDER_COLOR = new Color(0, 50, 50);
-	protected static final Color ITEM_CATEGORY_TEXT_COLOR = new Color(0, 50, 50);
+	protected static final Color ITEM_CATEGORY_TEXT_COLOR = new Color(0, 50, 50);  
+        
+        protected static final Properties ITEM_PROPERTIES = Properties.createButton(new java.awt.Color(0, 150, 150), new java.awt.Color(0, 50, 50), new java.awt.Color(0, 50, 50));
+	protected static final Properties ITEM_HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(0, 200, 200), new java.awt.Color(0,  80, 80), new java.awt.Color(0, 80, 80));
 	
 	protected class ItemCategoryButton extends ConditionalTextButton {
-		
-		protected static final Properties PROPERTIES = Properties.createButton(new java.awt.Color(0, 150, 150), new java.awt.Color(0, 50, 50), new java.awt.Color(0, 50, 50));
-		protected static final Properties HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(0, 200, 200), new java.awt.Color(0,  80, 80), new java.awt.Color(0, 80, 80));
 		
 		protected final ItemMoveOption.Category category;
 		
 		protected ItemCategoryButton(ItemMoveOption.Category category){
-			super(category.getDisplayName(), PROPERTIES, HOVER_PROPERTIES, new Runnable(){
-
-				@Override
-				public void run() {
-					toSelectItemState(ItemCategoryButton.this.category);
-				}
-				
-			}, new Condition(){
-
-				@Override
-				public boolean isTrue() {
-					return (GuiBattle.this.state == State.SELECT_ITEM_CATEGORY || GuiBattle.this.state == State.SELECT_ITEM) && hasCategories[ItemCategoryButton.this.category.ordinal()];
-				}
-			});
+			super(category.getDisplayName(), ITEM_PROPERTIES, ITEM_HOVER_PROPERTIES, new ItemCategoryClickAction(), new ItemCategoryCondition());
 			this.category = category;
+                        ((ItemCategoryClickAction)this.clickAction).button = this;
+                        ((ItemCategoryCondition)this.condition).button = this;
 		}
+
+                protected GuiBattle getBattle(){
+                    return GuiBattle.this;
+                }
 	}
+        
+        protected static class ItemCategoryClickAction implements Runnable {
+            
+            protected ItemCategoryButton button;
+                    
+            @Override
+            public void run() {
+		button.getBattle().toSelectItemState(button.category);
+            }
+        }
+        
+        protected static class ItemCategoryCondition implements Condition {
+            
+            protected ItemCategoryButton button;
+            
+            @Override
+            public boolean isTrue(){
+                return (button.getBattle().state == State.SELECT_ITEM_CATEGORY || button.getBattle().state == State.SELECT_ITEM) && button.getBattle().hasCategories[button.category.ordinal()];
+            }
+        }
 	
 	protected static final Color AVAILABLE_FIGHT_BUTTON_COLOR = new Color(0, 0, 150);
 	protected static final Color UNAVAILABLE_FIGHT_BUTTON_COLOR = new ColorAlpha(0, 0, 150, 100);
@@ -694,6 +565,72 @@ public class GuiBattle extends GuiMenu {
 				throw new IllegalStateException("Invalid state for target button: " + state);
 		}
 	}
+        
+    protected class ArmComponent extends WrapperComponent<TextButton> {
+            
+        public ArmComponent() {
+            super(null);
+        }
+        
+        @Override
+        public boolean isActive(){
+            return GuiBattle.this.state == State.SELECT_ACTION;
+        }
+        
+        public void setNoArms(){
+            setComponent(null);
+        }
+        
+        public void setText(String text){
+            if(component == null){
+                setComponent(new TextButton(text, BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> {
+                    battle.getChoosingPlayer().swapArm();
+                    toSelectActionState();
+                }));
+            }
+            else {
+                component.setText(text);
+            }
+        }
+    }
+    
+    protected class FightMovesComponent extends WrapperComponent<FightMovesMenu> {
+        
+        public FightMovesComponent() {
+            super(new FightMovesMenu());
+        }
+        
+    }
+    
+    protected static final Properties FIGHT_MOVE_DEFAULT = Properties.createButton(new java.awt.Color(), new java.awt.Color());
+    protected static final Properties FIGHT_MOVE_HOVER = Properties.createButton(new java.awt.Color(), new java.awt.Color());
+    protected static final Properties FIGHT_MOVE_INACTIVE = Properties.createButton(new java.awt.Color(), new java.awt.Color());
+    
+    protected class FightMovesMenu extends GuiMenu {
 
-	
+        @Override
+        protected void addComponents() {}
+        
+        public void setMoves(FightMoveOption[] moves){
+            for(FightMoveOption move : moves){
+                addComponent(new ActivatableTextButton(move.getName(), FIGHT_MOVE_DEFAULT, FIGHT_MOVE_HOVER, FIGHT_MOVE_INACTIVE, new FightMoveClickAction(move), () -> move.canCast(battle.getChoosingPlayer(), battle)), 0, , 1, );
+            }
+        }
+    }
+    
+    protected class FightMoveClickAction implements Runnable {
+        
+        protected FightMoveOption move;
+        
+        protected FightMoveClickAction(FightMoveOption move){
+            this.move = move;
+        }
+
+        @Override
+        public void run(){
+            if(move.canCast(battle.getChoosingPlayer(), battle)){
+                selectMove(move);
+            }
+        }
+    }
 }
