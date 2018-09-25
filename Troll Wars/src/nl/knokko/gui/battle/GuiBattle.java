@@ -45,9 +45,9 @@ public class GuiBattle extends GuiMenu {
 	
 	protected State state;
         
-        protected ArmComponent armComponent = new ArmComponent();
-	protected FightMoveButton[] fightMoveButtons;
-	protected ItemMoveButton[] itemMoveButtons;
+    protected final ArmComponent armComponent = new ArmComponent();
+    protected final FightMovesComponent fightMovesComponent = new FightMovesComponent();
+    protected final ItemMovesComponent itemMovesComponent = new ItemMovesComponent();
 	
 	protected FightMoveOption selectedMove;
 	protected ItemMoveOption selectedItem;
@@ -55,8 +55,6 @@ public class GuiBattle extends GuiMenu {
 	protected SelectTargetButton[] playerButtons;
 	protected SelectTargetButton[] opponentButtons;
 	protected ButtonText targetReturnButton;
-	
-	protected int scroll;
 	
 	protected boolean hasFightMoves;
 	protected boolean hasItemMoves;
@@ -103,18 +101,14 @@ public class GuiBattle extends GuiMenu {
 		for(int index = 0; index < itemCategories.length; index++){
 			addComponent(new ItemCategoryButton(itemCategories[index]), 0.375f, 0.125f + (itemCategories.length - 1 - index) * 0.05f, 0.625f, 0.225f + (itemCategories.length - 1 - index) * 0.05f);
 		}
-                addComponent(armComponent, 0.3f, 0.875f, 0.5f, 0.975f);
+        addComponent(armComponent, 0.3f, 0.875f, 0.5f, 0.975f);
+        addComponent(fightMovesComponent, 0.425f, 0.125f, 0.575f, 0.8f);
+        addComponent(itemMovesComponent, 0.225f, 0.125f, 0.425f, 0.8f);
 	}
 	
 	@Override
 	public void render(GuiRenderer renderer){
 		super.render(renderer);
-		if(state == State.SELECT_MOVE){
-			render(renderer, fightMoveButtons);
-		}
-		if(state == State.SELECT_ITEM){
-			render(renderer, itemMoveButtons);
-		}
 		if(state == State.SELECT_FIGHT_TARGET){
 			render(renderer, playerButtons);
 			render(renderer, opponentButtons);
@@ -152,12 +146,6 @@ public class GuiBattle extends GuiMenu {
 	}
 	
 	protected void leftClick(float x, float y){
-		if(state == State.SELECT_MOVE){
-			click(x, y, fightMoveButtons);
-		}
-		if(state == State.SELECT_ITEM){
-			if(click(x, y, itemMoveButtons)) return;
-		}
 		if(state == State.SELECT_FIGHT_TARGET){
 			if(click(x, y, playerButtons)) return;
 			if(click(x, y, opponentButtons)) return;
@@ -318,17 +306,13 @@ public class GuiBattle extends GuiMenu {
 	protected void toSelectMoveState(FightMoveOption.Category category){
 		state = State.SELECT_MOVE;
 		FightMoveOption[] moves = battle.getChoosingPlayer().getMoves(category);
-		fightMoveButtons = new FightMoveButton[moves.length];
-		for(int i = 0; i < moves.length; i++)
-			fightMoveButtons[i] = new FightMoveButton(moves[i], i, moves[i].canCast(battle.getChoosingPlayer(), battle));
+		fightMovesComponent.setMoves(moves);
 	}
 	
 	protected void toSelectItemState(ItemMoveOption.Category category){
 		state = State.SELECT_ITEM;
 		ItemMoveOption[] items = battle.getChoosingPlayer().getItems(category);
-		itemMoveButtons = new ItemMoveButton[items.length];
-		for(int i = 0; i < items.length; i++)
-			itemMoveButtons[i] = new ItemMoveButton(items[i], i);
+		itemMovesComponent.setItems(items);
 	}
 	
 	protected void toSelectTargetState(FightMoveOption move){
@@ -341,16 +325,6 @@ public class GuiBattle extends GuiMenu {
 		state = State.SELECT_ITEM_TARGET;
 		selectedItem = item;
 		addTargetButtons();
-	}
-
-	@Override
-	public void addButtons() {
-		
-	}
-
-	@Override
-	public void open() {
-		toWaitingState();
 	}
 	
 	protected static enum State {
@@ -365,7 +339,7 @@ public class GuiBattle extends GuiMenu {
 		SELECT_ITEM;
 	}
         
-        protected static final Properties FIGHT_PROPERTIES = Properties.createButton(new java.awt.Color(150, 100, 0), new java.awt.Color(50, 50, 0), new java.awt.Color(50, 50, 0));
+    protected static final Properties FIGHT_PROPERTIES = Properties.createButton(new java.awt.Color(150, 100, 0), new java.awt.Color(50, 50, 0), new java.awt.Color(50, 50, 0));
 	protected static final Properties FIGHT_HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(200, 140, 0), new java.awt.Color(80, 80, 0), new java.awt.Color(80, 80, 0));
 	
 	protected class FightCategoryButton extends ConditionalTextButton {
@@ -375,13 +349,13 @@ public class GuiBattle extends GuiMenu {
 		protected FightCategoryButton(FightMoveOption.Category category){
 			super(category.getDisplayName(), FIGHT_PROPERTIES, FIGHT_HOVER_PROPERTIES, new FightCategoryClickAction(), new FightCategoryCondition());
 			this.category = category;
-                        ((FightCategoryClickAction)this.clickAction).button = this;
-                        ((FightCategoryCondition)this.condition).button = this;
+            ((FightCategoryClickAction)this.clickAction).button = this;
+            ((FightCategoryCondition)this.condition).button = this;
 		}
                 
-                protected GuiBattle getBattle(){
-                    return GuiBattle.this;
-                }
+        protected GuiBattle getBattle(){
+        	return GuiBattle.this;
+        }
 	}
         
         protected static class FightCategoryClickAction implements Runnable {
@@ -468,51 +442,9 @@ public class GuiBattle extends GuiMenu {
 		return available ? AVAILABLE_FIGHT_TEXT_COLOR : UNAVAILABLE_FIGHT_TEXT_COLOR;
 	}
 	
-	protected class FightMoveButton extends ButtonText {
-		
-		protected FightMoveOption move;
-
-		public FightMoveButton(FightMoveOption move, int index, boolean available){
-			super(new Vector2f(0.1f, -0.65f + index * SCALE.y * 2.5f), SCALE, getFightButtonColor(available), getFightBorderColor(available), getFightTextColor(available), move.getName());
-			this.move = move;
-		}
-
-		@Override
-		public void leftClick(float x, float y) {
-			if(move.canCast(battle.getChoosingPlayer(), battle))
-				toSelectTargetState(move);
-		}
-		
-		@Override
-		public Vector2f getCentre(){
-			float y = centre.y - scroll * SCROLL_SCALE;
-			return new Vector2f(centre.x, y >= -0.75f && y <= 0.55f ? y : -10);
-		}
-	}
-	
 	protected static final Color ITEM_BUTTON_COLOR = new Color(0, 0, 200);
 	protected static final Color ITEM_BORDER_COLOR = new Color(0, 0, 100);
 	protected static final Color ITEM_TEXT_COLOR = new Color(0, 0, 50);
-	
-	protected class ItemMoveButton extends ButtonText {
-		
-		protected final ItemMoveOption move;
-
-		public ItemMoveButton(ItemMoveOption move, int index) {
-			super(new Vector2f(-0.3f, -0.65f + (index)), SCALE, ITEM_BUTTON_COLOR, ITEM_BORDER_COLOR, ITEM_TEXT_COLOR, move.getName());
-			this.move = move;
-		}
-
-		@Override
-		public void leftClick(float x, float y) {
-			toSelectTargetState(move);
-		}
-		
-		@Override
-		public Vector2f getCentre(){
-			return new Vector2f(centre.x, centre.y - scroll * SCROLL_SCALE);
-		}
-	}
 	
 	protected static final Color TARGET_ENEMY_BUTTON_COLOR = new Color(200, 100, 0);
 	protected static final Color TARGET_ENEMY_BORDER_COLOR = new Color(100, 50, 0);
@@ -600,11 +532,18 @@ public class GuiBattle extends GuiMenu {
             super(new FightMovesMenu());
         }
         
+        public void setMoves(FightMoveOption[] moves){
+        	if(component == null){
+        		component = new FightMovesMenu();
+        		component.setState(state);
+        	}
+        	component.setMoves(moves);
+        }
     }
     
-    protected static final Properties FIGHT_MOVE_DEFAULT = Properties.createButton(new java.awt.Color(), new java.awt.Color());
-    protected static final Properties FIGHT_MOVE_HOVER = Properties.createButton(new java.awt.Color(), new java.awt.Color());
-    protected static final Properties FIGHT_MOVE_INACTIVE = Properties.createButton(new java.awt.Color(), new java.awt.Color());
+    protected static final Properties FIGHT_MOVE_DEFAULT = Properties.createButton(new java.awt.Color(0, 0, 150), new java.awt.Color(0, 0, 50));
+    protected static final Properties FIGHT_MOVE_HOVER = Properties.createButton(new java.awt.Color(0, 0, 200), new java.awt.Color(0, 0, 70));
+    protected static final Properties FIGHT_MOVE_INACTIVE = Properties.createButton(new java.awt.Color(0, 0, 150, 100), new java.awt.Color(0, 0, 150, 100));
     
     protected class FightMovesMenu extends GuiMenu {
 
@@ -612,8 +551,11 @@ public class GuiBattle extends GuiMenu {
         protected void addComponents() {}
         
         public void setMoves(FightMoveOption[] moves){
+        	components.clear();
+        	int index = 0;
             for(FightMoveOption move : moves){
-                addComponent(new ActivatableTextButton(move.getName(), FIGHT_MOVE_DEFAULT, FIGHT_MOVE_HOVER, FIGHT_MOVE_INACTIVE, new FightMoveClickAction(move), () -> move.canCast(battle.getChoosingPlayer(), battle)), 0, , 1, );
+                addComponent(new ActivatableTextButton(move.getName(), FIGHT_MOVE_DEFAULT, FIGHT_MOVE_HOVER, FIGHT_MOVE_INACTIVE, new FightMoveClickAction(move), () -> move.canCast(battle.getChoosingPlayer(), battle)), 0, 1 - (1 + index) * 0.2f, 1, 1 - index * 0.2f);
+                index++;
             }
         }
     }
@@ -629,8 +571,118 @@ public class GuiBattle extends GuiMenu {
         @Override
         public void run(){
             if(move.canCast(battle.getChoosingPlayer(), battle)){
-                selectMove(move);
+                toSelectTargetState(move);
             }
         }
+    }
+    
+    protected class ItemMovesComponent extends WrapperComponent<ItemMovesMenu> {
+        
+        public ItemMovesComponent() {
+            super(new ItemMovesMenu());
+        }
+        
+        public void setItems(ItemMoveOption[] moves){
+        	if(component == null){
+        		component = new ItemMovesMenu();
+        		component.setState(state);
+        	}
+        	component.setItems(moves);
+        }
+    }
+    
+    protected static final Properties ITEM_MOVE_DEFAULT = Properties.createButton(new java.awt.Color(0, 0, 150), new java.awt.Color(0, 0, 50));
+    protected static final Properties ITEM_MOVE_HOVER = Properties.createButton(new java.awt.Color(0, 0, 200), new java.awt.Color(0, 0, 70));
+    protected static final Properties ITEM_MOVE_INACTIVE = Properties.createButton(new java.awt.Color(0, 0, 150, 100), new java.awt.Color(0, 0, 150, 100));
+    
+    protected class ItemMovesMenu extends GuiMenu {
+
+        @Override
+        protected void addComponents() {}
+        
+        public void setItems(ItemMoveOption[] moves){
+        	components.clear();
+        	int index = 0;
+            for(ItemMoveOption move : moves){
+                addComponent(new ActivatableTextButton(move.getName(), ITEM_MOVE_DEFAULT, ITEM_MOVE_HOVER, ITEM_MOVE_INACTIVE, new ItemMoveClickAction(move), () -> move.canUse(battle.getChoosingPlayer().getInventory(), battle.getChoosingPlayer(), battle)), 0, 1 - (1 + index) * 0.2f, 1, 1 - index * 0.2f);
+                index++;
+            }
+        }
+    }
+    
+    protected class ItemMoveClickAction implements Runnable {
+        
+        protected ItemMoveOption move;
+        
+        protected ItemMoveClickAction(ItemMoveOption move){
+            this.move = move;
+        }
+
+        @Override
+        public void run(){
+            if(move.canUse(battle.getChoosingPlayer().getInventory(), battle.getChoosingPlayer(), battle)){
+                toSelectTargetState(move);
+            }
+        }
+    }
+    
+    protected class MoveTargetsComponent extends WrapperComponent<MoveTargetsMenu> {
+
+		public MoveTargetsComponent() {
+			super(null);
+		}
+    	
+		public void setTargets(){
+			if(component == null){
+				component = new MoveTargetsMenu();
+				component.setState(state);
+			}
+			component.setTargets();
+		}
+    }
+    
+    protected static final Properties TARGET_ENEMY_DEFAULT = Properties.createButton(new java.awt.Color(200, 100, 0), new java.awt.Color(100, 50, 0));
+    protected static final Properties TARGET_ENEMY_HOVER = Properties.createButton(new java.awt.Color(250, 125, 0), new java.awt.Color(125, 60, 0));
+    protected static final Properties TARGET_ENEMY_DISABLED = Properties.createButton(new java.awt.Color(200, 100, 0, 100), new java.awt.Color(100, 50, 0, 100));
+    
+    protected static final Properties TARGET_PLAYER_DEFAULT = Properties.createButton(new java.awt.Color(0, 100, 200), new java.awt.Color(0, 50, 100));
+    protected static final Properties TARGET_PLAYER_HOVER = Properties.createButton(new java.awt.Color(0, 125, 250), new java.awt.Color(0, 60, 125));
+    protected static final Properties TARGET_PLAYER_DISABLED = Properties.createButton(new java.awt.Color(0, 100, 200, 100), new java.awt.Color(0, 50, 100, 100));
+    
+    protected class MoveTargetsMenu extends GuiMenu {
+    	
+    	@Override
+    	protected void addComponents(){}
+    	
+    	public void setTargets(){
+    		components.clear();
+    		BattleCreature[] players = battle.getPlayers();
+    		BattleCreature[] opponents = battle.getOpponents();
+    		//TODO add the target buttons
+    	}
+    	
+    	protected class PlayerButton extends ActivatableTextButton {
+
+			public PlayerButton(BattleCreature player) {
+				super(player.getName(), TARGET_PLAYER_DEFAULT, TARGET_PLAYER_HOVER, TARGET_PLAYER_DISABLED, new PlayerClickAction(player), () -> selectedMove.canCast(battle.getChoosingPlayer(), player, battle));
+			}
+    	}
+    	
+    	protected class PlayerClickAction implements Runnable {
+    		
+    		protected BattleCreature target;
+    		
+    		protected PlayerClickAction(BattleCreature target){
+    			this.target = target;
+    		}
+    		
+    		@Override
+    		public void run(){
+    			if(selectedMove.canCast(battle.getChoosingPlayer(), target, battle)){
+    				battle.selectPlayerMove(selectedMove.createMove(battle.getChoosingPlayer(), target, battle));
+    				toWaitingState();
+    			}
+    		}
+    	}
     }
 }
