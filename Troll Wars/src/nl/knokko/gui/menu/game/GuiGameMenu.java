@@ -23,12 +23,12 @@
  */
 package nl.knokko.gui.menu.game;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import nl.knokko.gamestate.StateGameMenu;
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.button.ButtonLink;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.text.TextButton;
+import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.main.Game;
 import nl.knokko.util.color.Color;
 
@@ -36,6 +36,9 @@ public class GuiGameMenu extends GuiMenu {
 	
 	private static final Color BUTTON_COLOR = new Color(0, 50, 200);
 	private static final Color BORDER_COLOR = new Color(0, 20, 50);
+    
+    private static final Properties BUTTON_PROPERTIES = Properties.createButton(new java.awt.Color(0, 50, 200), new java.awt.Color(0, 20, 50));
+    private static final Properties HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(0, 60, 250), new java.awt.Color(0, 30, 70));
 	
 	private final StateGameMenu state;
 
@@ -45,16 +48,10 @@ public class GuiGameMenu extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addButton(new ButtonCloseMenu(new Vector2f(0.65f, -0.6f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR));
-		addButton(new ButtonText(new Vector2f(0.65f, -0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Save and stop"){
-
-			@Override
-			public void leftClick(float x, float y) {
-				Game.stop(true);
-			}
-		});
-		addButton(new ButtonLink(new Vector2f(-0.65f, 0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Inventory", state.getInventory(), state));
-		addButton(new ButtonLink(new Vector2f(-0.65f, 0.6f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Characters", state.getPlayersMenu(), state));
+        addComponent(new ButtonCloseMenu(BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.675f, 0.15f, 0.975f, 0.25f);
+        addComponent(new TextButton("Save and stop", BUTTON_PROPERTIES, HOVER_PROPERTIES, () -> Game.stop(true)), 0.675f, 0.025f, 0.975f, 0.125f);
+        addComponent(new ButtonLink("Inventory", state, state.getInventory(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.025f, 0.875f, 0.325f, 0.975f);
+        addComponent(new ButtonLink("Characters", state, state.getPlayersMenu(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.025f, 0.75f, 0.325f, 0.85f);
 	}
 	
 	@Override
