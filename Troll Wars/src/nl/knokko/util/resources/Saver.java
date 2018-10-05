@@ -71,9 +71,18 @@ public final class Saver {
 	
 	public static String validateSaveName(String name){
 		try {
-			Files.createFile(new File(getSaveName(name)).toPath());
-			new File(getSaveName(name)).delete();
-			return null;
+			String result = null;
+			File testFile = new File(getSaveName(name));
+			FileOutputStream output = new FileOutputStream(testFile);
+			output.write(100);
+			output.close();
+			FileInputStream input = new FileInputStream(testFile);
+			if(input.read() != 100) {
+				result = "Input doesn't equal output";
+			}
+			input.close();
+			testFile.delete();
+			return result;
 		} catch(Exception ex){
 			ex.printStackTrace();
 			if(ex.getLocalizedMessage().length() < 20)
@@ -90,13 +99,9 @@ public final class Saver {
 		String absName = savesFolder.getAbsolutePath() + File.separator + "a";
 		for(int i = 0; i < saveName.length(); i++){
 			int c = (int) saveName.charAt(i);
-			if(i != 0 && c != 0)
+			if(i != 0)
 				absName += "k";
-			if(c != 0){
-				String extra = c + "";
-				extra = replace(extra);
-				absName += extra;
-			}
+			absName += replace(Integer.toString(c));
 		}
 		String timeString = replace(time + "");
 		new File(absName).mkdir();
