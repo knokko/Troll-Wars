@@ -144,6 +144,8 @@ public class GuiPlayerEquipment extends GuiMenu {
 	private class EquipmentButton extends AbstractGuiComponent {
 		
 		private GuiTexture texture;
+		private boolean canHaveItem;
+		
 		private final String slot;
 		private final InventoryType type;
 		
@@ -159,17 +161,18 @@ public class GuiPlayerEquipment extends GuiMenu {
 
 		@Override
 		public void click(float x, float y, int button) {
-			if(button == MouseCode.BUTTON_LEFT)
+			if(canHaveItem && button == MouseCode.BUTTON_LEFT)
 				openItemSelection(this, type);
 		}
 		
 		@Override
 		public void render(GuiRenderer renderer){
-			//updateItem();
-			if(texture != null)
-				renderer.renderTexture(texture, 0, 0, 1, 1);
-			else
-				renderer.fill(BORDER_COLOR, 0, 0, 1, 1);
+			if(canHaveItem) {
+				if(texture != null)
+					renderer.renderTexture(texture, 0, 0, 1, 1);
+				else
+					renderer.fill(BORDER_COLOR, 0, 0, 1, 1);
+			}
 		}
 		
 		private Item getItem(){
@@ -180,8 +183,29 @@ public class GuiPlayerEquipment extends GuiMenu {
 			}
 		}
 		
+		private boolean canHaveItem() {
+			try {
+				return (Boolean) getPlayer().getEquipment().getClass().getMethod("canEquip" + slot).invoke(getPlayer().getEquipment());
+			} catch(Exception ex){
+				throw new RuntimeException("Can't check if slot " + slot + " accepts items", ex);
+			}
+		}
+		
+		// TODO Use this in the item selection before rendering the equipment available
+		private boolean canHaveItem(Item item) {
+			try {
+				return (Boolean) getPlayer().getEquipment().getClass().getMethod("canEquip" + slot).invoke(getPlayer().getEquipment(), item);
+			} catch(Exception ex){
+				throw new RuntimeException("Can't check if slot " + slot + " accepts item " + item, ex);
+			}
+		}
+		
 		private void updateItem(){
-			updateItem(getItem());
+			canHaveItem = canHaveItem();
+			if(canHaveItem)
+				updateItem(getItem());
+			else
+				texture = null;
 		}
 		
 		private void updateItem(Item item){
