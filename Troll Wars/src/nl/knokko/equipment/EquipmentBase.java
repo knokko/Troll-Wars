@@ -25,7 +25,6 @@ package nl.knokko.equipment;
 
 import nl.knokko.battle.element.ElementStatsMultiSum;
 import nl.knokko.battle.element.ElementalStatistics;
-import nl.knokko.inventory.InventoryType;
 import nl.knokko.items.Item;
 import nl.knokko.items.ItemArmor;
 import nl.knokko.items.ItemShoe;
@@ -73,6 +72,7 @@ public abstract class EquipmentBase implements Equipment {
 		return 0;
 	}
 	
+	@Override
 	public int getArmor(){
 		int armor = 0;
 		armor += getArmor(helmet);
@@ -85,6 +85,7 @@ public abstract class EquipmentBase implements Equipment {
 		return armor;
 	}
 	
+	@Override
 	public int getResistance(){
 		int resist = 0;
 		resist += getResistance(helmet);
@@ -97,6 +98,7 @@ public abstract class EquipmentBase implements Equipment {
 		return resist;
 	}
 	
+	@Override
 	public BitOutput save(BitOutput buffer){
 		buffer.addShort(Items.getID(helmet));
 		buffer.addShort(Items.getID(chestplate));
@@ -110,6 +112,7 @@ public abstract class EquipmentBase implements Equipment {
 		return buffer;
 	}
 	
+	@Override
 	public void load(BitInput buffer){
 		equipHelmet(Items.fromID(buffer.readShort()));
 		equipChestplate(Items.fromID(buffer.readShort()));
@@ -122,13 +125,9 @@ public abstract class EquipmentBase implements Equipment {
 		equipRightShoe(Items.fromID(buffer.readShort()));
 	}
 	
-	private void checkEquip(InventoryType type, Item item){
-		if(!canEquip(type) || !canEquip(item))
-			throw new IllegalArgumentException("This equipment can not equip " + item);
-	}
-	
+	@Override
 	public void equipLeftShoe(Item shoe){
-		checkEquip(InventoryType.BOOTS, shoe);
+		if(!canEquipLeftShoe() || !canEquipLeftShoe(shoe)) throw new IllegalArgumentException("Can't equip " + shoe + " on " + this);
 		this.leftShoe = (ItemShoe) shoe;
 		if(shoe != null)
 			eStats.set(this.leftShoe.getElementStats(), 7);
@@ -136,8 +135,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 7);
 	}
 	
+	@Override
 	public void equipRightShoe(Item shoe){
-		checkEquip(InventoryType.BOOTS, shoe);
+		if(!canEquipRightShoe() || !canEquipRightShoe(shoe)) throw new IllegalArgumentException("Can't equip " + shoe + " on " + this);
 		this.rightShoe = (ItemShoe) shoe;
 		if(shoe != null)
 			eStats.set(this.rightShoe.getElementStats(), 8);
@@ -145,8 +145,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 7);
 	}
 	
+	@Override
 	public void equipPants(Item pants){
-		checkEquip(InventoryType.PANTS, pants);
+		if(!canEquipPants() || !canEquipPants(pants)) throw new IllegalArgumentException("Can't equip " + pants + " on " + this);
 		this.pants = (ItemPants) pants;
 		if(pants != null)
 			eStats.set(this.pants.getElementStats(), 6);
@@ -154,8 +155,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 6);
 	}
 	
+	@Override
 	public void equipChestplate(Item plate){
-		checkEquip(InventoryType.CHESTPLATE, plate);
+		if(!canEquipChestplate() || !canEquipChestplate(plate)) throw new IllegalArgumentException("Can't equip " + plate + " on " + this);
 		this.chestplate = (ItemChestplate) plate;
 		if(plate != null)
 			eStats.set(this.chestplate.getElementStats(), 1);
@@ -163,8 +165,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 1);
 	}
 	
+	@Override
 	public void equipLeftGlobe(Item globe){
-		checkEquip(InventoryType.GLOBE, globe);
+		if(!canEquipLeftGlobe() || !canEquipLeftGlobe(globe)) throw new IllegalArgumentException("Can't equip " + globe + " on " + this);
 		this.leftGlobe = (ItemGlobe) globe;
 		if(globe != null)
 			eStats.set(this.leftGlobe.getElementStats(), 2);
@@ -172,8 +175,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 2);
 	}
 	
+	@Override
 	public void equipRightGlobe(Item globe){
-		checkEquip(InventoryType.GLOBE, globe);
+		if(!canEquipRightGlobe() || !canEquipRightGlobe(globe)) throw new IllegalArgumentException("Can't equip " + globe + " on " + this);
 		this.rightGlobe = (ItemGlobe) globe;
 		if(globe != null)
 			eStats.set(this.rightGlobe.getElementStats(), 3);
@@ -181,8 +185,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 3);
 	}
 	
+	@Override
 	public void equipLeftWeapon(Item weapon){
-		checkEquip(InventoryType.WEAPON, weapon);
+		if(!canEquipLeftWeapon() || !canEquipLeftWeapon(weapon)) throw new IllegalArgumentException("Can't equip " + weapon + " on " + this);
 		this.leftWeapon = (ItemWeapon) weapon;
 		if(weapon != null)
 			eStats.set(this.leftWeapon.getElementStats(), 4);
@@ -190,8 +195,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 4);
 	}
 	
+	@Override
 	public void equipRightWeapon(Item weapon){
-		checkEquip(InventoryType.WEAPON, weapon);
+		if(!canEquipRightWeapon() || !canEquipRightWeapon(weapon)) throw new IllegalArgumentException("Can't equip " + weapon + " on " + this);
 		this.rightWeapon = (ItemWeapon) weapon;
 		if(weapon != null)
 			eStats.set(this.rightWeapon.getElementStats(), 5);
@@ -199,8 +205,9 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 5);
 	}
 	
+	@Override
 	public void equipHelmet(Item helmet){
-		checkEquip(InventoryType.HELMET, helmet);
+		if(!canEquipHelmet() || !canEquipHelmet(helmet)) throw new IllegalArgumentException("Can't equip " + helmet + " on " + this);
 		this.helmet = (ItemHelmet) helmet;
 		if(helmet != null)
 			eStats.set(this.helmet.getElementStats(), 0);
@@ -208,48 +215,98 @@ public abstract class EquipmentBase implements Equipment {
 			eStats.set(null, 0);
 	}
 	
+	@Override
 	public ItemShoe getLeftShoe(){
 		return leftShoe;
 	}
 	
+	@Override
 	public ItemShoe getRightShoe(){
 		return rightShoe;
 	}
 	
+	@Override
 	public ItemPants getPants(){
 		return pants;
 	}
 	
+	@Override
 	public ItemChestplate getChestplate(){
 		return chestplate;
 	}
 	
+	@Override
 	public ItemGlobe getLeftGlobe(){
 		return leftGlobe;
 	}
 	
+	@Override
 	public ItemGlobe getRightGlobe(){
 		return rightGlobe;
 	}
 	
+	@Override
 	public ItemWeapon getLeftWeapon(){
 		return leftWeapon;
 	}
 	
+	@Override
 	public ItemWeapon getRightWeapon(){
 		return rightWeapon;
 	}
 	
+	@Override
 	public ItemHelmet getHelmet(){
 		return helmet;
+	}
+	
+	@Override
+	public boolean canEquipLeftShoe(Item shoe) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipRightShoe(Item shoe) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipPants(Item pants) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipChestplate(Item chestplate) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipLeftGlobe(Item globe) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipRightGlobe(Item globe) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipLeftWeapon(Item weapon) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipRightWeapon(Item weapon) {
+		return true;
+	}
+	
+	@Override
+	public boolean canEquipHelmet(Item helmet) {
+		return true;
 	}
 	
 	@Override
 	public ElementalStatistics getElementStats() {
 		return eStats;
 	}
-	
-	protected abstract boolean canEquip(InventoryType type);
-	
-	protected abstract boolean canEquip(Item item);
 }

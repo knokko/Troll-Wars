@@ -81,4 +81,40 @@ public interface Equipment {
 	public ItemHelmet getHelmet();
 	
 	ElementalStatistics getElementStats();
+	
+	boolean canEquipLeftShoe(Item shoe);
+	
+	boolean canEquipRightShoe(Item shoe);
+	
+	boolean canEquipPants(Item pants);
+	
+	boolean canEquipChestplate(Item plate);
+	
+	boolean canEquipLeftGlobe(Item globe);
+	
+	boolean canEquipRightGlobe(Item globe);
+	
+	boolean canEquipLeftWeapon(Item weapon);
+	
+	boolean canEquipRightWeapon(Item weapon);
+	
+	boolean canEquipHelmet(Item helmet);
+	
+	boolean canEquipLeftShoe();
+	
+	boolean canEquipRightShoe();
+	
+	boolean canEquipPants();
+	
+	boolean canEquipChestplate();
+	
+	boolean canEquipLeftGlobe();
+	
+	boolean canEquipRightGlobe();
+	
+	boolean canEquipLeftWeapon();
+	
+	boolean canEquipRightWeapon();
+	
+	boolean canEquipHelmet();
 }

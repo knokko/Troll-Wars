@@ -40,16 +40,6 @@ public class EquipmentPlayer extends EquipmentBase {
 		super(buffer);
 		this.player = player;
 	}
-
-	@Override
-	protected boolean canEquip(InventoryType type) {
-		return player.canEquip(type);
-	}
-
-	@Override
-	protected boolean canEquip(Item item) {
-		return player.canEquip(item);
-	}
 	
 	@Override
 	public void equipLeftShoe(Item boots){
@@ -103,5 +93,50 @@ public class EquipmentPlayer extends EquipmentBase {
 	public void equipHelmet(Item helmet){
 		super.equipHelmet(helmet);
 		player.refreshHelmet();
+	}
+
+	@Override
+	public boolean canEquipLeftShoe() {
+		return player.canEquip(InventoryType.BOOTS);
+	}
+
+	@Override
+	public boolean canEquipRightShoe() {
+		return player.canEquip(InventoryType.BOOTS);
+	}
+
+	@Override
+	public boolean canEquipPants() {
+		return player.canEquip(InventoryType.PANTS);
+	}
+
+	@Override
+	public boolean canEquipChestplate() {
+		return player.canEquip(InventoryType.CHESTPLATE);
+	}
+
+	@Override
+	public boolean canEquipLeftGlobe() {
+		return player.canEquip(InventoryType.GLOBE);
+	}
+
+	@Override
+	public boolean canEquipRightGlobe() {
+		return player.canEquip(InventoryType.GLOBE);
+	}
+
+	@Override
+	public boolean canEquipLeftWeapon() {
+		return player.canEquip(InventoryType.WEAPON);
+	}
+
+	@Override
+	public boolean canEquipRightWeapon() {
+		return player.canEquip(InventoryType.WEAPON);
+	}
+
+	@Override
+	public boolean canEquipHelmet() {
+		return player.canEquip(InventoryType.HELMET);
 	}
 }

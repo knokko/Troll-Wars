@@ -133,4 +133,94 @@ public class EquipmentNone implements Equipment {
 	public ElementalStatistics getElementStats() {
 		return SimpleElementStats.NEUTRAL;
 	}
+
+	@Override
+	public boolean canEquipLeftShoe(Item shoe) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightShoe(Item shoe) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipPants(Item pants) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipChestplate(Item plate) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipLeftGlobe(Item globe) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightGlobe(Item globe) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipLeftWeapon(Item weapon) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightWeapon(Item weapon) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipHelmet(Item helmet) {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipLeftShoe() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightShoe() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipPants() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipChestplate() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipLeftGlobe() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightGlobe() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipLeftWeapon() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipRightWeapon() {
+		return false;
+	}
+
+	@Override
+	public boolean canEquipHelmet() {
+		return false;
+	}
 }

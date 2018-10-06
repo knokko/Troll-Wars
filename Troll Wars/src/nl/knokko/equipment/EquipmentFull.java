@@ -23,7 +23,6 @@
  */
 package nl.knokko.equipment;
 
-import nl.knokko.inventory.InventoryType;
 import nl.knokko.items.Item;
 import nl.knokko.items.Items;
 import nl.knokko.util.bits.BitInput;
@@ -59,12 +58,47 @@ public class EquipmentFull extends EquipmentBase {
 	}
 
 	@Override
-	protected boolean canEquip(InventoryType type) {
+	public boolean canEquipLeftShoe() {
 		return true;
 	}
 
 	@Override
-	protected boolean canEquip(Item item) {
+	public boolean canEquipRightShoe() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipPants() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipChestplate() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipLeftGlobe() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipRightGlobe() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipLeftWeapon() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipRightWeapon() {
+		return true;
+	}
+
+	@Override
+	public boolean canEquipHelmet() {
 		return true;
 	}
 }
