@@ -567,25 +567,19 @@ public class GuiBattle extends GuiMenu {
     		BattleCreature[] players = battle.getPlayers();
     		BattleCreature[] opponents = battle.getOpponents();
             for(int index = 0; index < players.length; index++){
-                addComponent(new PlayerButton(players[index]), 0.1f + 0.2f * index, 0.7f, 0.25f + 0.2f * index, 0.8f);
+                addComponent(createPlayerButton(players[index]), 0.1f + 0.2f * index, 0.7f, 0.25f + 0.2f * index, 0.8f);
             }
             for(int index = 0; index < opponents.length; index++){
-                addComponent(new EnemyButton(opponents[index]), 0.1f + 0.2f * index, 0.2f, 0.25f + 0.2f * index, 0.3f);
+                addComponent(createEnemyButton(opponents[index]), 0.1f + 0.2f * index, 0.2f, 0.25f + 0.2f * index, 0.3f);
             }
     	}
     	
-    	protected class PlayerButton extends ActivatableTextButton {
-
-			public PlayerButton(BattleCreature player) {
-				super(player.getName(), TARGET_PLAYER_DEFAULT, TARGET_PLAYER_HOVER, TARGET_PLAYER_DISABLED, new TargetClickAction(player), () -> selectedMove.canCast(battle.getChoosingPlayer(), player, battle));
-			}
+    	protected ActivatableTextButton createPlayerButton(BattleCreature player) {
+    		return new ActivatableTextButton(player.getName(), TARGET_PLAYER_DEFAULT, TARGET_PLAYER_HOVER, TARGET_PLAYER_DISABLED, new TargetClickAction(player), () -> selectedMove.canCast(battle.getChoosingPlayer(), player, battle));
     	}
-        
-        protected class EnemyButton extends ActivatableTextButton {
-
-			public EnemyButton(BattleCreature enemy) {
-				super(enemy.getName(), TARGET_ENEMY_DEFAULT, TARGET_ENEMY_HOVER, TARGET_ENEMY_DISABLED, new TargetClickAction(enemy), () -> selectedMove.canCast(battle.getChoosingPlayer(), enemy, battle));
-			}
+    	
+    	protected ActivatableTextButton createEnemyButton(BattleCreature enemy) {
+    		return new ActivatableTextButton(enemy.getName(), TARGET_ENEMY_DEFAULT, TARGET_ENEMY_HOVER, TARGET_ENEMY_DISABLED, new TargetClickAction(enemy), () -> selectedMove.canCast(battle.getChoosingPlayer(), enemy, battle));
     	}
     	
     	protected class TargetClickAction implements Runnable {
@@ -648,25 +642,19 @@ public class GuiBattle extends GuiMenu {
     		BattleCreature[] players = battle.getPlayers();
     		BattleCreature[] opponents = battle.getOpponents();
             for(int index = 0; index < players.length; index++){
-                addComponent(new PlayerButton(players[index]), 0.1f + 0.2f * index, 0.7f, 0.25f + 0.2f * index, 0.8f);
+                addComponent(createPlayerButton(players[index]), 0.1f + 0.2f * index, 0.7f, 0.25f + 0.2f * index, 0.8f);
             }
             for(int index = 0; index < opponents.length; index++){
-                addComponent(new EnemyButton(opponents[index]), 0.1f + 0.2f * index, 0.2f, 0.25f + 0.2f * index, 0.3f);
+                addComponent(createEnemyButton(opponents[index]), 0.1f + 0.2f * index, 0.2f, 0.25f + 0.2f * index, 0.3f);
             }
     	}
     	
-    	protected class PlayerButton extends ActivatableTextButton {
-
-			public PlayerButton(BattleCreature player) {
-				super(player.getName(), TARGET_PLAYER_DEFAULT, TARGET_PLAYER_HOVER, TARGET_PLAYER_DISABLED, new TargetClickAction(player), () -> selectedItem.canUse(battle.getChoosingPlayer().getInventory(), player, battle));
-			}
+    	protected ActivatableTextButton createPlayerButton(BattleCreature player) {
+    		return new ActivatableTextButton(player.getName(), TARGET_PLAYER_DEFAULT, TARGET_PLAYER_HOVER, TARGET_PLAYER_DISABLED, new TargetClickAction(player), () -> selectedItem.canUse(battle.getChoosingPlayer().getInventory(), player, battle));
     	}
-        
-        protected class EnemyButton extends ActivatableTextButton {
-
-			public EnemyButton(BattleCreature enemy) {
-				super(enemy.getName(), TARGET_ENEMY_DEFAULT, TARGET_ENEMY_HOVER, TARGET_ENEMY_DISABLED, new TargetClickAction(enemy), () -> selectedItem.canUse(battle.getChoosingPlayer().getInventory(), enemy, battle));
-			}
+    	
+    	protected ActivatableTextButton createEnemyButton(BattleCreature enemy) {
+    		return new ActivatableTextButton(enemy.getName(), TARGET_ENEMY_DEFAULT, TARGET_ENEMY_HOVER, TARGET_ENEMY_DISABLED, new TargetClickAction(enemy), () -> selectedItem.canUse(battle.getChoosingPlayer().getInventory(), enemy, battle));
     	}
     	
     	protected class TargetClickAction implements Runnable {
