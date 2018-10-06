@@ -28,9 +28,13 @@ import org.lwjgl.util.vector.Vector2f;
 import nl.knokko.gamestate.StateGameMenu;
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.component.WrapperComponent;
+import nl.knokko.gui.component.inventory.ComponentInventory;
+import nl.knokko.gui.component.inventory.ComponentInventory.ClickAction;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.inventory.InventoryTypeBase;
+import nl.knokko.items.Item;
 import nl.knokko.main.Game;
 import nl.knokko.texture.SizedTexture;
 import nl.knokko.util.color.Color;
@@ -47,6 +51,8 @@ public class GuiInventory extends GuiMenu {
 	private SizedTexture materialsTexture;
 	private SizedTexture equipmentTexture;
 	private SizedTexture consumablesTexture;
+    
+    private InventoryTypeBase selectedType;
 	
 	private boolean hasTextures;
 
@@ -56,12 +62,16 @@ public class GuiInventory extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
+        
+        //TODO maybe, I should do a real rework
+        
 		/*
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, 0.7f), null));
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, 0.45f), InventoryTypeBase.MATERIAL));
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, 0.2f), InventoryTypeBase.EQUIPMENT));
 		addButton(new InventoryTypeButton(new Vector2f(-0.65f, -0.05f), InventoryTypeBase.CONSUMABLE));
 		*/
+        addComponent(new ComponentInventory(Game.getPlayerInventory().getItems(), (Item item) -> {}));
 		addButton(new ButtonLink(new Vector2f(-0.65f, -0.6f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Back to menu", state.getGameMenu(), state));
 		addButton(new ButtonCloseMenu(new Vector2f(-0.65f, -0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR));
 	}
@@ -108,4 +118,23 @@ public class GuiInventory extends GuiMenu {
 		
 	}
 	*/
+    
+    private class TypeWrapper extends WrapperComponent<ComponentInventory> {
+        
+        private final InventoryTypeBase type;
+        
+        public TypeWrapper(InventoryTypeBase type) {
+            super(new ComponentInventory(Game.getPlayerInventory().getItems(type), (Item item) -> {}));
+            this.type = type;
+        }
+        
+        @Override
+        public boolean isActive(){
+            return selectedType == null || selectedType == type;
+        }
+        
+        public void refresh(){
+            component.refresh(Game.getPlayerInventory().getItems(type));
+        }
+    }
 }
