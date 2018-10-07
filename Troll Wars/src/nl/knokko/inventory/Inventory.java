@@ -63,6 +63,17 @@ public interface Inventory {
 	 */
 	List<Item> getItems(InventoryType type);
 	
+	/**
+	 * @param filter The filter to use
+	 * @return all items in this inventory that pass the filter
+	 */
+	List<Item> getItems(ItemFilter filter);
+	
+	public static interface ItemFilter {
+		
+		boolean filter(Item item);
+	}
+	
 	public static class Helper {
 		
 		public static ItemMoveOption[] getItemMoves(Inventory inventory){

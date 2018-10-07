@@ -132,4 +132,16 @@ public class ArrayInventory implements Inventory {
 		return list;
 	}
 
+	@Override
+	public List<Item> getItems(ItemFilter filter) {
+		List<Item> list = new ArrayList<Item>();
+		for (int index = 0; index < amounts.length; index++) {
+			if (amounts[index] > 0) {
+				Item item = Items.fromID((short) (index + Short.MIN_VALUE));
+				if (filter.filter(item))
+					list.add(item);
+			}
+		}
+		return list;
+	}
 }
