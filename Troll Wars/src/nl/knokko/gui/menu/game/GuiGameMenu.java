@@ -23,22 +23,22 @@
  */
 package nl.knokko.gui.menu.game;
 
+import java.awt.Color;
+
 import nl.knokko.gamestate.StateGameMenu;
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.main.Game;
-import nl.knokko.util.color.Color;
+
 
 public class GuiGameMenu extends GuiMenu {
-	
-	private static final Color BUTTON_COLOR = new Color(0, 50, 200);
-	private static final Color BORDER_COLOR = new Color(0, 20, 50);
     
-    private static final Properties BUTTON_PROPERTIES = Properties.createButton(new java.awt.Color(0, 50, 200), new java.awt.Color(0, 20, 50));
-    private static final Properties HOVER_PROPERTIES = Properties.createButton(new java.awt.Color(0, 60, 250), new java.awt.Color(0, 30, 70));
+    private static final Properties BUTTON_PROPERTIES = Properties.createButton(new Color(0, 50, 200), new Color(0, 20, 50));
+    private static final Properties HOVER_PROPERTIES = Properties.createButton(new Color(0, 60, 250), new Color(0, 30, 70));
 	
 	private final StateGameMenu state;
 
@@ -55,7 +55,7 @@ public class GuiGameMenu extends GuiMenu {
 	}
 	
 	@Override
-	public Color getBackgroundColor(){
+	public GuiColor getBackgroundColor(){
 		return null;
 	}
 }
