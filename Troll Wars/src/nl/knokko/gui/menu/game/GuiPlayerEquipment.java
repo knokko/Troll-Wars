@@ -23,42 +23,35 @@
  */
 package nl.knokko.gui.menu.game;
 
-import java.util.List;
-
-import org.lwjgl.util.vector.Vector2f;
+import java.awt.Color;
 
 import nl.knokko.gamestate.StateGameMenu;
 import nl.knokko.gui.button.ButtonCloseMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.color.GuiColor;
+import nl.knokko.gui.color.SimpleGuiColor;
 import nl.knokko.gui.component.AbstractGuiComponent;
+import nl.knokko.gui.component.WrapperComponent;
+import nl.knokko.gui.component.inventory.ComponentInventory;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.text.ConditionalTextButton;
 import nl.knokko.gui.mousecode.MouseCode;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.texture.GuiTexture;
-import nl.knokko.inventory.InventoryType;
+import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.items.Item;
 import nl.knokko.main.Game;
-import nl.knokko.main.GameScreen;
 import nl.knokko.players.Player;
-import nl.knokko.texture.SizedTexture;
-import nl.knokko.texture.Texture;
-import nl.knokko.util.color.Color;
-import nl.knokko.util.color.ColorAlpha;
-import nl.knokko.util.resources.Resources;
 
 public class GuiPlayerEquipment extends GuiMenu {
 	
-	private static final Vector2f EQUIPMENT_SIZE = new Vector2f(0.04f, 0.04f);
-	private static final Color COVER = new ColorAlpha(0, 0, 0, 100);
-	
-	private static final Color BUTTON_COLOR = new Color(200, 100, 0);
-	private static final Color BORDER_COLOR = new Color(100, 50, 0);
+	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(200, 100, 0), new Color(100, 50, 0));
+	private static final Properties HOVER_PROPS = Properties.createButton(new Color(255, 125, 0), new Color(125, 65, 0));
 	
 	private final StateGameMenu state;
 	
-	private EquipmentButton selectedButton;
-	private List<Item> selectableItems;
-	private SizedTexture selectedInventoryTexture;
+	private WrapperComponent<ComponentInventory> equipmentSelect;
+	private EquipmentEmptyButton equipmentEmpty;
 
 	public GuiPlayerEquipment(StateGameMenu state) {
 		this.state = state;
@@ -66,80 +59,49 @@ public class GuiPlayerEquipment extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addButton(new GuiPlayerMenu.ButtonSwapPlayer(new Vector2f(-0.65f, 0f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, state.getPlayersMenu()));
-		addButton(new ButtonLink(new Vector2f(-0.65f, -0.6f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Back to characters", state.getPlayersMenu(), state));
-		addButton(new ButtonCloseMenu(new Vector2f(-0.65f, -0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR));
-		addButton(new EquipmentButton(new Vector2f(0.3f, 0.8f), EQUIPMENT_SIZE, "Helmet", InventoryType.HELMET));
-		addButton(new EquipmentButton(new Vector2f(0.0f, 0.5f), EQUIPMENT_SIZE, "LeftWeapon", InventoryType.WEAPON));
-		addButton(new EquipmentButton(new Vector2f(0.6f, 0.5f), EQUIPMENT_SIZE, "RightWeapon", InventoryType.WEAPON));
-		addButton(new EquipmentButton(new Vector2f(0.0f, 0.2f), EQUIPMENT_SIZE, "LeftGlobe", InventoryType.GLOBE));
-		addButton(new EquipmentButton(new Vector2f(0.6f, 0.2f), EQUIPMENT_SIZE, "RightGlobe", InventoryType.GLOBE));
-		addButton(new EquipmentButton(new Vector2f(0.3f, -0.1f), EQUIPMENT_SIZE, "Chestplate", InventoryType.CHESTPLATE));
-		addButton(new EquipmentButton(new Vector2f(0.3f, -0.4f), EQUIPMENT_SIZE, "Pants", InventoryType.PANTS));
-		addButton(new EquipmentButton(new Vector2f(0.0f, -0.7f), EQUIPMENT_SIZE, "LeftShoe", InventoryType.BOOTS));
-		addButton(new EquipmentButton(new Vector2f(0.6f, -0.7f), EQUIPMENT_SIZE, "RightShoe", InventoryType.BOOTS));
-	}
-	
-	@Override
-	public void render(GuiRenderer renderer){
-		super.render(renderer);
-		if(selectedInventoryTexture != null){
-			//TODO create another GuiComponent for the item selection
-			renderer.fill(COVER, 0, 0, 1, 1);
-			renderer.renderTextures(new Vector2f(0f, 1f - selectedInventoryTexture.getRelativeHeight()), new Vector2f(selectedInventoryTexture.getRelativeWidth(), selectedInventoryTexture.getRelativeHeight()), selectedInventoryTexture);
-		}
-	}
-	
-	@Override
-	public void click(float x, float y, int button){
-		if(button == MouseCode.BUTTON_LEFT){
-			if(selectedInventoryTexture != null){
-				Item item = selectedButton.getItem();
-				if(x >= -selectedInventoryTexture.getRelativeWidth() && x <= selectedInventoryTexture.getRelativeWidth()){
-					int index = (int) ((((1 - y) / 2) * GameScreen.getHeight()) / 64);
-					if(index < selectableItems.size()){
-						selectedButton.setItem(selectableItems.get(index));
-						if(item != null)
-							Game.getPlayerInventory().addItem(item);
-						Game.getPlayerInventory().removeItem(selectableItems.get(index));
-					}
-					else if(item != null){
-						selectedButton.setItem(null);
-						Game.getPlayerInventory().addItem(item);
-					}
-				}
-				else if(item != null){
-					selectedButton.setItem(null);
-					Game.getPlayerInventory().addItem(item);
-				}
-				closeItemSelection();
-			}
-			else
-				super.click(x, y, button);
-		}
+		equipmentSelect = new WrapperComponent<ComponentInventory>(null);
+		equipmentEmpty = new EquipmentEmptyButton();
+		addComponent(equipmentSelect, 0.7f, 0.15f, 0.95f, 0.95f);
+		addComponent(equipmentEmpty, 0.7f, 0.025f, 0.9f, 0.125f);
+		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.15f, 0.25f, 0.25f);
+		addComponent(new ButtonLink("Back to characters", state, state.getPlayersMenu(), BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.3f, 0.25f, 0.4f);
+		addComponent(new GuiPlayerMenu.ButtonSwapPlayer(BUTTON_PROPS, HOVER_PROPS, state.getPlayersMenu()), 0.05f, 0.5f, 0.25f, 0.6f);
+		
+		addComponent(new EquipmentButton("Helmet"), 0.45f, 0.6f, 0.55f, 0.7f);
+		addComponent(new EquipmentButton("Chestplate"), 0.45f, 0.5f, 0.55f, 0.6f);
+		addComponent(new EquipmentButton("LeftGlobe"), 0.35f, 0.5f, 0.45f, 0.6f);
+		addComponent(new EquipmentButton("RightGlobe"), 0.55f, 0.5f, 0.65f, 0.6f);
+		addComponent(new EquipmentButton("LeftWeapon"), 0.35f, 0.4f, 0.45f, 0.5f);
+		addComponent(new EquipmentButton("RightWeapon"), 0.55f, 0.4f, 0.65f, 0.5f);
+		addComponent(new EquipmentButton("Pants"), 0.45f, 0.3f, 0.55f, 0.4f);
+		addComponent(new EquipmentButton("LeftShoe"), 0.35f, 0.2f, 0.45f, 0.3f);
+		addComponent(new EquipmentButton("RightShoe"), 0.55f, 0.2f, 0.65f, 0.3f);
 	}
 	
 	private Player getPlayer(){
 		return Game.getGameMenu().getPlayersMenu().player;
 	}
 	
-	private void openItemSelection(EquipmentButton button, InventoryType type){
-		selectedButton = button;
-		selectableItems = Game.getPlayerInventory().getItems(type);
-		selectedInventoryTexture = Resources.createInventoryTexture(Game.getPlayerInventory(), selectableItems);
-		if(selectedInventoryTexture == null){
-			Game.getPlayerInventory().addItem(selectedButton.getItem());
-			selectedButton.setItem(null);
-			selectedButton = null;
-			selectableItems = null;
-		}
+	private void openItemSelection(EquipmentButton button){
+		equipmentSelect.setComponent(new ComponentInventory(Game.getPlayerInventory().getItems((Item item) -> {
+			return button.canHaveItem(item);
+		}), (Item item) -> {
+			Item old = button.getItem();
+			if (old != null)
+				Game.getPlayerInventory().addItem(old);
+			button.setItem(item);
+			Game.getPlayerInventory().removeItem(item);
+			closeItemSelection();
+		}));
+		equipmentEmpty.activeEquipment = button;
 	}
 	
 	private void closeItemSelection(){
-		selectedButton = null;
-		selectableItems = null;
-		selectedInventoryTexture = null;
+		equipmentEmpty.activeEquipment = null;
+		equipmentSelect.setComponent(null);
 	}
+	
+	private static final GuiColor EMPTY_COLOR = new SimpleGuiColor(200, 100, 0);
 	
 	private class EquipmentButton extends AbstractGuiComponent {
 		
@@ -147,11 +109,9 @@ public class GuiPlayerEquipment extends GuiMenu {
 		private boolean canHaveItem;
 		
 		private final String slot;
-		private final InventoryType type;
 		
-		private EquipmentButton(String slot, InventoryType type){
+		private EquipmentButton(String slot){
 			this.slot = slot;
-			this.type = type;
 		}
 		
 		@Override
@@ -162,7 +122,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 		@Override
 		public void click(float x, float y, int button) {
 			if(canHaveItem && button == MouseCode.BUTTON_LEFT)
-				openItemSelection(this, type);
+				openItemSelection(this);
 		}
 		
 		@Override
@@ -171,7 +131,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 				if(texture != null)
 					renderer.renderTexture(texture, 0, 0, 1, 1);
 				else
-					renderer.fill(BORDER_COLOR, 0, 0, 1, 1);
+					renderer.fill(EMPTY_COLOR, 0, 0, 1, 1);
 			}
 		}
 		
@@ -191,7 +151,6 @@ public class GuiPlayerEquipment extends GuiMenu {
 			}
 		}
 		
-		// TODO Use this in the item selection before rendering the equipment available
 		private boolean canHaveItem(Item item) {
 			try {
 				return (Boolean) getPlayer().getEquipment().getClass().getMethod("canEquip" + slot).invoke(getPlayer().getEquipment(), item);
@@ -244,5 +203,20 @@ public class GuiPlayerEquipment extends GuiMenu {
 
 		@Override
 		public void keyReleased(int keyCode) {}
+	}
+	
+	private class EquipmentEmptyButton extends ConditionalTextButton {
+		
+		private EquipmentButton activeEquipment;
+
+		public EquipmentEmptyButton() {
+			super("Empty slot", BUTTON_PROPS, HOVER_PROPS, null, null);
+			clickAction = () -> {
+				activeEquipment.setItem(null);
+			};
+			condition = () -> {
+				return activeEquipment != null;
+			};
+		}
 	}
 }
