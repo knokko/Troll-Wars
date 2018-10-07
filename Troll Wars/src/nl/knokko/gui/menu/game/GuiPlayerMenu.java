@@ -23,7 +23,7 @@
  */
 package nl.knokko.gui.menu.game;
 
-import org.lwjgl.util.vector.Vector2f;
+import java.awt.Color;
 
 import nl.knokko.gamestate.StateGameMenu;
 import nl.knokko.gui.button.ButtonCloseMenu;
@@ -34,12 +34,11 @@ import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.main.Game;
 import nl.knokko.players.Player;
-import nl.knokko.util.color.Color;
 
 public class GuiPlayerMenu extends GuiMenu {
 	
-	private static final Color BUTTON_COLOR = new Color(0, 150, 100);
-	private static final Color BORDER_COLOR = new Color(0, 50, 40);
+	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(0, 150, 100), new Color(0, 50, 40));
+	private static final Properties HOVER_PROPS = Properties.createButton(new Color(0, 200, 120), new Color(0, 65, 50));
 	
 	private final StateGameMenu state;
 	
@@ -52,10 +51,10 @@ public class GuiPlayerMenu extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addButton(new ButtonLink(new Vector2f(-0.65f, 0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Equipment", state.getPlayerEquipment(), state));
-		addButton(new ButtonSwapPlayer(new Vector2f(-0.65f, 0f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, this));
-		addButton(new ButtonLink(new Vector2f(-0.65f, -0.6f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR, Color.BLACK, "Back to menu", state.getGameMenu(), state));
-		addButton(new ButtonCloseMenu(new Vector2f(-0.65f, -0.85f), new Vector2f(0.3f, 0.1f), BUTTON_COLOR, BORDER_COLOR));
+		addComponent(new ButtonLink("Equipment", state, state.getPlayerEquipment(), BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.85f, 0.25f, 0.95f);
+		addComponent(new ButtonSwapPlayer(BUTTON_PROPS, HOVER_PROPS, this), 0.05f, 0.45f, 0.25f, 0.55f);
+		addComponent(new ButtonLink("Back to menu", state, state.getGameMenu(), BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.3f, 0.25f, 0.4f);
+		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.1f, 0.25f, 0.2f);
 	}
 	
 	void setPlayer(Player newPlayer){
