@@ -191,7 +191,7 @@ public class GuiLoadGame extends GuiMenu {
 				}
 			});
 			this.save = save;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(save, SELECTED_BUTTON_PROPERTIES, IMAGE_WIDTH, IMAGE_HEIGHT));
+			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(save, SELECTED_BUTTON_PROPERTIES));
 		}
 		
 		@Override
@@ -263,7 +263,7 @@ public class GuiLoadGame extends GuiMenu {
 				}
 			});
 			this.time = time;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(text, SELECTED_BUTTON_PROPERTIES, IMAGE_WIDTH, IMAGE_HEIGHT));
+			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(text, SELECTED_BUTTON_PROPERTIES));
 		}
 		
 		@Override
