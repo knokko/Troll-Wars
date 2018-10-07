@@ -56,21 +56,20 @@ public class TradeOffer {
 		return get;
 	}
 	
-	public boolean trade(Inventory inventory){
-		if(!canPay(inventory))
+	public boolean trade(Inventory inventory, int amount){
+		if(!canPay(inventory, amount))
 			return false;
 		for(ItemStack is : give)
-			inventory.removeItem(is.getItem(), is.getAmount());
+			inventory.removeItem(is.getItem(), is.getAmount() * amount);
 		for(ItemStack is : get)
-			inventory.addItems(is.getItem(), is.getAmount());
+			inventory.addItems(is.getItem(), is.getAmount() * amount);
 		return true;
 	}
 	
-	public boolean canPay(Inventory inventory){
-		for(ItemStack is : give){
-			if(inventory.getAmount(is.getItem()) < is.getAmount())
+	public boolean canPay(Inventory inventory, int amount){
+		for(ItemStack is : give)
+			if(inventory.getAmount(is.getItem()) < is.getAmount() * amount)
 				return false;
-		}
 		return true;
 	}
 	

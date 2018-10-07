@@ -40,7 +40,7 @@ public class TradeOffers {
 	public List<TradeOffer> getAvailableOffers(Inventory inventory){
 		List<TradeOffer> list = new ArrayList<TradeOffer>();
 		for(TradeOffer offer : offers)
-			if(offer.canPay(inventory))
+			if(offer.canPay(inventory, 1))
 				list.add(offer);
 		return list;
 	}
