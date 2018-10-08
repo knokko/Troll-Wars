@@ -190,7 +190,7 @@ public class GuiLoadGame extends GuiMenu {
 
 				@Override
 				public boolean isTrue() {
-					return selectedSave == save;
+					return save.equals(selectedSave);
 				}
 			});
 		}

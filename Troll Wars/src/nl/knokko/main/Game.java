@@ -258,8 +258,8 @@ public class Game {
 	}
 	
 	public static void stop(boolean save){
-		window.close();
 		needsSaving = save;
+		window.close(false);
 	}
 	
 	public static Options getOptions(){
