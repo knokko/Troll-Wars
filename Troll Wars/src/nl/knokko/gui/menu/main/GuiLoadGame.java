@@ -30,10 +30,10 @@ import java.util.List;
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.text.ActivatableTextButton;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.render.GuiRenderer;
-import nl.knokko.gui.texture.GuiTexture;
-import nl.knokko.gui.util.TextBuilder;
+import nl.knokko.gui.util.Condition;
 import nl.knokko.gui.util.TextBuilder.HorAlignment;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.gui.util.TextBuilder.VerAlignment;
@@ -177,29 +177,22 @@ public class GuiLoadGame extends GuiMenu {
 		return s;
 	}
 	
-	private class ButtonSaveFile extends TextButton {
-		
-		private final String save;
-		private final GuiTexture selectedTexture;
+	private class ButtonSaveFile extends ActivatableTextButton {
 
 		public ButtonSaveFile(final String save) {
-			super(recoverName(save), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new Runnable(){
+			super(recoverName(save), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, SELECTED_BUTTON_PROPERTIES, new Runnable(){
 
 				@Override
 				public void run() {
 					selectedSave = save;
 				}
+			}, new Condition() {
+
+				@Override
+				public boolean isTrue() {
+					return selectedSave == save;
+				}
 			});
-			this.save = save;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(save, SELECTED_BUTTON_PROPERTIES));
-		}
-		
-		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedSave == save)
-				renderer.renderTexture(selectedTexture, 0, 0, 1, 1);
-			else
-				super.render(renderer);
 		}
 	}
 	
@@ -248,30 +241,25 @@ public class GuiLoadGame extends GuiMenu {
 		}
 	}
 	
-	private class ButtonSaveTime extends TextButton {
+	private class ButtonSaveTime extends ActivatableTextButton {
 		
 		private final long time;
-		
-		private final GuiTexture selectedTexture;
 
 		public ButtonSaveTime(String text, final long time) {
-			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new Runnable(){
+			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, SELECTED_BUTTON_PROPERTIES, new Runnable(){
 
 				@Override
 				public void run() {
 					selectedTime = time;
 				}
+			}, new Condition() {
+
+				@Override
+				public boolean isTrue() {
+					return selectedTime == time;
+				}
 			});
 			this.time = time;
-			selectedTexture = state.getWindow().getTextureLoader().loadTexture(TextBuilder.createTexture(text, SELECTED_BUTTON_PROPERTIES));
-		}
-		
-		@Override
-		public void render(GuiRenderer renderer){
-			if(selectedTime == time)
-				renderer.renderTexture(selectedTexture, 0, 0, 1, 1);
-			else
-				super.render(renderer);
 		}
 	}
 	

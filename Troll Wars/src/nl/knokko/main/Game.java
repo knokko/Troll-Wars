@@ -102,23 +102,14 @@ public class Game {
 	
 	private static String saveName;
 	
-	private static boolean isStopping;
 	private static boolean needsSaving;
-	
-	private static int renderTicks;
-	private static long renderTime;
 
 	public static void main(String[] args) {
 		System.out.println("Start memory is " + Runtime.getRuntime().totalMemory() + " bytes.");
 		prepare();
 		open();
 		init();
-		while(shouldContinue()){
-			update();
-			render();
-		}
-		finish();
-		close();
+		window.run(GameScreen.fps());
 	}
 	
 	private static void prepare(){
@@ -158,29 +149,11 @@ public class Game {
 		battle2dRenderer = new Battle2dRenderer();
 	}
 	
-	private static boolean shouldContinue(){
-		return !isStopping && !Display.isCloseRequested();
-	}
-	
 	private static void update(){
 		MouseInput.update();
 		KeyInput.update();
-		window.update();
 		for(int i = 0; i < updatingStates.size(); i++)
 			updatingStates.get(i).update();
-	}
-	
-	private static void render(){
-		/*
-		long startTime = System.nanoTime();
-		for(int i = renderingStates.size() - 1; i >= 0; i--)
-			renderingStates.get(i).render();
-		long endTime = System.nanoTime();
-		renderTime += (endTime - startTime);
-		renderTicks++;
-		GameScreen.updateScreen();
-		*/
-		GameScreen.updateScreen();
 	}
 	
 	private static void finish(){
@@ -190,12 +163,6 @@ public class Game {
 		for(GameState state : currentStates)
 			state.close();
 		Resources.cleanUp();
-		System.out.println("average render time is " + (renderTime / renderTicks) / 1000 + " microseconds");
-	}
-	
-	private static void close(){
-		//GameScreen.closeScreen();
-		window.close();
 	}
 	
 	public static void save(){
@@ -291,7 +258,7 @@ public class Game {
 	}
 	
 	public static void stop(boolean save){
-		isStopping = true;
+		window.close();
 		needsSaving = save;
 	}
 	
@@ -519,15 +486,12 @@ public class Game {
 
 		@Override
 		public boolean preUpdate() {
-			// TODO Auto-generated method stub
+			Game.update();
 			return false;
 		}
 
 		@Override
-		public void postUpdate() {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postUpdate() {}
 
 		@Override
 		public boolean preRender() {
@@ -537,92 +501,62 @@ public class Game {
 		}
 
 		@Override
-		public void postRender() {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postRender() {}
 
 		@Override
 		public boolean preClick(float x, float y, int button) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void postClick(float x, float y, int button) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postClick(float x, float y, int button) {}
 
 		@Override
 		public float preScroll(float amount) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
-		public void postScroll(float amount) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postScroll(float amount) {}
 
 		@Override
 		public boolean preKeyPressed(char character) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void postKeyPressed(char character) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postKeyPressed(char character) {}
 
 		@Override
 		public boolean preKeyPressed(int keyCode) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void postKeyPressed(int keyCode) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postKeyPressed(int keyCode) {}
 
 		@Override
 		public boolean preKeyReleased(int keyCode) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void postKeyReleased(int keyCode) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void postKeyReleased(int keyCode) {}
 
 		@Override
 		public void preClose() {
-			// TODO Auto-generated method stub
-			
+			finish();
 		}
 
 		@Override
-		public void postClose() {
-			// TODO Auto-generated method stub
-			
+		public void postClose() {}
+
+		@Override
+		public boolean preRunLoop() {
+			return false;
 		}
 
-                @Override
-                public boolean preRunLoop() {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-
-                @Override
-                public void postRunLoop() {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-		
+		@Override
+		public void postRunLoop() {}
 	}
 }

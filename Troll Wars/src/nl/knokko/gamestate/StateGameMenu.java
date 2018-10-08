@@ -36,11 +36,6 @@ public class StateGameMenu implements GameState {
 
 	public StateGameMenu() {
 		guis = new GuiComponent[]{new GuiGameMenu(this), new GuiInventory(this), new GuiPlayerMenu(this), new GuiPlayerEquipment(this)};
-		for(GuiComponent gui : guis){
-			gui.setState(Game.getGuiState());
-			gui.init();
-		}
-		setCurrentGui(getGameMenu());
 	}
 
 	@Override
@@ -82,6 +77,8 @@ public class StateGameMenu implements GameState {
 	@Override
 	public void setCurrentGui(GuiComponent gui) {
 		currentGui = gui;
+		gui.setState(Game.getGuiState());
+		gui.init();
 	}
 	
 	@Override
