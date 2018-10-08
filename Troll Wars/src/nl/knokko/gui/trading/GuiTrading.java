@@ -24,114 +24,157 @@
 package nl.knokko.gui.trading;
 
 import java.awt.Color;
-import java.util.List;
-
-import org.lwjgl.util.vector.Vector2f;
 
 import nl.knokko.gui.button.ButtonCloseMenu;
+import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.WrapperComponent;
 import nl.knokko.gui.component.image.ConditionalImageButton;
 import nl.knokko.gui.component.image.SimpleImageComponent;
 import nl.knokko.gui.component.inventory.ComponentInventory;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.state.GuiComponentState;
+import nl.knokko.gui.component.state.RelativeComponentState;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.component.text.TextComponent;
 import nl.knokko.gui.keycode.KeyCode;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.texture.loader.GuiTextureLoader;
+import nl.knokko.gui.util.TextBuilder.HorAlignment;
 import nl.knokko.gui.util.TextBuilder.Properties;
-import nl.knokko.input.KeyInput;
+import nl.knokko.gui.util.TextBuilder.VerAlignment;
+import nl.knokko.inventory.trading.ItemStack;
 import nl.knokko.inventory.trading.TradeOffer;
 import nl.knokko.inventory.trading.TradeOffers;
+import nl.knokko.items.Item;
 import nl.knokko.main.Game;
-import nl.knokko.main.GameScreen;
-import nl.knokko.texture.SizedTexture;
-import nl.knokko.util.resources.Resources;
 
 public class GuiTrading extends GuiMenu {
 	
-	//private static final Vector2f BUY_MIN = new Vector2f(-200f / GameScreen.getWidth() * 2, 175f / GameScreen.getHeight() * -2);//[-200,-50] and [100,175]
-	//private static final Vector2f BUY_MAX = new Vector2f(-50f / GameScreen.getWidth() * 2, 100f / GameScreen.getHeight() * -2);
-	//private static final Vector2f CANCEL_MIN = new Vector2f(50f / GameScreen.getWidth() * 2, 175f / GameScreen.getHeight() * -2);//[50,200] and [100,175]
-	//private static final Vector2f CANCEL_MAX = new Vector2f(200f / GameScreen.getWidth() * 2, 100f / GameScreen.getHeight() * -2);
-	
 	protected TradeOffers offers;
 	
-	protected List<TradeOffer> list;
-	
 	protected ComponentInventory inventoryComponent;
+	protected OffersComponent offersComponent;
 	protected SelectedOfferWrapper offerWrapper;
-	
-	protected SizedTexture offersTexture;
-	protected SizedTexture selectedOfferTexture;
 	
 	protected TradeOffer selectedOffer;
 
 	public GuiTrading(TradeOffers offers) {
 		this.offers = offers;
-		inventoryComponent = new ComponentInventory(null, null);
 	}
 	
 	@Override
 	protected void addComponents(){
+		inventoryComponent = new ComponentInventory(offers.getUsefulItems(Game.getPlayerInventory().getItems()), (Item item) -> {});
+		offersComponent = new OffersComponent();
 		offerWrapper = new SelectedOfferWrapper();
 		addComponent(offerWrapper, 0.55f, 0.5f, 0.95f, 0.9f);
-		addComponent(inventoryComponent, 0, 0, 0.2f, 1);
-		refreshCurrentTexture();
-		addButton(new ButtonCloseMenu(new Vector2f(-0.65f, -0.85f), new Vector2f(0.3f, 0.1f), new Color(0, 150, 150), new Color(0, 50, 50)));
+		addComponent(offersComponent, 0.25f, 0f, 0.5f, 1f);
+		addComponent(inventoryComponent, 0, 0, 0.2f, 0.8f);
+		addComponent(new ButtonCloseMenu(Properties.createButton(new Color(0, 150, 150), new Color(0, 50, 50)), Properties.createButton(new Color(0, 180, 180), new Color(0, 65, 65))), 0.05f, 0.85f, 0.25f, 95f);
 	}
 	
 	@Override
-	public void update(){
-		super.update();
-		if(KeyInput.wasKeyPressed(KeyCode.KEY_ESCAPE)){
-			if(selectedOfferTexture == null)
+	public void keyPressed(int key) {
+		if(key == KeyCode.KEY_ESCAPE) {
+			if(selectedOffer == null)
 				Game.removeState();
 			else {
-				selectedOfferTexture = null;
 				selectedOffer = null;
 				offerWrapper.getComponent().updateOffer();
 			}
-		}
-	}
-	
-	@Override
-	public void leftClick(float x, float y){
-		if(selectedOfferTexture != null && x >= -selectedOfferTexture.getRelativeWidth() && x <= selectedOfferTexture.getRelativeWidth() && y >= -selectedOfferTexture.getRelativeHeight() && y <= selectedOfferTexture.getRelativeHeight()){
-			if(x >= BUY_MIN.x && x <= BUY_MAX.x && y >= BUY_MIN.y && y <= BUY_MAX.y){
-				selectedOffer.trade(Game.getPlayerInventory());
-				refreshCurrentTexture();
-				return;
-			}
-			if(x >= CANCEL_MIN.x && x <= CANCEL_MAX.x && y >= CANCEL_MIN.y && y <= CANCEL_MAX.y){
-				selectedOfferTexture = null;
-				selectedOffer = null;
-				offerWrapper.getComponent().updateOffer();
-			}
-			return;
-		}
-		if(x >= -0.5f){
-			int index = (int) ((((1 - y) / 2) * GameScreen.getHeight()) / 64);
-			if(index < list.size()){
-				selectedOfferTexture = Resources.createTradeOfferTexture(list.get(index));
-				selectedOffer = list.get(index);
-			}
-		}
-	}
-	
-	public void refreshCurrentTexture(){
-		inventoryComponent.refresh(offers.getUsefulItems(Game.getPlayerInventory().getItems()));
-		list = offers.getAvailableOffers(Game.getPlayerInventory());
-		offersTexture = Resources.creatureTradeOffersTexture(list.toArray(new TradeOffer[list.size()]));
-		if(selectedOffer != null && !selectedOffer.canPay(Game.getPlayerInventory())){
-			selectedOffer = null;
-			selectedOfferTexture = null;
 		}
 	}
 	
 	private static final Properties LABEL_PROPS = Properties.createLabel();
 	private static final Properties TRADE_PROPS = Properties.createButton(new Color(0, 200, 0), new Color(0, 50, 0));
 	private static final Properties TRADE_HOVER_PROPS = Properties.createButton(Color.GREEN, new Color(0, 65, 0));
+	
+	private class OffersComponent extends GuiMenu {
+
+		@Override
+		protected void addComponents() {
+			components.clear();
+			TradeOffer[] available = offers.getAllOffers();
+			int index = 0;
+			for (TradeOffer offer : available) {
+				addComponent(new TradeOfferComponent(offer), 0.05f, 0.8f - index * 0.2f, 0.95f, 1f - index * 0.2f);
+				index++;
+			}
+		}
+		
+		private class TradeOfferComponent implements GuiComponent {
+			
+			private final ItemStacksComponent give;
+			private final ItemStacksComponent get;
+			
+			private final TradeOffer offer;
+			
+			private GuiComponentState state;
+			
+			private TradeOfferComponent(TradeOffer offer) {
+				give = new ItemStacksComponent(0.4f);
+				get = new ItemStacksComponent(0.4f);
+				this.offer = offer;
+			}
+			
+			@Override
+			public void setState(GuiComponentState state) {
+				this.state = state;
+				give.setState(new RelativeComponentState.Static(state, 0.05f, 0.05f, 0.45f, 0.75f));
+				get.setState(new RelativeComponentState.Static(state, 0.55f, 0.05f, 0.95f, 0.75f));
+			}
+			
+			@Override
+			public GuiComponentState getState() {
+				return state;
+			}
+
+			@Override
+			public void init() {
+				give.setItems(offer.getItemsToGive());
+				get.setItems(offer.getItemsToGet());
+			}
+
+			@Override
+			public void update() {}
+
+			@Override
+			public void render(GuiRenderer renderer) {
+				give.render(renderer.getArea(0.05f, 0.05f, 0.45f, 0.75f));
+				get.render(renderer.getArea(0.55f, 0.05f, 0.95f, 0.75f));
+			}
+
+			@Override
+			public void click(float x, float y, int button) {
+				selectedOffer = offer;
+				offerWrapper.getComponent().updateOffer();
+			}
+
+			@Override
+			public void clickOut(int button) {}
+
+			@Override
+			public boolean scroll(float amount) {
+				if(state.getMouseY() <= 0.75f) {
+					float x = state.getMouseX();
+					if(x >= 0.05f && x <= 0.45f)
+						return give.scroll(amount);
+					if(x >= 0.55f && x <= 0.95f)
+						return get.scroll(amount);
+				}
+				return false;
+			}
+
+			@Override
+			public void keyPressed(int keyCode) {}
+
+			@Override
+			public void keyPressed(char character) {}
+
+			@Override
+			public void keyReleased(int keyCode) {}
+		}
+	}
 	
 	private class SelectedOfferWrapper extends WrapperComponent<SelectedOfferComponent> {
 
@@ -150,12 +193,17 @@ public class GuiTrading extends GuiMenu {
 		private TextComponent amountComponent;
 		private int amount;
 		
+		private ItemStacksComponent give;
+		private ItemStacksComponent get;
+		
 		private void updateOffer() {
 			if(selectedOffer != null) {
 				if(amount != 1) {
 					amount = 1;
 					amountComponent.setText("1");
 				}
+				give.setItems(selectedOffer.getItemsToGive());
+				get.setItems(selectedOffer.getItemsToGet());
 			}
 		}
 
@@ -181,9 +229,39 @@ public class GuiTrading extends GuiMenu {
 			addComponent(new TextButton("Trade", TRADE_PROPS, TRADE_HOVER_PROPS, () -> {
 				selectedOffer.trade(Game.getPlayerInventory(), amount);
 				selectedOffer = null;
-				updateOffer();
 			}), 0.65f, 0.1f, 0.85f, 0.2f);
 			addComponent(new SimpleImageComponent(tl.loadTexture("textures/portraits/gothrok.png")), 0.1f, 0.85f, 0.2f, 0.95f);
+			give = new ItemStacksComponent(0.2f);
+			get = new ItemStacksComponent(0.2f);
+			addComponent(give, 0.25f, 0.4f, 0.45f, 0.8f);
+			addComponent(get, 0.55f, 0.4f, 0.75f, 0.8f);
 		}
 	}
+	
+	private class ItemStacksComponent extends GuiMenu {
+		
+		private final float stackHeight;
+		
+		private ItemStacksComponent(float stackHeight) {
+			this.stackHeight = stackHeight;
+		}
+
+		@Override
+		protected void addComponents() {}
+		
+		private void setItems(ItemStack[] items) {
+			components.clear();
+			if(items != null) {
+				for (int index = 0; index < items.length; index++) {
+					Item item = items[index].getItem();
+					addComponent(new SimpleImageComponent(item.getTexture().getGuiTexture()), 0f, 1f - stackHeight - index * stackHeight * 1.2f, 0.2f, 1f - index * stackHeight * 1.2f);
+					addComponent(new TextComponent(item.getName() + " x " + items[index].getAmount(), ITEM_PROPERTIES), 0.2f, 1f - stackHeight - index * stackHeight * 1.2f, 1f, 1f - index * stackHeight * 1.2f);
+				}
+			}
+		}
+	}
+	
+	private static final Properties ITEM_PROPERTIES = new Properties(
+			Properties.DEFAULT_BUTTON_FONT, Color.BLACK, new Color(180, 70, 0), new Color(50, 20, 0), 
+			HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f);
 }
