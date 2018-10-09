@@ -39,6 +39,7 @@ import nl.knokko.gui.mousecode.MouseCode;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.texture.GuiTexture;
 import nl.knokko.gui.util.TextBuilder.Properties;
+import nl.knokko.inventory.InventoryType;
 import nl.knokko.items.Item;
 import nl.knokko.main.Game;
 import nl.knokko.players.Player;
@@ -67,15 +68,15 @@ public class GuiPlayerEquipment extends GuiMenu {
 		addComponent(new ButtonLink("Back to characters", state, state.getPlayersMenu(), BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.3f, 0.25f, 0.4f);
 		addComponent(new GuiPlayerMenu.ButtonSwapPlayer(BUTTON_PROPS, HOVER_PROPS, state.getPlayersMenu()), 0.05f, 0.5f, 0.25f, 0.6f);
 		
-		addComponent(new EquipmentButton("Helmet"), 0.45f, 0.6f, 0.55f, 0.7f);
-		addComponent(new EquipmentButton("Chestplate"), 0.45f, 0.5f, 0.55f, 0.6f);
-		addComponent(new EquipmentButton("LeftGlobe"), 0.35f, 0.5f, 0.45f, 0.6f);
-		addComponent(new EquipmentButton("RightGlobe"), 0.55f, 0.5f, 0.65f, 0.6f);
-		addComponent(new EquipmentButton("LeftWeapon"), 0.35f, 0.4f, 0.45f, 0.5f);
-		addComponent(new EquipmentButton("RightWeapon"), 0.55f, 0.4f, 0.65f, 0.5f);
-		addComponent(new EquipmentButton("Pants"), 0.45f, 0.3f, 0.55f, 0.4f);
-		addComponent(new EquipmentButton("LeftShoe"), 0.35f, 0.2f, 0.45f, 0.3f);
-		addComponent(new EquipmentButton("RightShoe"), 0.55f, 0.2f, 0.65f, 0.3f);
+		addComponent(new EquipmentButton("Helmet", InventoryType.HELMET), 0.45f, 0.6f, 0.55f, 0.7f);
+		addComponent(new EquipmentButton("Chestplate", InventoryType.CHESTPLATE), 0.45f, 0.5f, 0.55f, 0.6f);
+		addComponent(new EquipmentButton("LeftGlobe", InventoryType.GLOBE), 0.35f, 0.5f, 0.45f, 0.6f);
+		addComponent(new EquipmentButton("RightGlobe", InventoryType.GLOBE), 0.55f, 0.5f, 0.65f, 0.6f);
+		addComponent(new EquipmentButton("LeftWeapon", InventoryType.WEAPON), 0.35f, 0.4f, 0.45f, 0.5f);
+		addComponent(new EquipmentButton("RightWeapon", InventoryType.WEAPON), 0.55f, 0.4f, 0.65f, 0.5f);
+		addComponent(new EquipmentButton("Pants", InventoryType.PANTS), 0.45f, 0.3f, 0.55f, 0.4f);
+		addComponent(new EquipmentButton("LeftShoe", InventoryType.BOOTS), 0.35f, 0.2f, 0.45f, 0.3f);
+		addComponent(new EquipmentButton("RightShoe", InventoryType.BOOTS), 0.55f, 0.2f, 0.65f, 0.3f);
 	}
 	
 	private Player getPlayer(){
@@ -93,6 +94,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 			Game.getPlayerInventory().removeItem(item);
 			closeItemSelection();
 		}));
+		//TODO items are upside down and click action doesn't work
 		equipmentEmpty.activeEquipment = button;
 	}
 	
@@ -108,10 +110,12 @@ public class GuiPlayerEquipment extends GuiMenu {
 		private GuiTexture texture;
 		private boolean canHaveItem;
 		
+		private final InventoryType inventoryType;
 		private final String slot;
 		
-		private EquipmentButton(String slot){
+		private EquipmentButton(String slot, InventoryType type){
 			this.slot = slot;
+			inventoryType = type;
 		}
 		
 		@Override
@@ -152,11 +156,15 @@ public class GuiPlayerEquipment extends GuiMenu {
 		}
 		
 		private boolean canHaveItem(Item item) {
-			try {
-				return (Boolean) getPlayer().getEquipment().getClass().getMethod("canEquip" + slot).invoke(getPlayer().getEquipment(), item);
-			} catch(Exception ex){
-				throw new RuntimeException("Can't check if slot " + slot + " accepts item " + item, ex);
-			}
+			if(item.getType() == inventoryType) {
+				try {
+					Class<?> eqClass = getPlayer().getEquipment().getClass();
+					return (Boolean) eqClass.getMethod("canEquip" + slot).invoke(getPlayer().getEquipment()) && (Boolean) eqClass.getMethod("canEquip" + slot, Item.class).invoke(getPlayer().getEquipment(), item);
+				} catch(Exception ex){
+					throw new RuntimeException("Can't check if slot " + slot + " accepts item " + item, ex);
+				}
+				}
+			return false;
 		}
 		
 		private void updateItem(){
@@ -179,6 +187,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 				getPlayer().getEquipment().getClass().getMethod("equip" + slot, Item.class).invoke(getPlayer().getEquipment(), item);
 				getPlayer().refreshEquipmentModels();
 				updateItem(item);
+				closeItemSelection();
 			} catch(Exception ex){
 				throw new RuntimeException("Can't set item in slot " + slot, ex);
 			}
