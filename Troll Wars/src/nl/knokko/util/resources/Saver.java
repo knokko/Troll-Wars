@@ -247,9 +247,8 @@ public final class Saver {
 			if(!file.isDirectory()){
 				try {
 					long time = Long.parseLong(GuiLoadGame.replace(file.getName().substring(0, file.getName().length() - 5)));
-					Calendar cal = new Calendar.Builder().setInstant(time).build();
 					if(file.length() > 0)
-						times.add(new SaveTime(time, cal.get(YEAR) + "/" + (cal.get(MONTH) + 1) + "/" + cal.get(DAY_OF_MONTH) + " " + cal.get(HOUR_OF_DAY) + ":" + cal.get(MINUTE) + ":" + cal.get(SECOND)));
+						times.add(new SaveTime(time));
 				} catch(Exception ex){
 					System.out.println("Can't load save " + file.getName());
 					ex.printStackTrace();
@@ -280,9 +279,16 @@ public final class Saver {
 		private final long time;
 		private final String text;
 		
-		private SaveTime(long milliTime, String text){
+		private static String n(int number) {
+			if(number < 10)
+				return "0" + number;
+			return "" + number;
+		}
+		
+		private SaveTime(long milliTime){
 			time = milliTime;
-			this.text = text;
+			Calendar cal = new Calendar.Builder().setInstant(time).build();
+			this.text = cal.get(YEAR) + "/" + n(cal.get(MONTH) + 1) + "/" + n(cal.get(DAY_OF_MONTH)) + " " + n(cal.get(HOUR_OF_DAY)) + ":" + n(cal.get(MINUTE)) + ":" + n(cal.get(SECOND));
 		}
 		
 		public String getFolderName(){
