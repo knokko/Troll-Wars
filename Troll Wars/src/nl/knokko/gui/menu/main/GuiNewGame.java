@@ -24,7 +24,6 @@
 package nl.knokko.gui.menu.main;
 
 import java.awt.Color;
-import java.awt.Font;
 
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
@@ -32,21 +31,19 @@ import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.component.text.TextComponent;
 import nl.knokko.gui.component.text.TextEditField;
-import nl.knokko.gui.util.TextBuilder.HorAlignment;
 import nl.knokko.gui.util.TextBuilder.Properties;
-import nl.knokko.gui.util.TextBuilder.VerAlignment;
 import nl.knokko.main.Game;
 import nl.knokko.util.resources.Saver;
 
 public class GuiNewGame extends GuiMenu {
 	
-	public static final Properties BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, Color.BLACK, new Color(150, 0, 150), new Color(50, 0, 50), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
-	public static final Properties HOVER_BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, new Color(50, 50, 50), new Color(250, 0, 250), new Color(80, 0, 80), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
+	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
+	private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 0, 50));
 	
-	public static final Properties EDIT_PROPERTIES = new Properties(GuiMainMenu.FONT, Color.BLACK, new Color(200, 200, 200), new Color(50, 50, 50), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.025f, 0.05f);
-	public static final Properties ACTIVE_EDIT_PROPERTIES = new Properties(GuiMainMenu.FONT, Color.BLACK, Color.WHITE, new Color(0, 200, 200), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.025f, 0.05f);
+	private static final Properties EDIT_PROPS = Properties.createEdit();
+	private static final Properties ACTIVE_PROPS = Properties.createEdit(Color.YELLOW);
 	
-	public static final Properties ERROR_PROPERTIES = new Properties(new Font("", 1, 30), Color.RED, new Color(0, 0, 0, 0), new Color(0, 0, 0, 0), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0, 0, 0, 0);
+	private static final Properties ERROR_PROPS = Properties.createLabel(Color.RED);
 	
 	private final StateMainMenu menu;
 	private TextEditField nameButton;
@@ -58,10 +55,10 @@ public class GuiNewGame extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addComponent(new ButtonLink("back", menu, menu.getGuiMainMenu(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.35f, 0.65f, 0.65f, 0.75f);
-		nameButton = new TextEditField("", EDIT_PROPERTIES, ACTIVE_EDIT_PROPERTIES);
+		addComponent(new ButtonLink("back", menu, menu.getGuiMainMenu(), BUTTON_PROPS, HOVER_PROPS), 0.35f, 0.65f, 0.65f, 0.75f);
+		nameButton = new TextEditField("", EDIT_PROPS, ACTIVE_PROPS);
 		addComponent(nameButton, 0.1f, 0.4f, 0.9f, 0.6f);
-		addComponent(new TextButton("start the game", BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new Runnable(){
+		addComponent(new TextButton("start the game", BUTTON_PROPS, HOVER_PROPS, new Runnable(){
 
 			@Override
 			public void run() {
@@ -74,7 +71,7 @@ public class GuiNewGame extends GuiMenu {
 			}
 			
 		}), 0.3f, 0.225f, 0.7f, 0.375f);
-		errorText = new TextComponent("", ERROR_PROPERTIES);
+		errorText = new TextComponent("", ERROR_PROPS);
 		addComponent(errorText, 0.025f, 0.025f, 0.975f, 0.175f);
 	}
 }

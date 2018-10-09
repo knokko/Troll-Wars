@@ -34,9 +34,7 @@ import nl.knokko.gui.component.text.ActivatableTextButton;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.util.Condition;
-import nl.knokko.gui.util.TextBuilder.HorAlignment;
 import nl.knokko.gui.util.TextBuilder.Properties;
-import nl.knokko.gui.util.TextBuilder.VerAlignment;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
@@ -45,14 +43,11 @@ import nl.knokko.util.resources.Saver.SaveTime;
 
 public class GuiLoadGame extends GuiMenu {
 	
-	public static final Properties BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, Color.BLACK, new Color(150, 0, 150), new Color(50, 0, 50), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
-	public static final Properties HOVER_BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, new Color(50, 50, 50), new Color(250, 0, 250), new Color(80, 0, 80), HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
-	public static final Properties SELECTED_BUTTON_PROPERTIES = new Properties(GuiMainMenu.FONT, new Color(50, 50, 50), new Color(250, 0, 250), Color.YELLOW, HorAlignment.MIDDLE, VerAlignment.MIDDLE, 0.05f, 0.1f, 0.05f, 0.1f);
+	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
+	private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 50, 50));
+	private static final Properties SELECTED_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(255, 100, 255), new Color(0, 50, 50));
 	
 	private final StateMainMenu state;
-	
-	//private ArrayList<ButtonSaveFile> savesButtons;
-	//private ArrayList<ButtonSaveTime> timesButtons;
 	
 	private SavesButtons savesButtons;
 	private TimesButtons timesButtons;
@@ -63,7 +58,7 @@ public class GuiLoadGame extends GuiMenu {
 		protected void addComponents() {
 			String[] saves = Saver.getSaveFiles();
 			for(int index = 0; index < saves.length; index++)
-				addComponent(new ButtonSaveFile(saves[index]), 0.05f, 0.725f - index * 0.125f, 0.35f, 0.825f - index * 0.125f);
+				addComponent(new ButtonSaveFile(saves[index]), 0f, 0.725f - index * 0.125f, 1f, 0.825f - index * 0.125f);
 		}
 		
 		protected void refresh(){
@@ -82,10 +77,8 @@ public class GuiLoadGame extends GuiMenu {
 			if(selectedSave != null){
 				SaveTime[] saves = Saver.getSaveTimes(selectedSave);
 				for(int index = 0; index < saves.length; index++)
-					addComponent(new ButtonSaveTime(saves[index].getText(), saves[index].getMilliTime()), 0.35f, 0.725f - index * 0.125f, 0.65f, 0.825f - index * 0.125f);
+					addComponent(new ButtonSaveTime(saves[index].getText(), saves[index].getMilliTime()), 0f, 0.725f - index * 0.125f, 1f, 0.825f - index * 0.125f);
 			}
-			//for(int i = 0; i < times.length; i++)
-				//timesButtons.add(new ButtonSaveTime(new Vector2f(0f, 0.55f - i * 0.25f), times[i].getText(), times[i].getMilliTime()));
 		}
 	}
 	
@@ -104,13 +97,12 @@ public class GuiLoadGame extends GuiMenu {
 		savesButtons = new SavesButtons();
 		timesButtons = new TimesButtons();
 		addComponent(timesButtons, 0.35f, 0f, 0.65f, 0.8f);
-		addComponent(savesButtons, 0.05f, 0f, 0.35f, 0.8f);
-		addComponent(new ButtonSaveFileOption("open", new OpenSaveFileAction()), 0.4f, 0.875f, 0.6f, 0.975f);
+		addComponent(savesButtons, 0.025f, 0f, 0.325f, 0.8f);
 		addComponent(new ButtonSaveFileOption("delete", new DeleteSaveFileAction()), 0.675f, 0.875f, 0.975f, 0.975f);
-		addComponent(new ButtonSaveTimeOption("load", new LoadSaveTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.725f, 0.975f, 0.825f);
-		addComponent(new ButtonSaveTimeOption("delete", new DeleteSaveTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.6f, 0.975f, 0.7f);
-		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.675f, 0.475f, 0.975f, 0.575f);
-		addComponent(new ButtonLink("back", state, state.getGuiMainMenu(), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES), 0.025f, 0.875f, 0.325f, 0.975f);
+		addComponent(new ButtonSaveTimeOption("load", new LoadSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.725f, 0.975f, 0.825f);
+		addComponent(new ButtonSaveTimeOption("delete", new DeleteSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.6f, 0.975f, 0.7f);
+		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.475f, 0.975f, 0.575f);
+		addComponent(new ButtonLink("back", state, state.getGuiMainMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.875f, 0.325f, 0.975f);
 		addSavesButtons();
 	}
 	
@@ -180,11 +172,12 @@ public class GuiLoadGame extends GuiMenu {
 	private class ButtonSaveFile extends ActivatableTextButton {
 
 		public ButtonSaveFile(final String save) {
-			super(recoverName(save), BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, SELECTED_BUTTON_PROPERTIES, new Runnable(){
+			super(recoverName(save), BUTTON_PROPS, HOVER_PROPS, SELECTED_PROPS, new Runnable(){
 
 				@Override
 				public void run() {
 					selectedSave = save;
+					timesButtons.refresh();
 				}
 			}, new Condition() {
 
@@ -199,7 +192,7 @@ public class GuiLoadGame extends GuiMenu {
 	private class ButtonSaveFileOption extends TextButton {
 
 		public ButtonSaveFileOption(String text, Runnable action) {
-			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, new SaveFileAction(action));
+			super(text, BUTTON_PROPS, HOVER_PROPS, new SaveFileAction(action));
 		}
 		
 		@Override
@@ -224,14 +217,6 @@ public class GuiLoadGame extends GuiMenu {
 		}
 	}
 	
-	private class OpenSaveFileAction implements Runnable {
-
-		@Override
-		public void run() {
-			timesButtons.refresh();
-		}
-	}
-	
 	private class DeleteSaveFileAction implements Runnable {
 
 		@Override
@@ -246,7 +231,7 @@ public class GuiLoadGame extends GuiMenu {
 		private final long time;
 
 		public ButtonSaveTime(String text, final long time) {
-			super(text, BUTTON_PROPERTIES, HOVER_BUTTON_PROPERTIES, SELECTED_BUTTON_PROPERTIES, new Runnable(){
+			super(text, BUTTON_PROPS, HOVER_PROPS, SELECTED_PROPS, new Runnable(){
 
 				@Override
 				public void run() {
@@ -266,7 +251,7 @@ public class GuiLoadGame extends GuiMenu {
 	private class ButtonSaveTimeOption extends TextButton {
 		
 		public ButtonSaveTimeOption(String text, Runnable action, Properties properties, Properties hoverProperties) {
-			super("load", properties, hoverProperties, new SaveTimeAction(action));
+			super(text, properties, hoverProperties, new SaveTimeAction(action));
 		}
 		
 		@Override
