@@ -105,4 +105,7 @@ public class StateDialogue implements GameState {
 	public void setCurrentDialogue(Dialogue dialogue){
 		current = dialogue;
 	}
+
+	@Override
+	public void keyPressed(int keyCode) {}
 }

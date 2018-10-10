@@ -134,4 +134,7 @@ public class StateBattle implements GameState {
 			gui = null;
 		}
 	}
+
+	@Override
+	public void keyPressed(int keyCode) {}
 }

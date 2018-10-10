@@ -67,8 +67,6 @@ public class StateArea implements GameState {
 		area.update();
 		if(Game.getCurrentState() == this)
 			camera.update();
-		if(Game.getCurrentState() == this && Game.getWindow().getInput().isKeyDown(KeyCode.KEY_ESCAPE))
-			Game.addState(Game.getGameMenu());
 	}
 
 	@Override
@@ -200,5 +198,11 @@ public class StateArea implements GameState {
 	private Area getArea(short id){
 		areas[id - Short.MIN_VALUE].enable();
 		return areas[id - Short.MIN_VALUE];
+	}
+
+	@Override
+	public void keyPressed(int keyCode) {
+		if(keyCode == KeyCode.KEY_ESCAPE)
+			Game.addState(Game.getGameMenu());
 	}
 }

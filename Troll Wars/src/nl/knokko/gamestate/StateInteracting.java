@@ -78,4 +78,7 @@ public class StateInteracting implements GameState {
 
 	@Override
 	public void save() {}
+
+	@Override
+	public void keyPressed(int keyCode) {}
 }

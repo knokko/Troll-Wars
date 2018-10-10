@@ -39,16 +39,10 @@ public class StateGameMenu implements GameState {
 	}
 
 	@Override
-	public void update() {
-		//currentGui.update();
-		if(Game.getWindow().getInput().isKeyDown(KeyCode.KEY_ESCAPE))
-			Game.removeState();
-	}
+	public void update() {}
 
 	@Override
-	public void render() {
-		//currentGui.render(Game.getGuiRenderer());
-	}
+	public void render() {}
 
 	@Override
 	public void open() {
@@ -104,4 +98,10 @@ public class StateGameMenu implements GameState {
 
 	@Override
 	public void save() {}
+	
+	@Override
+	public void keyPressed(int keyCode) {
+		if(keyCode == KeyCode.KEY_ESCAPE)
+			Game.removeState();
+	}
 }

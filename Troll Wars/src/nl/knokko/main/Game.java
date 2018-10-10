@@ -463,6 +463,7 @@ public class Game {
 			if(component != null)
 				component.keyPressed(keyCode);
 			KeyInput.addPress(keyCode);
+			getCurrentState().keyPressed(keyCode);
 		}
 
 		@Override

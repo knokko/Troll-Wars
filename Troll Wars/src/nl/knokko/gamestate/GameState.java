@@ -78,4 +78,6 @@ public interface GameState {
 	void setCurrentGui(GuiComponent gui);
 	
 	GuiComponent getCurrentGui();
+	
+	void keyPressed(int keyCode);
 }
