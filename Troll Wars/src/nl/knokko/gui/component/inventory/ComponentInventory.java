@@ -57,7 +57,7 @@ public class ComponentInventory extends GuiMenu {
 		if(items != null){
 			int index = 0;
 			for(Item item : items){
-				addComponent(new ItemComponent(item), 0, 1 - index * 0.1f, 1, 0.875f - index * 0.1f);
+				addComponent(new ItemComponent(item), 0, 0.9f - index * 0.1f, 1, 1f - index * 0.1f);
 				index++;
 			}
 		}
