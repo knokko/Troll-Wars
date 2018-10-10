@@ -60,8 +60,8 @@ public class GuiInventory extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addComponent(new ButtonLink("Back to menu", state, state.getGameMenu(), BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.7f, 0.2f, 0.8f);
-		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.05f, 0.5f, 0.2f, 0.6f);
+		addComponent(new ButtonLink("Back to menu", state, state.getGameMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.7f, 0.3f, 0.8f);
+		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.5f, 0.3f, 0.6f);
 		
 		// Base type buttons
 		addBaseTypeButton("All items", null, 0.7f);
@@ -99,7 +99,7 @@ public class GuiInventory extends GuiMenu {
 	}
 	
 	private void addWrapper(GuiComponent component) {
-		addComponent(component, 0.75f, 0.05f, 0.95f, 0.95f);
+		addComponent(component, 0.775f, 0.05f, 0.975f, 0.95f);
 	}
 	
 	private void addTypeButton(InventoryType type, float minY) {
@@ -107,14 +107,14 @@ public class GuiInventory extends GuiMenu {
 			selectedType = type;
 		}, () -> {
 			return selectedBaseType == type.getParent();
-		}), 0.5f, minY, 0.7f, minY + 0.1f);
+		}), 0.55f, minY, 0.75f, minY + 0.1f);
 	}
 	
 	private void addBaseTypeButton(String text, InventoryTypeBase type, float minY) {
 		addComponent(new TextButton(text, BUTTON_PROPS, HOVER_PROPS, () -> {
 			selectedBaseType = type;
 			selectedType = null;
-		}), 0.25f, minY, 0.45f, minY + 0.1f);
+		}), 0.325f, minY, 0.525f, minY + 0.1f);
 	}
 	
 	private void addBaseTypeButton(InventoryTypeBase type, float minY) {
