@@ -94,7 +94,6 @@ public class GuiPlayerEquipment extends GuiMenu {
 			Game.getPlayerInventory().removeItem(item);
 			closeItemSelection();
 		}));
-		//TODO items are upside down and click action doesn't work
 		equipmentEmpty.activeEquipment = button;
 	}
 	
