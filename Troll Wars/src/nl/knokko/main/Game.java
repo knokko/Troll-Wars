@@ -99,6 +99,7 @@ public class Game {
 	private static CurrentGuiComponent guiComponent;
 	
 	private static Matrix4f projectionMatrix;
+	private static float aspectRatio;
 	
 	private static String saveName;
 	
@@ -389,11 +390,13 @@ public class Game {
 	}
 	
 	public static Matrix4f getProjectionMatrix(){
+		if ((float) Display.getWidth() / (float) Display.getHeight() != aspectRatio)
+			createProjectionMatrix();
 		return projectionMatrix;
 	}
 	
 	public static void createProjectionMatrix(){
-        float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+        aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
