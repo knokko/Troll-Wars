@@ -96,7 +96,7 @@ public class ComponentInventory extends GuiMenu {
 
 		@Override
 		public void render(GuiRenderer renderer) {
-			if(state.isMouseOver())
+			if(action != null && state.isMouseOver())
 				renderer.renderTexture(hoverTexture, 0, 0, 1, 1);
 			else
 				renderer.renderTexture(defaultTexture, 0, 0, 1, 1);
