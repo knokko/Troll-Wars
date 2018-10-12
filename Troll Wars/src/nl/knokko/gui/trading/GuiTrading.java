@@ -26,6 +26,7 @@ package nl.knokko.gui.trading;
 import java.awt.Color;
 
 import nl.knokko.gui.button.ButtonCloseMenu;
+import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.WrapperComponent;
 import nl.knokko.gui.component.image.ConditionalImageButton;
@@ -54,7 +55,7 @@ public class GuiTrading extends GuiMenu {
 	
 	protected ComponentInventory inventoryComponent;
 	protected OffersComponent offersComponent;
-	protected SelectedOfferWrapper offerWrapper;
+	protected SelectedOfferWrapper selectedOfferWrapper;
 	
 	protected TradeOffer selectedOffer;
 
@@ -66,11 +67,12 @@ public class GuiTrading extends GuiMenu {
 	protected void addComponents(){
 		inventoryComponent = new ComponentInventory(offers.getUsefulItems(Game.getPlayerInventory().getItems()), null);
 		offersComponent = new OffersComponent();
-		offerWrapper = new SelectedOfferWrapper();
-		addComponent(offerWrapper, 0.55f, 0.5f, 0.95f, 0.9f);
+		selectedOfferWrapper = new SelectedOfferWrapper();
+		addComponent(selectedOfferWrapper, 0.55f, 0.5f, 0.95f, 0.9f);
+		System.out.println("add selectedOfferWrapper " + selectedOfferWrapper.getComponent().amountComponent);
 		addComponent(offersComponent, 0.25f, 0f, 0.5f, 1f);
 		addComponent(inventoryComponent, 0, 0, 0.2f, 0.8f);
-		addComponent(new ButtonCloseMenu(Properties.createButton(new Color(0, 150, 150), new Color(0, 50, 50)), Properties.createButton(new Color(0, 180, 180), new Color(0, 65, 65))), 0.05f, 0.85f, 0.25f, 95f);
+		addComponent(new ButtonCloseMenu(Properties.createButton(new Color(0, 150, 150), new Color(0, 50, 50)), Properties.createButton(new Color(0, 180, 180), new Color(0, 65, 65))), 0.05f, 0.85f, 0.25f, 0.95f);
 	}
 	
 	@Override
@@ -80,7 +82,7 @@ public class GuiTrading extends GuiMenu {
 				Game.removeState();
 			else {
 				selectedOffer = null;
-				offerWrapper.getComponent().updateOffer();
+				selectedOfferWrapper.getComponent().updateOffer();
 			}
 		}
 	}
@@ -147,7 +149,7 @@ public class GuiTrading extends GuiMenu {
 			@Override
 			public void click(float x, float y, int button) {
 				selectedOffer = offer;
-				offerWrapper.getComponent().updateOffer();
+				selectedOfferWrapper.getComponent().updateOffer();
 			}
 
 			@Override
@@ -188,6 +190,8 @@ public class GuiTrading extends GuiMenu {
 		}
 	}
 	
+	private static final GuiColor SELECTED_OFFER_BACKGROUND = nl.knokko.util.color.Color.YELLOW;
+	
 	private class SelectedOfferComponent extends GuiMenu {
 		
 		private TextComponent amountComponent;
@@ -206,9 +210,15 @@ public class GuiTrading extends GuiMenu {
 				get.setItems(selectedOffer.getItemsToGet());
 			}
 		}
+		
+		@Override
+		public GuiColor getBackgroundColor() {
+			return SELECTED_OFFER_BACKGROUND;
+		}
 
 		@Override
 		protected void addComponents() {
+			System.out.println("Create amountComponent");
 			amountComponent = new TextComponent("1", LABEL_PROPS);
 			amount = 1;
 			addComponent(amountComponent, 0.4f, 0.1f, 0.5f, 0.2f);
