@@ -34,8 +34,9 @@ import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.WrapperComponent;
 import nl.knokko.gui.component.inventory.ComponentInventory;
 import nl.knokko.gui.component.menu.GuiMenu;
-import nl.knokko.gui.component.text.ConditionalTextButton;
-import nl.knokko.gui.component.text.TextButton;
+import nl.knokko.gui.component.simple.SimpleColorComponent;
+import nl.knokko.gui.component.text.ActivatableTextButton;
+import nl.knokko.gui.component.text.CondivatableTextButton;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.inventory.InventoryType;
 import nl.knokko.inventory.InventoryTypeBase;
@@ -46,6 +47,7 @@ public class GuiInventory extends GuiMenu {
 	
 	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(100, 150, 0), new Color(40, 50, 0));
 	private static final Properties HOVER_PROPS = Properties.createButton(new Color(125, 200, 0), new Color(50, 65, 0));
+	private static final Properties ACTIVE_PROPS = Properties.createButton(new Color(150, 250, 0), new Color(65, 80, 0));
 	
 	private static final GuiColor BACKGROUND_COLOR = new SimpleGuiColor(150, 100, 0);
 	
@@ -60,8 +62,10 @@ public class GuiInventory extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		addComponent(new ButtonLink("Back to menu", state, state.getGameMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.7f, 0.3f, 0.8f);
-		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.5f, 0.3f, 0.6f);
+		addComponent(new ButtonLink("Back to menu", state, state.getGameMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.7f, 0.25f, 0.8f);
+		addComponent(new ButtonCloseMenu(BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.5f, 0.25f, 0.6f);
+		
+		addComponent(new SimpleColorComponent(new SimpleGuiColor(0, 150, 250)), 0.275f, 0f, 1f, 1f);
 		
 		// Base type buttons
 		addBaseTypeButton("All items", null, 0.7f);
@@ -99,22 +103,26 @@ public class GuiInventory extends GuiMenu {
 	}
 	
 	private void addWrapper(GuiComponent component) {
-		addComponent(component, 0.775f, 0.05f, 0.975f, 0.95f);
+		addComponent(component, 0.74f, 0.05f, 0.985f, 0.95f);
 	}
 	
 	private void addTypeButton(InventoryType type, float minY) {
-		addComponent(new ConditionalTextButton(type.toString(), BUTTON_PROPS, HOVER_PROPS, () -> {
+		addComponent(new CondivatableTextButton(type.toString(), BUTTON_PROPS, HOVER_PROPS, ACTIVE_PROPS, () -> {
 			selectedType = type;
 		}, () -> {
 			return selectedBaseType == type.getParent();
-		}), 0.55f, minY, 0.75f, minY + 0.1f);
+		}, () -> {
+			return selectedType == type;
+		}), 0.525f, minY, 0.725f, minY + 0.1f);
 	}
 	
 	private void addBaseTypeButton(String text, InventoryTypeBase type, float minY) {
-		addComponent(new TextButton(text, BUTTON_PROPS, HOVER_PROPS, () -> {
+		addComponent(new ActivatableTextButton(text, BUTTON_PROPS, HOVER_PROPS, ACTIVE_PROPS, () -> {
 			selectedBaseType = type;
 			selectedType = null;
-		}), 0.325f, minY, 0.525f, minY + 0.1f);
+		}, () -> {
+			return selectedBaseType == type;
+		}), 0.3f, minY, 0.5f, minY + 0.1f);
 	}
 	
 	private void addBaseTypeButton(InventoryTypeBase type, float minY) {
