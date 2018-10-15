@@ -62,7 +62,7 @@ public class GuiLoadGame extends GuiMenu {
 		}
 		
 		protected void refresh(){
-			components.clear();
+			clearComponents();
 			addComponents();
 		}
 	}
@@ -73,7 +73,7 @@ public class GuiLoadGame extends GuiMenu {
 		protected void addComponents() {}
 		
 		protected void refresh(){
-			components.clear();
+			clearComponents();
 			if(selectedSave != null){
 				SaveTime[] saves = Saver.getSaveTimes(selectedSave);
 				for(int index = 0; index < saves.length; index++)

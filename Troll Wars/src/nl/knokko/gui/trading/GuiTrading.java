@@ -95,7 +95,7 @@ public class GuiTrading extends GuiMenu {
 
 		@Override
 		protected void addComponents() {
-			components.clear();
+			clearComponents();
 			TradeOffer[] available = offers.getAllOffers();
 			int index = 0;
 			for (TradeOffer offer : available) {
@@ -260,7 +260,7 @@ public class GuiTrading extends GuiMenu {
 		protected void addComponents() {}
 		
 		private void setItems(ItemStack[] items) {
-			components.clear();
+			clearComponents();
 			if(items != null) {
 				for (int index = 0; index < items.length; index++) {
 					Item item = items[index].getItem();
@@ -273,5 +273,5 @@ public class GuiTrading extends GuiMenu {
 	
 	private static final Properties ITEM_PROPERTIES = new Properties(
 			Properties.DEFAULT_BUTTON_FONT, Color.BLACK, new Color(180, 70, 0), new Color(50, 20, 0), 
-			HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f);
+			HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f, -1, -1);
 }
