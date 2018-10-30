@@ -69,7 +69,7 @@ public class ComponentInventory extends GuiMenu {
 	}
 	
 	public void refresh(List<Item> newItemsToShow){
-		components.clear();
+		clearComponents();
 		items = newItemsToShow;
 		addComponents();
 	}
@@ -144,6 +144,6 @@ public class ComponentInventory extends GuiMenu {
 		return image;
 	}
 	
-	private static final Properties ITEM_NAME_PROPERTIES = new Properties(new Font("Italic", 0, 25), Color.BLACK, new Color(150, 150, 60), new Color(0, 200, 200), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f);
-	private static final Properties HOVER_ITEM_NAME_PROPERTIES = new Properties(new Font("Italic", 0, 25), Color.BLACK, new Color(200, 200, 90), new Color(0, 240, 240), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f);
+	private static final Properties ITEM_NAME_PROPERTIES = new Properties(new Font("Italic", 0, 25), Color.BLACK, new Color(150, 150, 60), new Color(0, 200, 200), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f, 512, 128);
+	private static final Properties HOVER_ITEM_NAME_PROPERTIES = new Properties(new Font("Italic", 0, 25), Color.BLACK, new Color(200, 200, 90), new Color(0, 240, 240), HorAlignment.LEFT, VerAlignment.MIDDLE, 0.025f, 0.05f, 0.05f, 0.1f, 512, 128);
 }
