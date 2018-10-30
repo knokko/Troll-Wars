@@ -199,7 +199,7 @@ public class GuiTrading extends GuiMenu {
 	private class SelectedOfferWrapper extends WrapperComponent<SelectedOfferComponent> {
 
 		public SelectedOfferWrapper() {
-			super(new SelectedOfferComponent());
+			super(new SelectedOfferComponent(), SELECTED_OFFER_BACKGROUND);
 		}
 		
 		@Override
@@ -258,6 +258,7 @@ public class GuiTrading extends GuiMenu {
 			addComponent(new TextButton("Trade", TRADE_PROPS, TRADE_HOVER_PROPS, () -> {
 				selectedOffer.trade(Game.getPlayerInventory(), amount);
 				selectedOffer = null;
+				inventoryComponent.refresh(offers.getUsefulItems(Game.getPlayerInventory().getItems()));
 			}), 0.65f, 0.1f, 0.85f, 0.2f);
 			addComponent(new SimpleImageComponent(tl.loadTexture("textures/portraits/gothrok.png")), 0.1f, 0.85f, 0.2f, 0.95f);
 			give = new ItemStacksComponent(SELECTED_OFFER_ITEMS_BACKGROUND, 0.2f);
