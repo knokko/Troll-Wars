@@ -517,7 +517,7 @@ public class Game {
 
 		@Override
 		public float preScroll(float amount) {
-			return 0;
+			return amount;
 		}
 
 		@Override
