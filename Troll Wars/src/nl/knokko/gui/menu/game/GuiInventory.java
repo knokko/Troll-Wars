@@ -138,7 +138,7 @@ public class GuiInventory extends GuiMenu {
         private final InventoryType type;
         
         public InventoryTypeWrapper(InventoryType type) {
-            super(new ComponentInventory(Game.getPlayerInventory().getItems(type), null));
+            super(new ComponentInventory(Game.getPlayerInventory(), Game.getPlayerInventory().getItems(type), null));
             this.type = type;
         }
         
@@ -153,7 +153,7 @@ public class GuiInventory extends GuiMenu {
         private final InventoryTypeBase type;
         
         public InventoryBaseTypeWrapper(InventoryTypeBase type) {
-            super(new ComponentInventory(type != null ? Game.getPlayerInventory().getItems(type) : Game.getPlayerInventory().getItems(), null));
+            super(new ComponentInventory(Game.getPlayerInventory(), type != null ? Game.getPlayerInventory().getItems(type) : Game.getPlayerInventory().getItems(), null));
             this.type = type;
         }
         

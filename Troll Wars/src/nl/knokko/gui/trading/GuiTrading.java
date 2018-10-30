@@ -69,7 +69,7 @@ public class GuiTrading extends GuiMenu {
 	
 	@Override
 	protected void addComponents(){
-		inventoryComponent = new ComponentInventory(offers.getUsefulItems(Game.getPlayerInventory().getItems()), null);
+		inventoryComponent = new ComponentInventory(Game.getPlayerInventory(), offers.getUsefulItems(Game.getPlayerInventory().getItems()), null);
 		offersComponent = new OffersComponent();
 		selectedOfferWrapper = new SelectedOfferWrapper();
 		addComponent(offersComponent, 0.26f, 0f, 1f, 0.5f);

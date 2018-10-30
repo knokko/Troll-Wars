@@ -38,6 +38,7 @@ import nl.knokko.gui.util.TextBuilder;
 import nl.knokko.gui.util.TextBuilder.HorAlignment;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.gui.util.TextBuilder.VerAlignment;
+import nl.knokko.inventory.Inventory;
 import nl.knokko.items.Item;
 
 public class ComponentInventory extends GuiMenu {
@@ -45,10 +46,12 @@ public class ComponentInventory extends GuiMenu {
 	public static final nl.knokko.util.color.Color BACKGROUND = new nl.knokko.util.color.Color(200, 200, 50);
 	
 	private final ClickAction action;
+	private final Inventory inventory;
 	private List<Item> items;
 
-	public ComponentInventory(List<Item> itemsToShow, ClickAction clickAction) {
+	public ComponentInventory(Inventory inventory, List<Item> itemsToShow, ClickAction clickAction) {
 		action = clickAction;
+		this.inventory = inventory;
 		items = itemsToShow;
 	}
 
@@ -57,7 +60,7 @@ public class ComponentInventory extends GuiMenu {
 		if(items != null){
 			int index = 0;
 			for(Item item : items){
-				addComponent(new ItemComponent(item), 0, 0.9f - index * 0.1f, 1, 1f - index * 0.1f);
+				addComponent(new ItemComponent(item, inventory.getAmount(item)), 0, 0.9f - index * 0.1f, 1, 1f - index * 0.1f);
 				index++;
 			}
 		}
@@ -77,18 +80,20 @@ public class ComponentInventory extends GuiMenu {
 	private class ItemComponent extends AbstractGuiComponent {
 		
 		private final Item item;
+		private final int amount;
 		
 		private GuiTexture defaultTexture;
 		private GuiTexture hoverTexture;
 		
-		private ItemComponent(Item item){
+		private ItemComponent(Item item, int amount){
 			this.item = item;
+			this.amount = amount;
 		}
 
 		@Override
 		public void init() {
-			defaultTexture = state.getWindow().getTextureLoader().loadTexture(createItemImage(item, ITEM_NAME_PROPERTIES));
-			hoverTexture = state.getWindow().getTextureLoader().loadTexture(createItemImage(item, HOVER_ITEM_NAME_PROPERTIES));
+			defaultTexture = state.getWindow().getTextureLoader().loadTexture(createItemImage(item, amount, ITEM_NAME_PROPERTIES));
+			hoverTexture = state.getWindow().getTextureLoader().loadTexture(createItemImage(item, amount, HOVER_ITEM_NAME_PROPERTIES));
 		}
 
 		@Override
@@ -131,9 +136,9 @@ public class ComponentInventory extends GuiMenu {
 		void onClick(Item item);
 	}
 	
-	private static BufferedImage createItemImage(Item item, Properties properties){
+	private static BufferedImage createItemImage(Item item, int amount, Properties properties){
 		BufferedImage itemImage = item.getTexture().getImage();
-		BufferedImage textImage = TextBuilder.createTexture(item.getName(), properties, itemImage.getWidth() * 3, itemImage.getHeight());
+		BufferedImage textImage = TextBuilder.createTexture(item.getName() + " x " + amount, properties, itemImage.getWidth() * 3, itemImage.getHeight());
 		BufferedImage image = new BufferedImage(itemImage.getWidth() * 4, itemImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
 		g.setColor(new Color(250, 250, 0));
