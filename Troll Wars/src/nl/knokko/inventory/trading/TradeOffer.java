@@ -77,9 +77,6 @@ public class TradeOffer {
 		for(ItemStack is : give)
 			if(is.getItem() == item)
 				return true;
-		for(ItemStack is : get)
-			if(is.getItem() == item)
-				return true;
 		return false;
 	}
 }
