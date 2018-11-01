@@ -16,8 +16,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.area.Area;
 import nl.knokko.area.TileMap;
-import nl.knokko.gui.component.GuiComponent;
-import nl.knokko.input.MouseClickEvent;
+import nl.knokko.gui.texture.GuiTexture;
+import nl.knokko.gui.window.GLGuiWindow;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
@@ -25,11 +25,9 @@ import nl.knokko.main.GameScreen;
 import nl.knokko.render.tile.TileModels;
 import nl.knokko.render.tile.TileRenderer;
 import nl.knokko.shaders.WorldShader;
-import nl.knokko.texture.Texture;
 import nl.knokko.tiles.Tile;
 import nl.knokko.tiles.Tiles;
 import nl.knokko.util.Facing;
-import nl.knokko.util.color.Color;
 import nl.knokko.util.resources.Compressor;
 import nl.knokko.util.resources.Natives;
 import nl.knokko.util.resources.Resources;
@@ -44,9 +42,10 @@ public class AreaDesigner {
 	private static final int NEW_WIDTH = 200;
 	private static final int NEW_DEPTH = 200;
 	
+	private static GLGuiWindow window;
 	private static Area area;
 	private static Camera camera;
-	private static GuiComponent gui;
+	private static GuiAreaDesigner gui;
 	private static Random random;
 	
 	private static TileRenderer tileRenderer;
@@ -68,7 +67,7 @@ public class AreaDesigner {
 	private static int tileIndex = 0;
 	
 	private static TileHolder[] tiles;
-	private static Texture[] tileNameTextures;
+	private static GuiTexture[] tileNameTextures;
 	
 	private static long prevTime;
 	
@@ -79,8 +78,9 @@ public class AreaDesigner {
 
 	public static void main(String[] args) {
 		prepare();
-		open();
 		init();
+		open();
+		postInit();
 		while(shouldContinue()){
 			update();
 			render();
@@ -94,19 +94,14 @@ public class AreaDesigner {
 	}
 	
 	private static void open(){
-		GameScreen.openScreen();
+		
+		window.open("Troll Wars Area Designer", true);
+		//GameScreen.openScreen();
 	}
 	
-	private static void init(){
+	private static void postInit() {
 		Tiles.init();
 		TileModels.init();
-		Game.createProjectionMatrix();
-		load();
-		//camera = new CameraFlying(new Vector3f(WIDTH * 32, 80, DEPTH * 32), 90, 0);
-		tileRenderer = new TileRenderer();
-		gui = new GuiAreaDesigner();
-		random = new Random();
-		Mouse.setGrabbed(true);
 		Field[] fields = Tiles.class.getFields();
 		ArrayList<TileHolder> tileList = new ArrayList<TileHolder>();
 		for(int i = 0; i < fields.length; i++){
@@ -121,9 +116,20 @@ public class AreaDesigner {
 			} 
 		}
 		tiles = tileList.toArray(new TileHolder[tileList.size()]);
-		tileNameTextures = new Texture[tiles.length];
-		for(int i = 0; i < tiles.length; i++)
-			tileNameTextures[i] = Resources.getTextTexture(tiles[i].getTileName(), Color.BLACK);
+		Mouse.setGrabbed(true);
+		tileRenderer = new TileRenderer();
+		window.setMainComponent(gui);
+		load();
+	}
+	
+	private static void init(){
+		Game.createProjectionMatrix();
+		//camera = new CameraFlying(new Vector3f(WIDTH * 32, 80, DEPTH * 32), 90, 0);
+		random = new Random();
+		
+		window = new GLGuiWindow();
+		gui = new GuiAreaDesigner();
+		//window.setMainComponent(gui);
 	}
 	
 	private static void load(){
@@ -148,7 +154,7 @@ public class AreaDesigner {
 	}
 	
 	private static boolean shouldContinue(){
-		return !Display.isCloseRequested() && !KeyInput.isKeydown(Keyboard.KEY_ESCAPE);
+		return !Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
 	}
 	
 	private static void update(){
@@ -162,18 +168,23 @@ public class AreaDesigner {
 					moveTileUp();
 				else
 					moveTile(facing);
+				gui.updateSelectedPosition();
 			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)){
+				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 					moveTileDown();
-				}
 				else
 					moveTile(Facing.fromYaw(facing.getDegreeYaw() + 180));
+				gui.updateSelectedPosition();
 			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 				moveTile(Facing.fromYaw(facing.getDegreeYaw() + 90));
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+				gui.updateSelectedPosition();
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 				moveTile(Facing.fromYaw(facing.getDegreeYaw() + 270));
+				gui.updateSelectedPosition();
+			}
 			if(moveBufferX > 0)
 				--moveBufferX;
 			if(moveBufferY > 0)
@@ -195,11 +206,13 @@ public class AreaDesigner {
 				tileIndex = 0;
 			if(tileIndex >= tiles.length)
 				tileIndex = tiles.length - 1;
+			gui.updateSelectedTile();
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_H)){
 			targetX = (int) (camera.getPosition().x / 64);
 			targetY = (int) (camera.getPosition().y / 16);
 			targetZ = (int) (camera.getPosition().z / 64);
+			gui.updateSelectedPosition();
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_1))
 			stackAmount = 1;
@@ -223,20 +236,27 @@ public class AreaDesigner {
 			area.getTiles().clearDuplicates();
 		boolean pressed = false;
 		int button = -1;
+		while (Mouse.next()) {
+			if (Mouse.getEventButtonState()) {
+				pressed = true;
+				button = Mouse.getEventButton();
+			}
+		}
+		/*
 		ArrayList<MouseClickEvent> clicks = MouseInput.getMouseClicks();
 		for(MouseClickEvent click : clicks){
 			if(click.wasPressed()){
 				pressed = true;
 				button = click.getButton();
 			}
-		}
+		}*/
 		if(pressed && targetX < area.getTiles().getWidth() && targetX >= 0 && targetY >= 0 && targetZ < area.getTiles().getDepth() && targetZ >= 0){
-			if(KeyInput.isKeydown(Keyboard.KEY_F)){
+			if(Keyboard.isKeyDown(Keyboard.KEY_F)){
 				markedX = targetX;
 				markedY = targetY;
 				markedZ = targetZ;
 			}
-			else if(KeyInput.isKeydown(Keyboard.KEY_Q)){
+			else if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
 				moveTileState = !moveTileState;
 			}
 			else {
@@ -255,8 +275,6 @@ public class AreaDesigner {
 					area.getTiles().removeTiles(targetX, targetY, targetZ);
 			}
 		}
-		KeyInput.update();
-		MouseInput.update();
 	}
 	
 	private static void render(){
@@ -271,8 +289,8 @@ public class AreaDesigner {
 		if(markedY != -1)
 			tileRenderer.renderGreenTop(camera, tiles[tileIndex].getTile(random), markedX, markedY, markedZ);
 		tileRenderer.unprepare();
-		gui.render(guiRenderer);
-		GameScreen.updateScreen();
+		window.render();
+		Display.sync(GameScreen.fps());
 	}
 	
 	private static void finish(){
@@ -281,7 +299,7 @@ public class AreaDesigner {
 	}
 	
 	private static void close(){
-		GameScreen.closeScreen();
+		window.close();
 	}
 	
 	private static void save(){
@@ -372,10 +390,10 @@ public class AreaDesigner {
 	}
 	
 	private static byte getMoveBuffer(){
-		return (byte) (KeyInput.isKeydown(Keyboard.KEY_T) ? 5 : 20);
+		return (byte) (Keyboard.isKeyDown(Keyboard.KEY_T) ? 5 : 20);
 	}
 	
-	static Texture getTileNameTexture(){
+	static GuiTexture getTileNameTexture(){
 		return tileNameTextures[tileIndex];
 	}
 	
@@ -400,7 +418,11 @@ public class AreaDesigner {
 		renderCount++;
 	}
 	
-	private static interface TileHolder {
+	public static TileHolder getSelectedTile() {
+		return tiles[tileIndex];
+	}
+	
+	static interface TileHolder {
 		
 		Tile getTile(Random random);
 		
