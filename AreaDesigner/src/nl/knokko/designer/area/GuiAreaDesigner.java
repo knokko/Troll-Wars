@@ -21,8 +21,8 @@ public class GuiAreaDesigner extends GuiMenu {
 		tileNameComponent = new TextComponent(AreaDesigner.getSelectedTile().getTileName(), Properties.createLabel());
 		positionComponent = new TextComponent(getPositionText(), Properties.createLabel());
 		addComponent(new SimpleColorComponent(Color.BLUE_PURPLE), 0, 0.9f, 1, 1);
-		addComponent(tileNameComponent, 0.65f, 0.85f, 0.85f, 0.95f);
-		addComponent(positionComponent, 0.2f, 0.85f, 0.4f, 0.95f);
+		addComponent(tileNameComponent, 0.65f, 0.91f, 0.85f, 0.99f);
+		addComponent(positionComponent, 0.2f, 0.91f, 0.4f, 0.99f);
 	}
 	
 	private String getPositionText() {
