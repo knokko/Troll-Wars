@@ -25,6 +25,7 @@ package nl.knokko.story.dialogue;
 
 import java.awt.Font;
 
+import nl.knokko.gui.util.Condition;
 import nl.knokko.util.color.Color;
 
 public class ChoiseDialogueText extends SimpleDialogueText {
@@ -33,6 +34,7 @@ public class ChoiseDialogueText extends SimpleDialogueText {
 	
 	protected final Color holdColor;
 	protected Runnable action;
+	protected Condition condition;
 
 	public ChoiseDialogueText(String text, Color color, Color holdColor, Font font) {
 		super(text, color, font);
@@ -60,5 +62,9 @@ public class ChoiseDialogueText extends SimpleDialogueText {
 	
 	public void setAction(Runnable action){
 		this.action = action;
+	}
+	
+	public void setCondition(Condition condition) {
+		this.condition = condition;
 	}
 }
