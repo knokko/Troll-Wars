@@ -124,6 +124,7 @@ public class Game {
 		window.setMainComponent(guiComponent);
 		window.setWindowListener(new GameWindowListener());
 		GameScreen.openScreen();
+		MouseInput.setGuiState(getGuiState());
 	}
 	
 	private static void init(){
