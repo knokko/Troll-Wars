@@ -53,7 +53,7 @@ public final class MouseInput {
 		SCROLLS.clear();
 		float x = guiState.getMouseX();
 		float y = guiState.getMouseY();
-		if (prevMouseX == prevMouseX && prevMouseY == prevMouseY && (x != prevMouseX || y != prevMouseY))
+		if (prevMouseX == prevMouseX && prevMouseY == prevMouseY && (x != prevMouseX || y != prevMouseY) && x == x && y == y)
 			MOVES.add(new MouseMoveEvent(x, y, x - prevMouseX, y - prevMouseY));
 
 		/*
