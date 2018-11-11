@@ -16,8 +16,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.area.Area;
 import nl.knokko.area.TileMap;
+import nl.knokko.gui.component.state.RelativeComponentState;
+import nl.knokko.gui.keycode.KeyCode;
 import nl.knokko.gui.texture.GuiTexture;
 import nl.knokko.gui.window.GLGuiWindow;
+import nl.knokko.gui.window.WindowListener;
+import nl.knokko.input.KeyInput;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
@@ -119,6 +123,7 @@ public class AreaDesigner {
 		Mouse.setGrabbed(true);
 		tileRenderer = new TileRenderer();
 		window.setMainComponent(gui);
+		MouseInput.setGuiState(new RelativeComponentState.Static(gui.getState(), 0, 0, 1, 1));
 		load();
 	}
 	
@@ -128,6 +133,7 @@ public class AreaDesigner {
 		random = new Random();
 		
 		window = new GLGuiWindow();
+		window.setWindowListener(new AreaWindowListener());
 		gui = new GuiAreaDesigner();
 		//window.setMainComponent(gui);
 	}
@@ -154,34 +160,35 @@ public class AreaDesigner {
 	}
 	
 	private static boolean shouldContinue(){
-		return !Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
+		return !Display.isCloseRequested() && !KeyInput.isKeyDown(KeyCode.KEY_ESCAPE);
 	}
 	
 	private static void update(){
+		window.update();
 		area.update();
 		camera.update();
 		gui.update();
 		if(!moveTileState){
 			Facing facing = Facing.fromYaw(camera.getDegYaw());
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+			if(KeyInput.isKeyDown(KeyCode.KEY_UP)){
 				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 					moveTileUp();
 				else
 					moveTile(facing);
 				gui.updateSelectedPosition();
 			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+			if(KeyInput.isKeyDown(KeyCode.KEY_DOWN)){
 				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 					moveTileDown();
 				else
 					moveTile(Facing.fromYaw(facing.getDegreeYaw() + 180));
 				gui.updateSelectedPosition();
 			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			if(KeyInput.isKeyDown(KeyCode.KEY_RIGHT)) {
 				moveTile(Facing.fromYaw(facing.getDegreeYaw() + 90));
 				gui.updateSelectedPosition();
 			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			if(KeyInput.isKeyDown(KeyCode.KEY_LEFT)) {
 				moveTile(Facing.fromYaw(facing.getDegreeYaw() + 270));
 				gui.updateSelectedPosition();
 			}
@@ -208,31 +215,31 @@ public class AreaDesigner {
 				tileIndex = tiles.length - 1;
 			gui.updateSelectedTile();
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_H)){
+		if(KeyInput.isKeyDown(KeyCode.KEY_H)){
 			targetX = (int) (camera.getPosition().x / 64);
 			targetY = (int) (camera.getPosition().y / 16);
 			targetZ = (int) (camera.getPosition().z / 64);
 			gui.updateSelectedPosition();
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_1))
+		if(KeyInput.isKeyDown(KeyCode.KEY_1))
 			stackAmount = 1;
-		if(Keyboard.isKeyDown(Keyboard.KEY_2))
+		if(KeyInput.isKeyDown(KeyCode.KEY_2))
 			stackAmount = 2;
-		if(Keyboard.isKeyDown(Keyboard.KEY_3))
+		if(KeyInput.isKeyDown(KeyCode.KEY_3))
 			stackAmount = 3;
-		if(Keyboard.isKeyDown(Keyboard.KEY_4))
+		if(KeyInput.isKeyDown(KeyCode.KEY_4))
 			stackAmount = 4;
-		if(Keyboard.isKeyDown(Keyboard.KEY_5))
+		if(KeyInput.isKeyDown(KeyCode.KEY_5))
 			stackAmount = 5;
-		if(Keyboard.isKeyDown(Keyboard.KEY_6))
+		if(KeyInput.isKeyDown(KeyCode.KEY_6))
 			stackAmount = 6;
-		if(Keyboard.isKeyDown(Keyboard.KEY_7))
+		if(KeyInput.isKeyDown(KeyCode.KEY_7))
 			stackAmount = 7;
-		if(Keyboard.isKeyDown(Keyboard.KEY_8))
+		if(KeyInput.isKeyDown(KeyCode.KEY_8))
 			stackAmount = 8;
-		if(Keyboard.isKeyDown(Keyboard.KEY_9))
+		if(KeyInput.isKeyDown(KeyCode.KEY_9))
 			stackAmount = 9;
-		if(Keyboard.isKeyDown(Keyboard.KEY_C))
+		if(KeyInput.isKeyDown(KeyCode.KEY_C))
 			area.getTiles().clearDuplicates();
 		boolean pressed = false;
 		int button = -1;
@@ -251,12 +258,12 @@ public class AreaDesigner {
 			}
 		}*/
 		if(pressed && targetX < area.getTiles().getWidth() && targetX >= 0 && targetY >= 0 && targetZ < area.getTiles().getDepth() && targetZ >= 0){
-			if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+			if(KeyInput.isKeyDown(KeyCode.KEY_F)){
 				markedX = targetX;
 				markedY = targetY;
 				markedZ = targetZ;
 			}
-			else if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
+			else if(KeyInput.isKeyDown(KeyCode.KEY_Q)){
 				moveTileState = !moveTileState;
 			}
 			else {
@@ -275,6 +282,8 @@ public class AreaDesigner {
 					area.getTiles().removeTiles(targetX, targetY, targetZ);
 			}
 		}
+		MouseInput.update();
+		KeyInput.update();
 	}
 	
 	private static void render(){
@@ -390,7 +399,7 @@ public class AreaDesigner {
 	}
 	
 	private static byte getMoveBuffer(){
-		return (byte) (Keyboard.isKeyDown(Keyboard.KEY_T) ? 5 : 20);
+		return (byte) (KeyInput.isKeyDown(KeyCode.KEY_T) ? 5 : 20);
 	}
 	
 	static GuiTexture getTileNameTexture(){
@@ -420,6 +429,87 @@ public class AreaDesigner {
 	
 	public static TileHolder getSelectedTile() {
 		return tiles[tileIndex];
+	}
+	
+	private static class AreaWindowListener implements WindowListener {
+
+		@Override
+		public boolean preUpdate() {
+			return false;
+		}
+
+		@Override
+		public void postUpdate() {}
+
+		@Override
+		public boolean preRender() {
+			return false;
+		}
+
+		@Override
+		public void postRender() {}
+
+		@Override
+		public boolean preClick(float x, float y, int button) {
+			return false;
+		}
+
+		@Override
+		public void postClick(float x, float y, int button) {}
+
+		@Override
+		public float preScroll(float amount) {
+			return amount;
+		}
+
+		@Override
+		public void postScroll(float amount) {
+			MouseInput.addScroll(amount);
+		}
+
+		@Override
+		public boolean preKeyPressed(char character) {
+			return false;
+		}
+
+		@Override
+		public void postKeyPressed(char character) {
+			KeyInput.addPress(character);
+		}
+
+		@Override
+		public boolean preKeyPressed(int keyCode) {
+			return false;
+		}
+
+		@Override
+		public void postKeyPressed(int keyCode) {
+			KeyInput.addPress(keyCode);
+		}
+
+		@Override
+		public boolean preKeyReleased(int keyCode) {
+			return false;
+		}
+
+		@Override
+		public void postKeyReleased(int keyCode) {
+			KeyInput.addRelease(keyCode);
+		}
+
+		@Override
+		public boolean preRunLoop() {
+			return false;
+		}
+
+		@Override
+		public void postRunLoop() {}
+
+		@Override
+		public void preClose() {}
+
+		@Override
+		public void postClose() {}
 	}
 	
 	static interface TileHolder {
