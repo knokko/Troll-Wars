@@ -27,7 +27,9 @@ import java.awt.Font;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import nl.knokko.gui.util.Condition;
 import nl.knokko.main.Game;
+import nl.knokko.story.dialogue.action.DialogueConditions;
 import nl.knokko.story.dialogue.action.DialogueFunctions;
 import nl.knokko.texture.ImageTexture;
 import nl.knokko.util.Maths;
@@ -58,17 +60,17 @@ public final class DialogueFactory {
 		if(data.readBoolean()){
 			Color background = Color.fromBits(data);
 			ImageTexture portrait = map.loadPortrait(data);
-			SimpleDialogueText title = loadSimple(data, dialogue);
-			ChoiseDialogueText[] choises = new ChoiseDialogueText[(int) (data.readNumber(CHOISE_BITCOUNT, false) + MIN_CHOISES)];
+			ChoiseDialogueText[] choises = new ChoiseDialogueText[data.readInt()];
 			for(int i = 0; i < choises.length; i++)
 				choises[i] = loadChoise(data, dialogue, bitCount);
+			SimpleDialogueText title = loadSimple(data, dialogue);
 			return new ChoiseDialoguePart(dialogue, background, portrait, title, choises);
 		}
 		else {
 			Color background = Color.fromBits(data);
 			ImageTexture portrait = map.loadPortrait(data);
-			SimpleDialogueText title = loadSimple(data, dialogue);
 			SimpleDialogueText text = loadSimple(data, dialogue);
+			SimpleDialogueText title = loadSimple(data, dialogue);
 			SimpleDialoguePart part = new SimpleDialoguePart(dialogue, background, portrait, title, text);
 			part.setNext(loadAction(data, dialogue, bitCount));
 			return part;
@@ -80,8 +82,11 @@ public final class DialogueFactory {
 	}
 	
 	private static ChoiseDialogueText loadChoise(BitInput data, Instance instance, byte bitCount){
-		ChoiseDialogueText choise = new ChoiseDialogueText(data.readJavaString(), Color.fromBits(data), Color.fromBits(data), loadFont(data));
+		String text = data.readJavaString();
+		Color color = Color.fromBits(data);
+		ChoiseDialogueText choise = new ChoiseDialogueText(text, color, color, loadFont(data));
 		choise.setAction(loadAction(data, instance, bitCount));
+		choise.setCondition(loadCondition(data));
 		return choise;
 	}
 	
@@ -90,11 +95,15 @@ public final class DialogueFactory {
 	}
 	
 	private static Runnable loadAction(BitInput data, Instance dialogue, byte bitCount){
+		int next = data.readInt();
 		String action = data.readJavaString();
-		int next = (int) data.readNumber(bitCount, false);
 		if(!action.isEmpty())
 			return new ActionFunction(dialogue, next, action);
 		return new ActionNextPart(dialogue, next);
+	}
+	
+	private static Condition loadCondition(BitInput data) {
+		return new DialogueCondition(data.readJavaString());
 	}
 	
 	private static class Instance implements Dialogue {
@@ -202,6 +211,29 @@ public final class DialogueFactory {
 				throw new IllegalArgumentException("Incorrect function: " + method.getName(), e);
 			}
 		}
+	}
+	
+	private static class DialogueCondition implements Condition {
+		
+		private final Method method;
+		
+		private DialogueCondition(String name) {
+			try {
+				method = DialogueConditions.class.getDeclaredMethod(name);
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Unknown function: " + name, e);
+			} 
+		}
+
+		@Override
+		public boolean isTrue() {
+			try {
+				return (boolean) method.invoke(null);
+			} catch (Exception ex) {
+				throw new IllegalArgumentException("Incorrect condition: " + method.getName(), ex);
+			}
+		}
+		
 	}
 	
 	private static class Part {

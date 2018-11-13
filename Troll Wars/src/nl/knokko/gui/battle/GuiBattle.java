@@ -442,7 +442,7 @@ public class GuiBattle extends GuiMenu {
         protected void addComponents() {}
         
         public void setMoves(FightMoveOption[] moves){
-        	components.clear();
+        	clearComponents();
         	int index = 0;
             for(FightMoveOption move : moves){
                 addComponent(new ActivatableTextButton(move.getName(), FIGHT_MOVE_DEFAULT, FIGHT_MOVE_HOVER, FIGHT_MOVE_INACTIVE, new FightMoveClickAction(move), () -> move.canCast(battle.getChoosingPlayer(), battle)), 0, 1 - (1 + index) * 0.2f, 1, 1 - index * 0.2f);
@@ -492,7 +492,7 @@ public class GuiBattle extends GuiMenu {
         protected void addComponents() {}
         
         public void setItems(ItemMoveOption[] moves){
-        	components.clear();
+        	clearComponents();
         	int index = 0;
             for(ItemMoveOption move : moves){
                 addComponent(new ActivatableTextButton(move.getName(), ITEM_MOVE_DEFAULT, ITEM_MOVE_HOVER, ITEM_MOVE_INACTIVE, new ItemMoveClickAction(move), () -> move.canUse(battle.getChoosingPlayer().getInventory(), battle.getChoosingPlayer(), battle)), 0, 1 - (1 + index) * 0.2f, 1, 1 - index * 0.2f);
@@ -562,7 +562,7 @@ public class GuiBattle extends GuiMenu {
     	protected void addComponents(){}
     	
     	public void setTargets(){
-    		components.clear();
+    		clearComponents();
             addComponent(returnButton, 0.1f, 0.45f, 0.25f, 0.55f);
     		BattleCreature[] players = battle.getPlayers();
     		BattleCreature[] opponents = battle.getOpponents();
@@ -637,7 +637,7 @@ public class GuiBattle extends GuiMenu {
     	protected void addComponents(){}
     	
     	public void setTargets(){
-    		components.clear();
+    		clearComponents();
             addComponent(returnButton, 0.1f, 0.45f, 0.25f, 0.55f);
     		BattleCreature[] players = battle.getPlayers();
     		BattleCreature[] opponents = battle.getOpponents();

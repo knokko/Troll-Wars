@@ -40,7 +40,6 @@ import nl.knokko.gui.component.text.CondivatableTextButton;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.inventory.InventoryType;
 import nl.knokko.inventory.InventoryTypeBase;
-import nl.knokko.items.Item;
 import nl.knokko.main.Game;
 
 public class GuiInventory extends GuiMenu {
@@ -139,7 +138,7 @@ public class GuiInventory extends GuiMenu {
         private final InventoryType type;
         
         public InventoryTypeWrapper(InventoryType type) {
-            super(new ComponentInventory(Game.getPlayerInventory().getItems(type), (Item item) -> {}));
+            super(new ComponentInventory(Game.getPlayerInventory(), Game.getPlayerInventory().getItems(type), null));
             this.type = type;
         }
         
@@ -154,7 +153,7 @@ public class GuiInventory extends GuiMenu {
         private final InventoryTypeBase type;
         
         public InventoryBaseTypeWrapper(InventoryTypeBase type) {
-            super(new ComponentInventory(type != null ? Game.getPlayerInventory().getItems(type) : Game.getPlayerInventory().getItems(), (Item item) -> {}));
+            super(new ComponentInventory(Game.getPlayerInventory(), type != null ? Game.getPlayerInventory().getItems(type) : Game.getPlayerInventory().getItems(), null));
             this.type = type;
         }
         

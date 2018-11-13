@@ -44,7 +44,7 @@ public class GameScreen {
 			ex.printStackTrace();
 		}
 		*/
-		Game.getWindow().open("Troll Wars", 800, 800, true);
+		Game.getWindow().open("Troll Wars", true);
 	}
 	
 	public static void updateScreen(){

@@ -84,7 +84,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 	}
 	
 	private void openItemSelection(EquipmentButton button){
-		equipmentSelect.setComponent(new ComponentInventory(Game.getPlayerInventory().getItems((Item item) -> {
+		equipmentSelect.setComponent(new ComponentInventory(Game.getPlayerInventory(), Game.getPlayerInventory().getItems((Item item) -> {
 			return button.canHaveItem(item);
 		}), (Item item) -> {
 			Item old = button.getItem();

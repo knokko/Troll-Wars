@@ -291,6 +291,22 @@ public class DialogueDesigner {
 							backUp();
 							setDialogue(new DialogueBuilder(), name);
 						}
+						if (y > Y_FILE_EXPORT && y < Y_FILE_EXPORT + OFFSET_Y) {
+							// TODO now actually export...
+							new File("dialogues").mkdirs();
+							try {
+								BitOutput output = new BitOutputStream(new FileOutputStream(new File("dialogues/" + name + ".dal")));
+								output.addBoolean(dialogue.canLeave);
+								output.addInt(dialogue.parts.size());
+								dialogue.portraits.save(output);
+								for (PartBuilder part : dialogue.parts) {
+									part.save(output, dialogue.portraits);
+								}
+								output.terminate();
+							} catch (IOException ex) {
+								ex.printStackTrace();
+							}
+						}
 					}
 					fileToolbar = false;
 					panel.repaint();
@@ -462,8 +478,6 @@ public class DialogueDesigner {
 		
 		@Override
 		public void paint(Graphics g){
-			//TODO time for exporting...
-			//TODO Use my GUI library instead of custom packages for Troll Wars
 			g.setFont(FONT);
 			g.setColor(BACKGROUND);
 			g.fillRect(0, OFFSET_Y, frame.getWidth(), frame.getHeight() - OFFSET_Y);
@@ -610,6 +624,8 @@ public class DialogueDesigner {
 					g.drawString("Close", X_FILE + 5, Y_FILE_CLOSE + 40);
 					g.setColor(Color.RED);
 					g.drawString("Clear", X_FILE + 5, Y_FILE_CLEAR + 40);
+					g.setColor(Color.BLACK);
+					g.drawString("Export", X_FILE, Y_FILE_EXPORT + 40);
 				}
 			}
 			if(selectingName()){
@@ -1642,6 +1658,7 @@ public class DialogueDesigner {
 	static final int Y_FILE_SAVE = Y_FILE_LOAD + OFFSET_Y;
 	static final int Y_FILE_CLOSE = Y_FILE_SAVE + OFFSET_Y;
 	static final int Y_FILE_CLEAR = Y_FILE_CLOSE + OFFSET_Y;
+	static final int Y_FILE_EXPORT = Y_FILE_CLEAR + OFFSET_Y;
 	static final int HEIGHT_FILE = 300;
 	
 	static final int Y_NEWPART_SIMPLE = OFFSET_Y;

@@ -124,6 +124,7 @@ public class Game {
 		window.setMainComponent(guiComponent);
 		window.setWindowListener(new GameWindowListener());
 		GameScreen.openScreen();
+		MouseInput.setGuiState(getGuiState());
 	}
 	
 	private static void init(){
@@ -517,7 +518,7 @@ public class Game {
 
 		@Override
 		public float preScroll(float amount) {
-			return 0;
+			return amount;
 		}
 
 		@Override
