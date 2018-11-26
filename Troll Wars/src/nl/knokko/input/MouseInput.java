@@ -39,9 +39,6 @@ public final class MouseInput {
 	private static final ArrayList<MouseScrollEvent> SCROLLS = new ArrayList<MouseScrollEvent>();
 	
 	private static GuiComponentState guiState;
-
-	private static float prevMouseX = Float.NaN;
-	private static float prevMouseY = Float.NaN;
 	
 	public static void setGuiState(GuiComponentState state) {
 		guiState = state;
@@ -51,24 +48,10 @@ public final class MouseInput {
 		MOVES.clear();
 		CLICKS.clear();
 		SCROLLS.clear();
-		float x = guiState.getMouseX();
-		float y = guiState.getMouseY();
-		if (prevMouseX == prevMouseX && prevMouseY == prevMouseY && (x != prevMouseX || y != prevMouseY) && x == x && y == y)
-			MOVES.add(new MouseMoveEvent(x, y, x - prevMouseX, y - prevMouseY));
-
-		/*
-		 * while(Mouse.next()){ if(Mouse.getEventDWheel() != 0) scrolls.add(new
-		 * MouseScrollEvent(Mouse.getEventDWheel())); if(Mouse.getEventDX() != 0 ||
-		 * Mouse.getEventDY() != 0) moves.add(new MouseMoveEvent(Mouse.getEventX(),
-		 * Mouse.getEventY(), Mouse.getEventDX(), Mouse.getEventDY()));
-		 * if(Mouse.getEventButton() != -1 && clickCooldown == 0){ clicks.add(new
-		 * MouseClickEvent(getRelativeX(Mouse.getEventX()),
-		 * getRelativeY(Mouse.getEventY()), Mouse.getEventButton(),
-		 * Mouse.getEventButtonState())); clickCooldown = (byte) (GameScreen.fps() / 2);
-		 * } } if(clickCooldown > 0) clickCooldown--;
-		 */
-		prevMouseX = x;
-		prevMouseY = y;
+		float dx = guiState.getMouseDX();
+		float dy = guiState.getMouseDY();
+		if (dx != 0 || dy != 0)
+			MOVES.add(new MouseMoveEvent(guiState.getMouseX(), guiState.getMouseX(), dx, dy));
 	}
 
 	public static ArrayList<MouseMoveEvent> getMouseMoves() {

@@ -115,16 +115,13 @@ public class CameraFlying implements Camera {
 	public void update(){
 		ArrayList<MouseMoveEvent> moves = MouseInput.getMouseMoves();
 		for(MouseMoveEvent event : moves){
+			System.out.println("yaw was " + yaw);
 			yaw += event.getDeltaX() * 500;
-			while(yaw >= 360)
-				yaw -= 360;
-			while(yaw < 0)
-				yaw += 360;
+			System.out.println("yaw moved to " + yaw);
+			yaw = yaw % 360;
+			System.out.println("yaw became " + yaw);
 			pitch -= event.getDeltaY() * 500;
-			while(pitch >= 360)
-				pitch -= 360;
-			while(pitch < 0)
-				pitch += 360;
+			pitch = pitch % 360;
 		}
 		float speed = KeyInput.isKeyDown(KeyCode.KEY_T) ? 15 : 5;
 		if(KeyInput.isKeyDown(KeyCode.KEY_CAPSLOCK))
