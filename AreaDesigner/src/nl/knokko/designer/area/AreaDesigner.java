@@ -121,9 +121,7 @@ public class AreaDesigner {
 	}
 	
 	private static void open(){
-		
-		window.open("Troll Wars Area Designer", true);
-		//GameScreen.openScreen();
+		window.open("Troll Wars Area Designer", false);
 	}
 	
 	private static void postInit() {

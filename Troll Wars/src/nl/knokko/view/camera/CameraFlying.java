@@ -115,11 +115,8 @@ public class CameraFlying implements Camera {
 	public void update(){
 		ArrayList<MouseMoveEvent> moves = MouseInput.getMouseMoves();
 		for(MouseMoveEvent event : moves){
-			System.out.println("yaw was " + yaw);
 			yaw += event.getDeltaX() * 500;
-			System.out.println("yaw moved to " + yaw);
 			yaw = yaw % 360;
-			System.out.println("yaw became " + yaw);
 			pitch -= event.getDeltaY() * 500;
 			pitch = pitch % 360;
 		}
