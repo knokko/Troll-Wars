@@ -28,6 +28,7 @@ import java.awt.Font;
 import nl.knokko.story.dialogue.PortraitMap;
 import nl.knokko.story.dialogue.SimpleDialoguePart;
 import nl.knokko.story.dialogue.SimpleDialogueText;
+import nl.knokko.story.dialogue.action.DialogueFunctions;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 import nl.knokko.util.color.Color;
@@ -67,6 +68,13 @@ public class SimplePartBuilder extends PartBuilder {
 		text.save(output);
 		title.save(output);
 		output.addInt(nextIndex);
+		if (functionName != null) {
+			try {
+				DialogueFunctions.class.getMethod(functionName);
+			} catch (NoSuchMethodException ex) {
+				System.out.println("There is no dialogue function with name " + functionName);
+			}
+		}
 		output.addJavaString(functionName);
 	}
 	

@@ -29,6 +29,8 @@ import java.util.List;
 import nl.knokko.story.dialogue.ChoiseDialogueText;
 import nl.knokko.story.dialogue.DialogueText;
 import nl.knokko.story.dialogue.PortraitMap;
+import nl.knokko.story.dialogue.action.DialogueConditions;
+import nl.knokko.story.dialogue.action.DialogueFunctions;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 import nl.knokko.util.color.Color;
@@ -67,7 +69,21 @@ public class ChoisePartBuilder extends PartBuilder {
 		for(Choise choise : choises){
 			choise.text.save(output);
 			output.addInt(choise.nextIndex);
+			if (choise.function != null) {
+				try {
+					DialogueFunctions.class.getMethod(choise.function);
+				} catch (NoSuchMethodException ex) {
+					System.out.println("There is no dialogue function with name " + choise.function);
+				}
+			}
 			output.addJavaString(choise.function);
+			if (choise.condition != null) {
+				try {
+					DialogueConditions.class.getMethod(choise.condition);
+				} catch (NoSuchMethodException ex) {
+					System.out.println("There is no dialogue condition with name " + choise.condition);
+				}
+			}
 			output.addJavaString(choise.condition);
 		}
 		title.save(output);

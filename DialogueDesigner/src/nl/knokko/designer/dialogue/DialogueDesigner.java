@@ -315,7 +315,6 @@ public class DialogueDesigner {
 							setDialogue(new DialogueBuilder(), name);
 						}
 						if (y > Y_FILE_EXPORT && y < Y_FILE_EXPORT + OFFSET_Y) {
-							// TODO now actually export...
 							new File("dialogues").mkdirs();
 							try {
 								BitOutput output = new BitOutputStream(new FileOutputStream(new File("dialogues/" + name + ".dal")));
