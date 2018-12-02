@@ -36,7 +36,7 @@ import nl.knokko.story.npc.NPCManager;
 public final class DialogueFunctions {
 	
 	public static void leave(){
-		Game.finishDialogue();
+		Game.closeDialogue();
 	}
 
 	public static void introHumanAppearDemon(){
@@ -54,19 +54,19 @@ public final class DialogueFunctions {
 		allies[0] = BattlePlayer.getInstance(Game.getPlayers().gothrok);
 		Game.getPlayers().gothrok.enterBattle();
 		allies[1] = new BattleMyrmora.Intro();
-		Game.finishDialogue();
+		Game.closeDialogue();
 		Game.startBattle(new PlotBattle(allies, getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
 	}
 	
 	public static void introHumanBattleAlone(){
 		Game.getEventManager().introHuman().setState(IntroHumanEvent.STATE_FOUGHT_ALONE);
-		Game.finishDialogue();
+		Game.closeDialogue();
 		Game.startBattle(new PlotBattle(Game.getPlayers().getBattlePlayers(), getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
 	}
 	
 	public static void introHumanLeave(){
 		Game.getEventManager().introHuman().setState(IntroHumanEvent.STATE_LEFT);
-		Game.finishDialogue();
+		Game.closeDialogue();
 	}
 	
 	private static BattleCreature[] getIntroHumans(){

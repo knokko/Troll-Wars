@@ -23,38 +23,50 @@
  *******************************************************************************/
 package nl.knokko.shaders;
 
-import org.lwjgl.util.vector.Vector2f;
+import nl.knokko.util.color.ColorSpecial;
 
-public class GuiShader extends ShaderProgram {
+public class SpecialGuiShader extends ShaderProgram {
     
     public static final String VERTEX_FILE = "nl/knokko/shaders/gui.vshad";
-    public static final String FRAGMENT_FILE = "nl/knokko/shaders/gui.fshad";
+    public static final String FRAGMENT_FILE = "nl/knokko/shaders/specialgui.fshad";
     
-    public static final GuiShader GUI_SHADER = new GuiShader();
+    public static final SpecialGuiShader SPECIAL_GUI_SHADER = new SpecialGuiShader();
      
-    private int locationCentrePosition;
-    private int locationScale;
+    private int locationScreenPosition;
+	private int locationSize;
+	private int locationUV;
+    
+    private int locationColorMyrmora;
  
-    private GuiShader() {
+    private SpecialGuiShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
     
-    public void loadCentrePosition(Vector2f position){
-    	loadVector(locationCentrePosition, position);
-    }
-    
-    public void loadScale(Vector2f scale){
-    	loadVector(locationScale, scale);
-    }
+    public void loadPosition(float x, float y){
+		loadVector(locationScreenPosition, x, y);
+	}
+	
+	public void loadSize(float width, float height){
+		loadVector(locationSize, width, height);
+	}
+	
+	public void loadBounds(float minU, float minV, float maxU, float maxV) {
+		loadVector(locationUV, minU, minV, maxU, maxV);
+	}
  
     @Override
     protected void getAllUniformLocations() {
-    	locationCentrePosition = getUniformLocation("centrePosition");
-    	locationScale = getUniformLocation("scale");
+    	locationScreenPosition = getUniformLocation("screenPosition");
+    	locationSize = getUniformLocation("size");
+    	locationColorMyrmora = getUniformLocation("colorMyrmora");
     }
  
     @Override
     protected void bindAttributes() {
-        super.bindAttribute(0, "modelPosition");
+        bindAttribute(0, "modelPosition");
+    }
+    
+    public void updateColors() {
+    	loadVector(locationColorMyrmora, ColorSpecial.MYRMORA.toVector());
     }
 }

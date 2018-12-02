@@ -330,10 +330,6 @@ public class Game {
 		removeState();
 	}
 	
-	public static void finishDialogue(){
-		removeState();
-	}
-	
 	public static void gameOver(){
 		stop(false);//TODO a proper game over...
 	}

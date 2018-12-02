@@ -99,9 +99,9 @@ public class Color implements Comparable<Color>, GuiColor {
 		return new Color(bits.readByte(), bits.readByte(), bits.readByte());
 	}
 
-	private final byte red;
-	private final byte green;
-	private final byte blue;
+	protected final byte red;
+	protected final byte green;
+	protected final byte blue;
 	
 	public Color(int red, int green, int blue){
 		this.red = (byte) red;

@@ -1,0 +1,21 @@
+#version 140
+
+in vec2 textureCoords;
+
+out vec4 out_Color;
+
+uniform sampler2D guiTexture;
+
+const vec4 MYRMORA_ALIAS = vec4(0.5686275, 0.36078432, 0.32941177, 1.0);
+
+uniform vec4 colorMyrmora;
+
+void main(void){
+	vec4 color = texture(guiTexture, textureCoords);
+	if (color == MYRMORA_ALIAS) {
+		out_Color = colorMyrmora;
+	}
+	else {
+		out_Color = color;
+	}
+}

@@ -23,27 +23,45 @@
  *******************************************************************************/
 package nl.knokko.gui.dialogue;
 
+import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.component.dialogue.ChoiseDialogueComponent;
+import nl.knokko.gui.component.dialogue.SimpleDialogueComponent;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.story.dialogue.ChoiseDialoguePart;
 import nl.knokko.story.dialogue.Dialogue;
 import nl.knokko.story.dialogue.DialoguePart;
-import nl.knokko.util.resources.Resources;
+import nl.knokko.story.dialogue.SimpleDialoguePart;
 
 public class GuiDialogue extends GuiMenu {
 	
 	private final Dialogue dialogue;
+	
+	private SubComponent partComponent;
 
 	public GuiDialogue(Dialogue dialogue) {
 		this.dialogue = dialogue;
 	}
+	
+	public Dialogue getDialogue() {
+		return dialogue;
+	}
 
 	@Override
 	protected void addComponents() {
-		// TODO Auto-generated method stub
-
+		partComponent = new SubComponent(createPartComponent(), 0, 0, 1, 0.3f);
+		addComponent(partComponent);
 	}
 	
-	protected void changePart() {
+	public void changePart() {
+		partComponent.setComponent(createPartComponent());
+	}
+	
+	private GuiComponent createPartComponent() {
 		DialoguePart current = dialogue.current();
-		Resources.createDialogueImage(current, null);
+		if (current instanceof SimpleDialoguePart) {
+			return new SimpleDialogueComponent((SimpleDialoguePart) current, this);
+		} else {
+			return new ChoiseDialogueComponent((ChoiseDialoguePart) current, this);
+		}
 	}
 }

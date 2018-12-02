@@ -265,12 +265,12 @@ public final class Resources {
 	
 	public static Dialogue loadDialogue(String dialogueName, int id){
 		try {
-			BitInput input = new BitInputStream(Resources.class.getClassLoader().getResourceAsStream("dialogues/" + dialogueName + ".dialogue"));
+			BitInput input = new BitInputStream(Resources.class.getClassLoader().getResourceAsStream("dialogues/" + dialogueName + ".dal"));
 			Dialogue dialogue = DialogueFactory.loadFromBits(input, id);
 			input.terminate();
 			return dialogue;
 		} catch (NullPointerException e) {
-			throw new IllegalArgumentException("There is no dialogue with name " + dialogueName);
+			throw new IllegalArgumentException("There is no dialogue with name " + dialogueName, e);
 		}
 	}
 	
@@ -1672,8 +1672,9 @@ public final class Resources {
 	/**
 	 * @param textHeights If this is not null, the y coords of the text per index will be put in this array
 	 */
-	public static BufferedImage createDialogueImage(DialoguePart part, int[] textHeights){
-		return createDialogueImage(part.getBackGround(), part.getPortrait(), part.getTitle(), part.getText(), textHeights);
+	public static BufferedImage createDialogueImage(DialoguePart part, int[] textHeights, boolean addDummySpace){
+		return createDialogueImage(part.getBackGround(), part.getPortrait(), part.getTitle(), 
+				part.getText(), textHeights, addDummySpace);
 	}
 	
 	public static void getTextHeights(DialogueText[] texts, int[] textHeights){
@@ -1710,22 +1711,25 @@ public final class Resources {
 	/**
 	 * @param textHeights If this is not null, the y coords of the text per index will be put in this array
 	 */
-	public static BufferedImage createDialogueImage(Color backGround, ImageTexture portrait, DialogueText title, DialogueText[] texts, int[] textHeights){
-		BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+	public static BufferedImage createDialogueImage(Color backGround, ImageTexture portrait, 
+			DialogueText title, DialogueText[] texts, int[] textHeights, boolean addDummySpace){
+		// Quick and dirty solution for something I shouldn't have done
+		final int dummyHeight = 466;
+		BufferedImage image = new BufferedImage(800, 800 - dummyHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		g.setColor(backGround.toAWTColor());
-		g.fillRect(0, 500, 800, 300);
-		g.fillRect(34, 466, 766, 34);
+		g.fillRect(0, 500 - dummyHeight, 800, 300);
+		g.fillRect(34, 466 - dummyHeight, 766, 34);
 		g.setColor(java.awt.Color.BLACK);
-		g.drawRect(0, 500, 800, 300);
-		g.drawRect(33, 466, 766, 34);
-		g.drawRect(0, 466, 33, 33);
-		g.drawImage(portrait.getImage(), 1, 467, 32, 32, null);
+		g.drawRect(0, 500 - dummyHeight, 800, 300);
+		g.drawRect(33, 466 - dummyHeight, 766, 34);
+		g.drawRect(0, 466 - dummyHeight, 33, 33);
+		g.drawImage(portrait.getImage(), 1, 467 - dummyHeight, 32, 32, null);
 		g.setFont(title.getFont());
 		g.setColor(title.getColor().toAWTColor());
-		g.drawString(title.getText(), 40, 494);
+		g.drawString(title.getText(), 40, 494 - dummyHeight);
 		int textIndex = 0;
-		int y = 540;
+		int y = 540 - dummyHeight;
 		for(DialogueText text : texts){
 			g.setColor(text.getColor().toAWTColor());
 			g.setFont(text.getFont());
@@ -1754,6 +1758,18 @@ public final class Resources {
 			textIndex++;
 		}
 		g.dispose();
+		if (addDummySpace) {
+			BufferedImage result = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+			g = result.createGraphics();
+			g.drawImage(image, 0, dummyHeight, null);
+			g.dispose();
+			if (textHeights != null) {
+				for (int index = 0; index < textHeights.length; index++) {
+					textHeights[index] += dummyHeight;
+				}
+			}
+			return result;
+		}
 		return image;
 	}
 	

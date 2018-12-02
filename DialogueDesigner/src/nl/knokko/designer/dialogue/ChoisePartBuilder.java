@@ -75,6 +75,8 @@ public class ChoisePartBuilder extends PartBuilder {
 				} catch (NoSuchMethodException ex) {
 					System.out.println("There is no dialogue function with name " + choise.function);
 				}
+			} else if (choise.nextIndex == -1) {
+				System.out.println("The choise part with text '" + choise.text.text + "' has no next part and no function!");
 			}
 			output.addJavaString(choise.function);
 			if (choise.condition != null) {

@@ -29,8 +29,8 @@ import nl.knokko.util.resources.Resources;
 public final class Dialogues {
 	
 	public static final Dialogue INTRO_HUMANS = Resources.loadDialogue("intro humans", 0);
-	public static final Dialogue INTRO_HUMANS_WITH_TROLLS = Resources.loadDialogue("intro humans with trolls", 1);
-	public static final Dialogue INTRO_HUMANS_WITHOUT_TROLLS = Resources.loadDialogue("intro humans without trolls", 2);
+	public static final Dialogue INTRO_HUMANS_WITH_TROLLS = null; // TODO add later
+	public static final Dialogue INTRO_HUMANS_WITHOUT_TROLLS = null;
 	
 	private static final Dialogue[] DIALOGUES = {INTRO_HUMANS, INTRO_HUMANS_WITH_TROLLS, INTRO_HUMANS_WITHOUT_TROLLS};
 	

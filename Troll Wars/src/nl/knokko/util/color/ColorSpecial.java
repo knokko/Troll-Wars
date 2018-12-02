@@ -23,6 +23,8 @@
  *******************************************************************************/
 package nl.knokko.util.color;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 import nl.knokko.util.color.special.ColorMyrmora;
@@ -83,5 +85,9 @@ public class ColorSpecial extends Color {
 	@Override
 	public int hashCode(){
 		return id;
+	}
+	
+	public Vector3f getAliasVector() {
+		return new Vector3f((red & 0xFF) / 255f, (green & 0xFF) / 255f, (blue & 0xFF) / 255f);
 	}
 }

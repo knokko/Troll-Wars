@@ -48,6 +48,10 @@ public class ChoiseDialogueText extends SimpleDialogueText {
 	public ChoiseDialogueText(String text, Color color) {
 		this(text, color, DEFAULT_HOLD_COLOR, DEFAULT_FONT);
 	}
+	
+	public ChoiseDialogueText(String text, Color color, Font font) {
+		this(text, color, DEFAULT_HOLD_COLOR, font);
+	}
 
 	public ChoiseDialogueText(String text) {
 		this(text, DEFAULT_COLOR, DEFAULT_HOLD_COLOR, DEFAULT_FONT);
@@ -66,5 +70,13 @@ public class ChoiseDialogueText extends SimpleDialogueText {
 	
 	public void setCondition(Condition condition) {
 		this.condition = condition;
+	}
+	
+	public Color getHoldColor() {
+		return holdColor;
+	}
+	
+	public Condition getCondition() {
+		return condition;
 	}
 }

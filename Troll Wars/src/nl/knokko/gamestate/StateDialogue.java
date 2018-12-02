@@ -24,6 +24,7 @@
 package nl.knokko.gamestate;
 
 import nl.knokko.gui.component.GuiComponent;
+import nl.knokko.gui.dialogue.GuiDialogue;
 import nl.knokko.main.Game;
 import nl.knokko.story.dialogue.Dialogue;
 import nl.knokko.story.dialogues.Dialogues;
@@ -34,6 +35,7 @@ import nl.knokko.util.resources.Saver;
 public class StateDialogue implements GameState {
 	
 	private Dialogue current;
+	private GuiDialogue currentGui;
 
 	public StateDialogue() {}
 
@@ -41,17 +43,10 @@ public class StateDialogue implements GameState {
 	public void update() {
 		if(current == null)
 			Game.removeState();
-		else {
-			//TODO use user input
-		}
 	}
 
 	@Override
-	public void render() {
-		if(current != null){
-			
-		}
-	}
+	public void render() {}
 
 	@Override
 	public void open() {
@@ -95,15 +90,24 @@ public class StateDialogue implements GameState {
 	}
 
 	@Override
-	public void setCurrentGui(GuiComponent gui) {}
+	public void setCurrentGui(GuiComponent gui) {
+		throw new UnsupportedOperationException("Use setCurrentDialogue");
+	}
 	
 	@Override
 	public GuiComponent getCurrentGui(){
-		return null;
+		return currentGui;
 	}
 	
 	public void setCurrentDialogue(Dialogue dialogue){
 		current = dialogue;
+		if (dialogue != null) {
+			currentGui = new GuiDialogue(dialogue);
+			currentGui.setState(Game.getGuiState());
+			currentGui.init();
+		} else {
+			currentGui = null;
+		}
 	}
 
 	@Override

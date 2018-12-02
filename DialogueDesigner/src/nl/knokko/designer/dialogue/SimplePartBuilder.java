@@ -74,6 +74,8 @@ public class SimplePartBuilder extends PartBuilder {
 			} catch (NoSuchMethodException ex) {
 				System.out.println("There is no dialogue function with name " + functionName);
 			}
+		} else if (nextIndex == -1) {
+			System.out.println("The simple part with text '" + text.text + "' has no next part and no function.");
 		}
 		output.addJavaString(functionName);
 	}

@@ -84,7 +84,7 @@ public final class DialogueFactory {
 	private static ChoiseDialogueText loadChoise(BitInput data, Instance instance, byte bitCount){
 		String text = data.readJavaString();
 		Color color = Color.fromBits(data);
-		ChoiseDialogueText choise = new ChoiseDialogueText(text, color, color, loadFont(data));
+		ChoiseDialogueText choise = new ChoiseDialogueText(text, color, loadFont(data));
 		choise.setAction(loadAction(data, instance, bitCount));
 		choise.setCondition(loadCondition(data));
 		return choise;
@@ -97,13 +97,17 @@ public final class DialogueFactory {
 	private static Runnable loadAction(BitInput data, Instance dialogue, byte bitCount){
 		int next = data.readInt();
 		String action = data.readJavaString();
-		if(!action.isEmpty())
+		if(action != null)
 			return new ActionFunction(dialogue, next, action);
 		return new ActionNextPart(dialogue, next);
 	}
 	
-	private static Condition loadCondition(BitInput data) {
-		return new DialogueCondition(data.readJavaString());
+	private static Condition loadCondition(BitInput input) {
+		String methodName = input.readJavaString();
+		if (methodName != null)
+			return new DialogueCondition(methodName);
+		else
+			return Condition.TRUE;
 	}
 	
 	private static class Instance implements Dialogue {
@@ -185,7 +189,8 @@ public final class DialogueFactory {
 
 		@Override
 		public void run() {
-			dialogue.setCurrent(index);
+			if (index != -1)
+				dialogue.setCurrent(index);
 		}
 	}
 	

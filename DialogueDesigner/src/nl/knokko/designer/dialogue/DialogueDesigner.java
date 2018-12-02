@@ -242,6 +242,7 @@ public class DialogueDesigner {
 		byte clickAction = CLICK_ACTION_DEFAULT;
 		
 		Frame(){
+			setTitle("Troll Wars Dialogue Designer");
 			setSize(1600,900);
 			setVisible(true);
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -508,7 +509,10 @@ public class DialogueDesigner {
 					if(part.designerX <= viewX + frame.getWidth() && part.designerX + DIALOGUE_WIDTH >= viewX && part.designerY <= viewY + frame.getHeight() && part.designerY + DIALOGUE_HEIGHT >= viewY){
 						if(part instanceof SimplePartBuilder){
 							SimplePartBuilder simple = (SimplePartBuilder) part;
-							BufferedImage image = Resources.createDialogueImage(simple.background, simple.portrait, simple.title.toSDT(), new DialogueText[]{new SimpleDialogueText(simple.text.text, simple.text.color, simple.text.font)}, null);
+							BufferedImage image = Resources.createDialogueImage(simple.background, 
+									simple.portrait, simple.title.toSDT(), 
+									new DialogueText[]{new SimpleDialogueText(simple.text.text, 
+											simple.text.color, simple.text.font)}, null, true);
 							g.drawImage(image, simple.designerX - viewX, simple.designerY - 500 - viewY, null);
 							if(simple.functionName != null){
 								g.setColor(java.awt.Color.BLUE);
@@ -530,7 +534,9 @@ public class DialogueDesigner {
 						if(part instanceof ChoisePartBuilder){
 							ChoisePartBuilder choise = (ChoisePartBuilder) part;
 							int[] textHeights = new int[choise.choises.size()];
-							BufferedImage image = Resources.createDialogueImage(choise.background, choise.portrait, choise.title.toSDT(), choise.toDialogueTexts(), textHeights);
+							BufferedImage image = Resources.createDialogueImage(choise.background, 
+									choise.portrait, choise.title.toSDT(), choise.toDialogueTexts(), 
+									textHeights, true);
 							for(int i = 0; i < textHeights.length; i++)
 								textHeights[i] -= 500;
 							g.drawImage(image, choise.designerX - viewX, choise.designerY - 500 - viewY, null);
