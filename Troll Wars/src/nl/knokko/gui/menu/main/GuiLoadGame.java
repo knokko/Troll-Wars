@@ -29,6 +29,8 @@ import java.util.List;
 
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.color.GuiColor;
+import nl.knokko.gui.color.SimpleGuiColor;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.text.ActivatableTextButton;
 import nl.knokko.gui.component.text.TextButton;
@@ -47,6 +49,8 @@ public class GuiLoadGame extends GuiMenu {
 	private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 50, 50));
 	private static final Properties SELECTED_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(255, 100, 255), new Color(0, 50, 50));
 	
+	private static final GuiColor BACKGROUND = new SimpleGuiColor(0, 0, 150);
+	
 	private final StateMainMenu state;
 	
 	private SavesButtons savesButtons;
@@ -61,6 +65,11 @@ public class GuiLoadGame extends GuiMenu {
 				addComponent(new ButtonSaveFile(saves[index]), 0f, 0.725f - index * 0.125f, 1f, 0.825f - index * 0.125f);
 		}
 		
+		@Override
+		public GuiColor getBackgroundColor() {
+			return BACKGROUND;
+		}
+		
 		protected void refresh(){
 			clearComponents();
 			addComponents();
@@ -71,6 +80,11 @@ public class GuiLoadGame extends GuiMenu {
 
 		@Override
 		protected void addComponents() {}
+		
+		@Override
+		public GuiColor getBackgroundColor() {
+			return BACKGROUND;
+		}
 		
 		protected void refresh(){
 			clearComponents();
@@ -104,6 +118,11 @@ public class GuiLoadGame extends GuiMenu {
 		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.475f, 0.975f, 0.575f);
 		addComponent(new ButtonLink("back", state, state.getGuiMainMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.875f, 0.325f, 0.975f);
 		addSavesButtons();
+	}
+	
+	@Override
+	public GuiColor getBackgroundColor() {
+		return BACKGROUND;
 	}
 	
 	public void refresh(){
