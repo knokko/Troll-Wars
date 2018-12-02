@@ -23,6 +23,7 @@
  *******************************************************************************/
 package nl.knokko.gui.dialogue;
 
+import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.dialogue.ChoiseDialogueComponent;
 import nl.knokko.gui.component.dialogue.SimpleDialogueComponent;
@@ -50,6 +51,11 @@ public class GuiDialogue extends GuiMenu {
 	protected void addComponents() {
 		partComponent = new SubComponent(createPartComponent(), 0, 0, 1, 0.3f);
 		addComponent(partComponent);
+	}
+	
+	@Override
+	public GuiColor getBackgroundColor() {
+		return null;
 	}
 	
 	public void changePart() {
