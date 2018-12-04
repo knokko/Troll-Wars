@@ -642,7 +642,6 @@ public final class Resources {
 		addVertex(data, x1, y1, z1, nx1, ny1, nz1, u1, v1);
 		addVertex(data, x2, y2, z2, nx2, ny2, nz2, u2, v2);
 		addVertex(data, x3, y3, z3, nx3, ny3, nz3, u3, v3);
-		System.out.println("Resources.addTriangle(): " + x1 + "," + y1 + "," + z1 + "," + u1 + "," + v1 + ":" + data.vertices.size());
 		bindTriangle(data);
 	}
 	
@@ -673,7 +672,6 @@ public final class Resources {
 	}
 	
 	private static void mirrorX(ModelBuilder data){
-		System.out.println(data.vertices.size());
 		for(int i = 0; i < data.vertices.size(); i += 3)
 			data.vertices.set(i, -data.vertices.get(i));
 		for(int i = 0; i < data.normals.size(); i+= 3)
