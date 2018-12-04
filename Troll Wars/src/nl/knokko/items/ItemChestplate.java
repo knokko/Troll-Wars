@@ -53,14 +53,14 @@ public class ItemChestplate extends ItemArmor {
 	}
 	
 	public ModelPart createModelBelly(HumanoidBelly belly){
-		return Resources.createModelArmorBelly(ModelArmorBelly.Factory.createInstance(1.15f), belly, armorTexture);
+		return Resources.createModelArmorBelly(ModelArmorBelly.Factory.createInstance(1.3f), belly, armorTexture);
 	}
 	
 	public ModelPart createModelUpperArm(HumanoidArm arm){
-		return Resources.createModelArmorUpperArm(ModelArmorArm.Factory.createInstance(1.1f, 1.3f), arm, armorTexture);
+		return Resources.createModelArmorUpperArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
 	}
 	
 	public ModelPart createModelUnderArm(HumanoidArm arm){
-		return Resources.createModelArmorUnderArm(ModelArmorArm.Factory.createInstance(1.1f, 1.3f), arm, armorTexture);
+		return Resources.createModelArmorUnderArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
 	}
 }

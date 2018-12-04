@@ -36,12 +36,17 @@ public class TextureArea {
 		this.height = height;
 	}
 	
+	@Override
+	public String toString() {
+		return "TextureArea(" + minX + "," + minY + "," + width + "," + height + ")";
+	}
+	
 	public TextureArea(float width, float height){
-		this((int) width, (int) height);
+		this((int) Math.ceil(width), (int) Math.ceil(height));
 	}
 	
 	public TextureArea(double width, double height){
-		this((int) width, (int) height);
+		this((int) Math.ceil(width), (int) Math.ceil(height));
 	}
 	
 	public int getMinX(){
@@ -53,11 +58,11 @@ public class TextureArea {
 	}
 	
 	public int getMaxX(){
-		return minX + width;
+		return minX + width - 1;
 	}
 	
 	public int getMaxY(){
-		return minY + height;
+		return minY + height - 1;
 	}
 	
 	public float getMinU(int textureWidth){

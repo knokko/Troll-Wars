@@ -33,7 +33,7 @@ public class ColorSpecial extends Color {
 	
 	public static final ColorMyrmora MYRMORA = new ColorMyrmora();
 	
-	private static final Color[] COLORS = {
+	private static final ColorSpecial[] COLORS = {
 		MYRMORA
 	};
 	
@@ -52,6 +52,12 @@ public class ColorSpecial extends Color {
 	
 	public static int amount(){
 		return COLORS.length;
+	}
+	
+	public static void updateColors() {
+		for (ColorSpecial color : COLORS) {
+			color.update();
+		}
 	}
 	
 	protected final char id;
@@ -87,7 +93,14 @@ public class ColorSpecial extends Color {
 		return id;
 	}
 	
+	@Override
+	public java.awt.Color toAWTColor(){
+		return new java.awt.Color(red & 0xFF, green & 0xFF, blue & 0xFF, 255);
+	}
+	
 	public Vector3f getAliasVector() {
 		return new Vector3f((red & 0xFF) / 255f, (green & 0xFF) / 255f, (blue & 0xFF) / 255f);
 	}
+	
+	public void update() {}
 }

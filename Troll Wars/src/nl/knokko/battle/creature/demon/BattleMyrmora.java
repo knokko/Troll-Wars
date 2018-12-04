@@ -53,7 +53,7 @@ public class BattleMyrmora {
 	public static class Intro extends ResourceBattleCreature implements ModelOwner {
 		
 		public Intro(){
-			super("Myrmora", 10000, 30000, 500, 1000, 1000, 0, 500, 0, BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA);
+			super("Myrmora", 10000, 30000, 500, 1000, 1000, 0, 500, 70, BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA);
 		}
 		
 		private boolean leftArm;

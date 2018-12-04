@@ -171,9 +171,10 @@ public interface BodyMyrre extends MyrreArm, MyrreFootClaw, MyrreHandClaw, Myrre
 			}
 			ModelPart[] parts = new ModelPart[length];
 			part = leg;
-			for(int index = 0; index < length; index++){
-				parts[index] = part;
+			parts[0] = leg;
+			for(int index = 1; index < length; index++){
 				part = part.getChildren()[0];
+				parts[index] = part;
 			}
 			return parts;
 		}
@@ -236,14 +237,15 @@ public interface BodyMyrre extends MyrreArm, MyrreFootClaw, MyrreHandClaw, Myrre
 			int length = 1;
 			ModelPart part = arm;
 			while(!(part instanceof MyrreHandModelPart)){
-				part = arm.getChildren()[0];
+				part = part.getChildren()[0];
 				length++;
 			}
 			ModelPart[] parts = new ModelPart[length];
 			part = arm;
-			for(int index = 0; index < length; index++){
+			parts[0] = arm;
+			for(int index = 1; index < length; index++){
+				part = part.getChildren()[0];
 				parts[index] = part;
-				part = arm.getChildren()[0];
 			}
 			return parts;
 		}

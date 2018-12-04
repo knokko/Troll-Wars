@@ -23,11 +23,13 @@
  *******************************************************************************/
 package nl.knokko.shaders;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import nl.knokko.util.color.ColorSpecial;
 
 public class SpecialGuiShader extends ShaderProgram {
     
-    public static final String VERTEX_FILE = "nl/knokko/shaders/gui.vshad";
+    public static final String VERTEX_FILE = "nl/knokko/gui/shader/vertex.shader";
     public static final String FRAGMENT_FILE = "nl/knokko/shaders/specialgui.fshad";
     
     public static final SpecialGuiShader SPECIAL_GUI_SHADER = new SpecialGuiShader();
@@ -67,6 +69,8 @@ public class SpecialGuiShader extends ShaderProgram {
     }
     
     public void updateColors() {
-    	loadVector(locationColorMyrmora, ColorSpecial.MYRMORA.toVector());
+    	ColorSpecial.updateColors();
+    	Vector3f colorMyrmora = ColorSpecial.MYRMORA.toVector();
+    	loadVector(locationColorMyrmora, colorMyrmora.x, colorMyrmora.y, colorMyrmora.z, 1);
     }
 }

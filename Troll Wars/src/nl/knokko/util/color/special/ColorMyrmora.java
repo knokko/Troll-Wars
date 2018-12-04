@@ -23,27 +23,40 @@
  *******************************************************************************/
 package nl.knokko.util.color.special;
 
-import java.util.Random;
-
 import nl.knokko.util.color.ColorSpecial;
 
 public class ColorMyrmora extends ColorSpecial {
 	
-	private static Random random = new Random();
+	private double angleRed;
+	private double angleGreen;
+	private double angleBlue;
 
 	public ColorMyrmora() {
 		super((char) 0);
 	}
 	
+	@Override
+	public void update() {
+		angleRed += 0.03;
+		angleRed %= 2 * Math.PI;
+		angleGreen += 0.15;
+		angleGreen %= 2 * Math.PI;
+		angleBlue += 0.06;
+		angleBlue %= 2 * Math.PI;
+	}
+	
+	@Override
 	public byte getRed(){
-		return (byte) (random.nextInt(50) - 120);
+		return (byte) (50 * Math.sin(angleRed) + 150);
 	}
 	
+	@Override
 	public byte getGreen(){
-		return (byte) random.nextInt(30);
+		return (byte) (20 + 15 * Math.sin(angleGreen));
 	}
 	
+	@Override
 	public byte getBlue(){
-		return (byte) (random.nextInt(50) - 70);
+		return (byte) (50 * Math.sin(angleBlue) + 190);
 	}
 }

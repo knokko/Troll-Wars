@@ -70,7 +70,7 @@ public final class DialogueFunctions {
 	}
 	
 	private static BattleCreature[] getIntroHumans(){
-		BattleCreature[] humans = new BattleCreature[7];
+		BattleCreature[] humans = new BattleCreature[6];
 		NPCManager n = Game.getNPCManager();
 		//humans[0] = new BattleHuman.IntroWarrior(20, Items.IRON_SWORD, BodyHuman.Models.createSimpleInstance(random, 0.05f), BodyHuman.Textures.createBlanc(new Color(30, 20, 10)));
 		//humans[1] = new BattleHuman.IntroWarrior(20, Items.IRON_SPEAR, BodyHuman.Models.createSimpleInstance(random, 0.05f), BodyHuman.Textures.createBrown(new Color(10, 20, 10)));
@@ -86,7 +86,7 @@ public final class DialogueFunctions {
 		humans[4] = new BattleHuman.IntroWarrior(n.getIntroWarrior4());
 		//humans[5] = new BattleHuman.IntroWarrior(n.getIntroWarrior5());
 		//Intro warrior 5 is Theresa, who will leave to report to the wizard
-		humans[6] = new BattleHuman.IntroWarrior(n.getIntroWarrior6());
+		humans[5] = new BattleHuman.IntroWarrior(n.getIntroWarrior6());
 		return humans;
 	}
 }

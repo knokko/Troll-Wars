@@ -40,6 +40,11 @@ public class SpawnPosition {
 		tileZ = z;
 	}
 	
+	@Override
+	public String toString() {
+		return "SpawnPosition(" + tileX + "," + tileY + "," + tileZ + ")";
+	}
+	
 	public int getTileX(){
 		return tileX;
 	}

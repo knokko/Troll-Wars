@@ -51,10 +51,10 @@ public class ItemPants extends ItemArmor {
 	}
 	
 	public ModelPart createModelUpperLeg(HumanoidLeg leg){
-		return Resources.createModelArmorUpperLeg(ModelArmorLeg.Factory.createInstance(1.1f), leg, armorTexture);
+		return Resources.createModelArmorUpperLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
 	}
 	
 	public ModelPart createModelUnderLeg(HumanoidLeg leg){
-		return Resources.createModelArmorUnderLeg(ModelArmorLeg.Factory.createInstance(1.1f), leg, armorTexture);
+		return Resources.createModelArmorUnderLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
 	}
 }

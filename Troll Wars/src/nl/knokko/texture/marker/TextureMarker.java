@@ -45,7 +45,7 @@ public class TextureMarker {
 				maxY = area.getMaxY();
 			x = maxX + 1;
 		}
-		return new Dimension(Maths.next2Power(maxX), Maths.next2Power(maxY));
+		return new Dimension(Maths.next2Power(maxX + 1), Maths.next2Power(maxY + 1));
 	}
 	
 	public static TextureArea createSphere(float height, float width, float depth, int ppm){

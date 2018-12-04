@@ -74,7 +74,7 @@ public class AreaIntroTheresa extends AreaSimpleHuman {
 		Game.getNPCManager().getIntroTheresa().updateLeaveStatus();
 		short status = Game.getNPCManager().getIntroTheresa().getLeaveStatus();
 		if(status <= IntroTheresa.MAX_LEAVE_STATUS){
-			getPosition().setPosition(getX(status), Y, getZ(status));
+			getPosition().setPosition(getX(status) * 32, Y * 8, getZ(status) * 32);
 			animator.update((status - status / 32 * 32) / 32f, true, true);
 		}
 		else {

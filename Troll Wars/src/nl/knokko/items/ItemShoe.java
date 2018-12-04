@@ -52,10 +52,10 @@ public class ItemShoe extends ItemArmor {
 	}
 	
 	public ModelPart createModelLeft(HumanoidFootProperties foot, HumanoidLeg leg){
-		return Resources.createModelArmorFoot(ModelArmorFoot.Factory.createInstance(1.1f), foot, leg, armorTexture, false);
+		return Resources.createModelArmorFoot(ModelArmorFoot.Factory.createInstance(1.3f), foot, leg, armorTexture, false);
 	}
 	
 	public ModelPart createModelRight(HumanoidFootProperties foot, HumanoidLeg leg){
-		return Resources.createModelArmorFoot(ModelArmorFoot.Factory.createInstance(1.1f), foot, leg, armorTexture, true);
+		return Resources.createModelArmorFoot(ModelArmorFoot.Factory.createInstance(1.3f), foot, leg, armorTexture, true);
 	}
 }

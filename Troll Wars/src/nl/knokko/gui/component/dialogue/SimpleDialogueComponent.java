@@ -58,14 +58,14 @@ public class SimpleDialogueComponent extends AbstractGuiComponent {
 
 	@Override
 	public void render(GuiRenderer renderer) {
-		//SPECIAL_GUI_SHADER.start();
-		//SPECIAL_GUI_SHADER.updateColors();
+		SPECIAL_GUI_SHADER.start();
+		SPECIAL_GUI_SHADER.updateColors();
 		// This is really funny stuff: 
 		// Even though the GuiRenderer assumes that the normal gui shader is being used, it won't make a
 		// difference because the special gui shader uses the same data and the lwjgl interface is static
 		renderer.renderTexture(texture, 0, 0, 1, 1);
-		//SPECIAL_GUI_SHADER.stop();
-		//GUI_SHADER.start();
+		SPECIAL_GUI_SHADER.stop();
+		GUI_SHADER.start();
 	}
 
 	@Override

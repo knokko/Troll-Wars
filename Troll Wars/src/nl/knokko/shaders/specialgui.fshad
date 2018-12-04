@@ -10,9 +10,16 @@ const vec4 MYRMORA_ALIAS = vec4(0.5686275, 0.36078432, 0.32941177, 1.0);
 
 uniform vec4 colorMyrmora;
 
+bool is(vec4 color, vec4 alias){
+	float dx = color.x - alias.x;
+	float dy = color.y - alias.y;
+	float dz = color.z - alias.z;
+	return dx * dx + dy * dy + dz * dz < 0.02;
+}
+
 void main(void){
 	vec4 color = texture(guiTexture, textureCoords);
-	if (color == MYRMORA_ALIAS) {
+	if (is(color, MYRMORA_ALIAS)) {
 		out_Color = colorMyrmora;
 	}
 	else {
