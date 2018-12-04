@@ -33,8 +33,6 @@ import nl.knokko.util.resources.Resources;
 
 import static nl.knokko.shaders.SpecialGuiShader.SPECIAL_GUI_SHADER;
 
-import java.awt.image.BufferedImage;
-
 import static nl.knokko.gui.shader.GuiShader.GUI_SHADER;
 
 public class SimpleDialogueComponent extends AbstractGuiComponent {
