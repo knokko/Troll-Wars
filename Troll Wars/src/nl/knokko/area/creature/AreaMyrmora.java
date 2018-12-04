@@ -26,6 +26,7 @@ package nl.knokko.area.creature;
 import nl.knokko.animation.body.AnimatorMyrre;
 import nl.knokko.animation.body.BodyAnimator;
 import nl.knokko.model.body.BodyMyrre;
+import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.position.SpawnPosition;
 import nl.knokko.util.resources.Resources;
 
@@ -48,6 +49,11 @@ public class AreaMyrmora {
 		@Override
 		protected BodyAnimator createAnimator() {
 			return new AnimatorMyrre(this);
+		}
+		
+		@Override
+		public ShaderType getShaderType() {
+			return ShaderType.SPIRIT;
 		}
 
 		@Override
