@@ -29,6 +29,7 @@ import nl.knokko.battle.move.BattleMove;
 import nl.knokko.battle.move.FightMoveOption;
 import nl.knokko.battle.move.ItemMoveOption;
 import nl.knokko.battle.move.MoveSkipTurn;
+import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.component.WrapperComponent;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.simple.ConditionalColorComponent;
@@ -166,7 +167,7 @@ public class GuiBattle extends GuiMenu {
 	}
 	
     @Override
-	public Color getBackgroundColor(){
+	public GuiColor getBackgroundColor(){
 		return null;
 	}
 	
@@ -441,6 +442,11 @@ public class GuiBattle extends GuiMenu {
         @Override
         protected void addComponents() {}
         
+        @Override
+        public GuiColor getBackgroundColor() {
+        	return null;
+        }
+        
         public void setMoves(FightMoveOption[] moves){
         	clearComponents();
         	int index = 0;
@@ -490,6 +496,11 @@ public class GuiBattle extends GuiMenu {
 
         @Override
         protected void addComponents() {}
+        
+        @Override
+        public GuiColor getBackgroundColor() {
+        	return null;
+        }
         
         public void setItems(ItemMoveOption[] moves){
         	clearComponents();
@@ -560,6 +571,11 @@ public class GuiBattle extends GuiMenu {
     	
     	@Override
     	protected void addComponents(){}
+    	
+    	@Override
+    	public GuiColor getBackgroundColor() {
+    		return null;
+    	}
     	
     	public void setTargets(){
     		clearComponents();
@@ -635,6 +651,11 @@ public class GuiBattle extends GuiMenu {
     	
     	@Override
     	protected void addComponents(){}
+    	
+    	@Override
+    	public GuiColor getBackgroundColor() {
+    		return null;
+    	}
     	
     	public void setTargets(){
     		clearComponents();
