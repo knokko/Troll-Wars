@@ -29,6 +29,8 @@ import nl.knokko.area.Area;
 import nl.knokko.area.AreaDoor;
 import nl.knokko.area.AreaDoor.Location;
 import nl.knokko.area.TileMap;
+import nl.knokko.battle.decoration.BattleDecoration;
+import nl.knokko.battle.decoration.BattleDecorations;
 import nl.knokko.main.Game;
 import nl.knokko.util.resources.Resources;
 
@@ -43,6 +45,11 @@ public abstract class AreaSorgCave extends Area {
 	@Override
 	public boolean hasRandomBattles(){
 		return true;
+	}
+	
+	@Override
+	public BattleDecoration getBattleDecoration() {
+		return BattleDecorations.SORG_CAVE;
 	}
 	
 	public static class A1 extends AreaSorgCave {

@@ -34,6 +34,7 @@ import nl.knokko.area.creature.AreaPlayer;
 import nl.knokko.areas.AreaRargia;
 import nl.knokko.areas.AreaSorgCave;
 import nl.knokko.areas.AreaSorgMountains;
+import nl.knokko.battle.decoration.BattleDecoration;
 import nl.knokko.main.Game;
 import nl.knokko.render.main.CreatureRenderer;
 import nl.knokko.render.tile.TileRenderer;
@@ -147,6 +148,10 @@ public class Area {
 	
 	public short getID(){
 		throw new IllegalStateException("The default Area class does not have an ID!");
+	}
+	
+	public BattleDecoration getBattleDecoration() {
+		throw new UnsupportedOperationException("The area " + getClass().getName() + " doesn't have a battle decoration");
 	}
 	
 	public void save(){}

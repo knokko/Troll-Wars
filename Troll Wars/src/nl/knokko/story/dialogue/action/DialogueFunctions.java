@@ -26,6 +26,7 @@ package nl.knokko.story.dialogue.action;
 import nl.knokko.battle.PlotBattle;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.creature.player.BattlePlayer;
+import nl.knokko.battle.decoration.BattleDecorations;
 import nl.knokko.battle.creature.demon.BattleMyrmora;
 import nl.knokko.battle.creature.humanoid.BattleHuman;
 import nl.knokko.main.Game;
@@ -55,13 +56,13 @@ public final class DialogueFunctions {
 		Game.getPlayers().gothrok.enterBattle();
 		allies[1] = new BattleMyrmora.Intro();
 		Game.closeDialogue();
-		Game.startBattle(new PlotBattle(allies, getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
+		Game.startBattle(new PlotBattle(BattleDecorations.SORG_CAVE, allies, getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
 	}
 	
 	public static void introHumanBattleAlone(){
 		Game.getEventManager().introHuman().setState(IntroHumanEvent.STATE_FOUGHT_ALONE);
 		Game.closeDialogue();
-		Game.startBattle(new PlotBattle(Game.getPlayers().getBattlePlayers(), getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
+		Game.startBattle(new PlotBattle(BattleDecorations.SORG_CAVE, Game.getPlayers().getBattlePlayers(), getIntroHumans(), StoryBattleRegistry.ID_INTRO_HUMAN));
 	}
 	
 	public static void introHumanLeave(){

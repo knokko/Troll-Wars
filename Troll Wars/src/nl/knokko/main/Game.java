@@ -316,7 +316,7 @@ public class Game {
 	
 	public static void startRandomBattle(BattleCreature... opponents){
 		BattleCreature[] playerTeam = players.getBattlePlayers();
-		Battle battle = new BattleDefault(playerTeam, opponents);
+		Battle battle = new BattleDefault(getArea().getArea().getBattleDecoration(), playerTeam, opponents);
 		startBattle(battle);
 		getArea().decreaseSteps();
 	}

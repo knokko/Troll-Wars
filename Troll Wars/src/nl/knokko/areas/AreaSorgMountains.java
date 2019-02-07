@@ -32,6 +32,8 @@ import nl.knokko.area.TileMap;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.creature.bird.BattleMountainBird;
 import nl.knokko.battle.creature.humanoid.BattleTroll;
+import nl.knokko.battle.decoration.BattleDecoration;
+import nl.knokko.battle.decoration.BattleDecorations;
 import nl.knokko.equipment.EquipmentFull;
 import nl.knokko.main.Game;
 import nl.knokko.model.body.BodyBird;
@@ -69,6 +71,11 @@ public class AreaSorgMountains extends Area {
 	@Override
 	public short getID(){
 		return ID;
+	}
+	
+	@Override
+	public BattleDecoration getBattleDecoration() {
+		return BattleDecorations.SORG_MOUNTAINS;
 	}
 		
 	@Override

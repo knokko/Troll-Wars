@@ -26,9 +26,12 @@ package nl.knokko.battle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
 import nl.knokko.battle.creature.BattleCreature;
+import nl.knokko.battle.decoration.BattleDecoration;
+import nl.knokko.battle.decoration.BattleDecorations;
 import nl.knokko.battle.move.BattleMove;
 import nl.knokko.main.Game;
 import nl.knokko.model.ModelPart;
@@ -37,6 +40,7 @@ import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
+import nl.knokko.util.color.Color;
 import nl.knokko.view.camera.*;
 import nl.knokko.view.light.DefaultLight;
 import nl.knokko.view.light.Light;
@@ -47,6 +51,8 @@ public class BattleDefault implements Battle {
 	
 	protected static final Light LIGHT = new DefaultLight();
 	protected static final byte TEAM_SIZE_BITCOUNT = 4;
+	
+	protected BattleDecoration decoration;
 	
 	protected BattleState state;
 	protected Camera camera;
@@ -83,7 +89,8 @@ public class BattleDefault implements Battle {
 		camera = createCamera();
 	}
 
-	public BattleDefault(BattleCreature[] players, BattleCreature[] opponents){
+	public BattleDefault(BattleDecoration decoration, BattleCreature[] players, BattleCreature[] opponents){
+		this.decoration = decoration;
 		state = BattleState.STARTING;
 		playerTeam = players;
 		opposingTeam = opponents;
@@ -102,6 +109,7 @@ public class BattleDefault implements Battle {
 
 	@Override
 	public void save(BitOutput buffer) {
+		buffer.addByte(decoration.getID());
 		buffer.addNumber(state.getID(), BattleState.BIT_COUNT, false);
 		buffer.addLong(onTurn);
 		buffer.addNumber(currentCreatures.size(), CURRENT_CREATURES_BIT_COUNT, false);
@@ -118,8 +126,8 @@ public class BattleDefault implements Battle {
 
 	@Override
 	public void load(BitInput buffer) {
+		decoration = BattleDecorations.fromID(buffer.readByte());
 		state = BattleState.fromID(buffer.readNumber(BattleState.BIT_COUNT, false));
-		System.out.println("BattleDefault.load: state is " + state);
 		onTurn = buffer.readLong();
 		byte currentCreaturesSize = (byte) buffer.readNumber(CURRENT_CREATURES_BIT_COUNT, false);
 		currentCreatures = new ArrayList<Byte>(currentCreaturesSize);
@@ -187,8 +195,11 @@ public class BattleDefault implements Battle {
 
 	@Override
 	public void render() {
+		Color background = decoration.getBackgroundColor();
+		GL11.glClearColor(background.getRedF(), background.getGreenF(), background.getBlueF(), 1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		Game.getCreatureRenderer().prepare(true);
+		Game.getCreatureRenderer().prepare(false);
 		Game.getCreatureRenderer().prepareWorldShader(camera, LIGHT);
 		renderTeam(playerTeam, ShaderType.NORMAL);
 		renderTeam(opposingTeam, ShaderType.NORMAL);

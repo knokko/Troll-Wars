@@ -309,6 +309,7 @@ public class GuiLoadGame extends GuiMenu {
 		@Override
 		public void run() {
 			Saver.deleteSaveTime(selectedSave, selectedTime);
+			selectedTime = 0;
 			timesButtons.refresh();
 		}
 	}

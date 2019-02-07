@@ -24,6 +24,7 @@
 package nl.knokko.battle;
 
 import nl.knokko.battle.creature.BattleCreature;
+import nl.knokko.battle.decoration.BattleDecoration;
 import nl.knokko.main.Game;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
@@ -34,8 +35,8 @@ public class PlotBattle extends BattleDefault {
 	
 	protected int plotID;
 
-	public PlotBattle(BattleCreature[] players, BattleCreature[] opponents, int plotID) {
-		super(players, opponents);
+	public PlotBattle(BattleDecoration decoration, BattleCreature[] players, BattleCreature[] opponents, int plotID) {
+		super(decoration, players, opponents);
 		this.plotID = plotID;
 	}
 	
