@@ -46,6 +46,7 @@ import nl.knokko.texture.painter.ModelPainter;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
+import nl.knokko.view.camera.Camera;
 
 public abstract class SimpleBattleCreature implements BattleCreature {
 	
@@ -302,8 +303,8 @@ public abstract class SimpleBattleCreature implements BattleCreature {
 	}
 	
 	@Override
-	public Matrix4f getMatrix(){
-		return Maths.createTransformationMatrix(new Vector3f(renderProperties.getCentreX(), renderProperties.getMinY(), renderProperties.getCentreZ()), 0, -yaw, 0, 1);
+	public Matrix4f getMatrix(Camera camera){
+		return Maths.createTransformationMatrix(new Vector3f(renderProperties.getCentreX(camera), renderProperties.getMinY(camera), renderProperties.getCentreZ(camera)), 0, -yaw, 0, 1);
 	}
 	
 	@Override

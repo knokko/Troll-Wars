@@ -67,7 +67,7 @@ public class LiquidTileShader extends ShaderProgram {
 	}
 	
 	public void loadViewMatrix(Camera camera){
-		loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createViewMatrix(camera), null));
+		loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null));
 	}
 	
 	public void loadRandomizer(){

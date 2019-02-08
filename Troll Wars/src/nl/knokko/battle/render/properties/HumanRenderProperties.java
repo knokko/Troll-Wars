@@ -27,6 +27,7 @@ import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyHuman;
 import nl.knokko.util.Maths;
+import nl.knokko.view.camera.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -46,8 +47,8 @@ public class HumanRenderProperties extends SimpleRenderProperties {
 	}
 
 	@Override
-	public Vector3f[] getCastHands() {
-		Matrix4f matrix = creature.getMatrix();
+	public Vector3f[] getCastHands(Camera camera) {
+		Matrix4f matrix = creature.getMatrix(camera);
 		Matrix4f left = leftHand.getMatrix(matrix);
 		Matrix4f right = rightHand.getMatrix(matrix);
 		return new Vector3f[]{new Vector3f(left.m20, left.m21, -left.m22), new Vector3f(right.m20, right.m21, -right.m22)};

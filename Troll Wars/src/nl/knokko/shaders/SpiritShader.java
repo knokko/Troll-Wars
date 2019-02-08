@@ -65,7 +65,7 @@ public class SpiritShader extends ShaderProgram {
 	}
 	
 	public void loadViewMatrix(Camera camera){
-		super.loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createViewMatrix(camera), null));
+		super.loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null));
 	}
 	
 	public void loadRandomizer(){

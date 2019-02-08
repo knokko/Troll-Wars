@@ -25,19 +25,45 @@ package nl.knokko.battle.render.properties;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import nl.knokko.view.camera.Camera;
+
 public interface BattleRenderProperties {
 	
-	float getMinX();
+	default float getMinX(Camera camera) {
+		return getRealMinX() - camera.getPosition().x;
+	}
 	
-	float getMinY();
+	float getRealMinX();
 	
-	float getMinZ();
+	default float getMinY(Camera camera) {
+		return getRealMinY() - camera.getPosition().y;
+	}
 	
-	float getMaxX();
+	float getRealMinY();
 	
-	float getMaxY();
+	default float getMinZ(Camera camera) {
+		return getRealMinZ() - camera.getPosition().z;
+	}
 	
-	float getMaxZ();
+	float getRealMinZ();
+	
+	default float getMaxX(Camera camera) {
+		return getRealMaxX() - camera.getPosition().x;
+	}
+	
+	float getRealMaxX();
+	
+	default float getMaxY(Camera camera) {
+		return getRealMaxY() - camera.getPosition().y;
+	}
+	
+	float getRealMaxY();
+	
+	default float getMaxZ(Camera camera) {
+		return getRealMaxZ() - camera.getPosition().z;
+	}
+	
+	float getRealMaxZ();
 	
 	float getWidth();
 	
@@ -45,29 +71,65 @@ public interface BattleRenderProperties {
 	
 	float getDepth();
 	
-	float getCentreX();
+	default float getCentreX(Camera camera) {
+		return getRealCenterX() - camera.getPosition().x;
+	}
 	
-	float getCentreY();
+	float getRealCenterX();
 	
-	float getCentreZ();
+	default float getCentreY(Camera camera) {
+		return getRealCenterY() - camera.getPosition().y;
+	}
+	
+	float getRealCenterY();
+	
+	default float getCentreZ(Camera camera) {
+		return getRealCenterZ() - camera.getPosition().z;
+	}
+	
+	float getRealCenterZ();
 	
 	float getCilinderRadius();
 	
-	float getHealthX();
+	default float getHealthX(Camera camera) {
+		return getRealHealthX() - camera.getPosition().x;
+	}
 	
-	float getHealthY();
+	float getRealHealthX();
 	
-	float getHealthZ();
+	default float getHealthY(Camera camera) {
+		return getRealHealthY() - camera.getPosition().y;
+	}
+	
+	float getRealHealthY();
+	
+	default float getHealthZ(Camera camera) {
+		return getRealHealthZ() - camera.getPosition().z;
+	}
+	
+	float getRealHealthZ();
 	
 	float getHealthWidth();
 	
 	float getHealthHeight();
 	
-	float getManaX();
+	default float getManaX(Camera camera) {
+		return getRealManaX() - camera.getPosition().x;
+	}
 	
-	float getManaY();
+	float getRealManaX();
 	
-	float getManaZ();
+	default float getManaY(Camera camera) {
+		return getRealManaY() - camera.getPosition().y;
+	}
+	
+	float getRealManaY();
+	
+	default float getManaZ(Camera camera) {
+		return getRealManaZ() - camera.getPosition().z;
+	}
+	
+	float getRealManaZ();
 	
 	float getManaWidth();
 	
@@ -75,5 +137,5 @@ public interface BattleRenderProperties {
 	
 	boolean isInside(float x, float y, float z);
 	
-	Vector3f[] getCastHands();
+	Vector3f[] getCastHands(Camera camera);
 }

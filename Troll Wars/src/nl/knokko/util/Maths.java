@@ -94,6 +94,12 @@ public class Maths {
 		return matrix;
 	}
 	
+	public static final Matrix4f createTransformationMatrix(AreaPosition position, Camera camera, float rotX, float rotY, float rotZ, float size){
+		Vector3f c = camera.getPosition();
+		Matrix4f matrix = createTransformationMatrix(new Vector3f(position.getX() * 2 - c.x, position.getY() * 2 - c.y, position.getZ() * 2 - c.z), rotX, rotY, rotZ, size);
+		return matrix;
+	}
+	
 	public static final Matrix4f createTransformationMatrix(Vector3f position, float rx, float ry, float rz, float sx, float sy, float sz){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -140,6 +146,15 @@ public class Maths {
 		Vector3f c = camera.getPosition();
 		Vector3f invert = new Vector3f(-c.x, -c.y, -c.z);
 		Matrix4f.translate(invert, view, view);
+		return view;
+	}
+	
+	public static final Matrix4f createOriginViewMatrix(Camera camera) {
+		Matrix4f view = new Matrix4f();
+		view.setIdentity();
+		Matrix4f.rotate(camera.getRadPitch(), new Vector3f(1, 0, 0), view, view);
+		Matrix4f.rotate(camera.getRadYaw(), new Vector3f(0, 1, 0), view, view);
+		Matrix4f.rotate(camera.getRadRoll(), new Vector3f(0, 0, 1), view, view);
 		return view;
 	}
 	

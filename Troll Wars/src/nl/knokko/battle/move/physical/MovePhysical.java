@@ -28,6 +28,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.creature.MovingBattleCreature;
 import nl.knokko.battle.move.BattleMove;
+import nl.knokko.view.camera.Camera;
 
 public abstract class MovePhysical implements BattleMove {
 	
@@ -49,8 +50,8 @@ public abstract class MovePhysical implements BattleMove {
 	@Override
 	public void update() {
 		if(state == -1){
-			float dx = target.getRenderProperties().getCentreX() - performer.getRenderProperties().getCentreX();
-			float dz = target.getRenderProperties().getCentreZ() - performer.getRenderProperties().getCentreZ();
+			float dx = target.getRenderProperties().getRealCenterX() - performer.getRenderProperties().getRealCenterX();
+			float dz = target.getRenderProperties().getRealCenterZ() - performer.getRenderProperties().getRealCenterZ();
 			float distance = (float) Math.sqrt(dx * dx + dz * dz);
 			if(distance <= requiredDistance())
 				state = 0;
@@ -87,7 +88,7 @@ public abstract class MovePhysical implements BattleMove {
 	}
 	
 	@Override
-	public void render(Matrix4f matrix){}
+	public void render(Matrix4f matrix, Camera camera){}
 
 	@Override
 	public boolean isDone() {

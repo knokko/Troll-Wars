@@ -198,17 +198,17 @@ public class BattleDefault implements Battle {
 		Color background = decoration.getBackgroundColor();
 		GL11.glClearColor(background.getRedF(), background.getGreenF(), background.getBlueF(), 1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		Matrix4f viewMatrix = Maths.createOriginViewMatrix(camera);
 		Game.getCreatureRenderer().prepare(false);
 		Game.getCreatureRenderer().prepareWorldShader(camera, LIGHT);
-		renderTeam(playerTeam, ShaderType.NORMAL);
-		renderTeam(opposingTeam, ShaderType.NORMAL);
+		renderTeam(camera, playerTeam, ShaderType.NORMAL);
+		renderTeam(camera, opposingTeam, ShaderType.NORMAL);
 		Game.getCreatureRenderer().prepareLiquidShader(camera, LIGHT);
-		renderTeam(playerTeam, ShaderType.LIQUID);
-		renderTeam(opposingTeam, ShaderType.LIQUID);
+		renderTeam(camera, playerTeam, ShaderType.LIQUID);
+		renderTeam(camera, opposingTeam, ShaderType.LIQUID);
 		Game.getCreatureRenderer().prepareSpiritShader(camera, LIGHT);
-		renderTeam(playerTeam, ShaderType.SPIRIT);
-		renderTeam(opposingTeam, ShaderType.SPIRIT);
+		renderTeam(camera, playerTeam, ShaderType.SPIRIT);
+		renderTeam(camera, opposingTeam, ShaderType.SPIRIT);
 		Game.get2DBattleRenderer().startResourceShader(viewMatrix);
 		for(BattleCreature creature : playerTeam)
 			if(creature != null && !creature.isFainted())
@@ -218,7 +218,7 @@ public class BattleDefault implements Battle {
 				Game.get2DBattleRenderer().renderResources(camera, creature);
 		Game.get2DBattleRenderer().stopResourceShader();
 		if(currentMove != null)
-			currentMove.render(viewMatrix);
+			currentMove.render(viewMatrix, camera);
 	}
 	
 	@Override
@@ -226,22 +226,22 @@ public class BattleDefault implements Battle {
 		return camera;
 	}
 	
-	protected void renderTeam(BattleCreature[] team, ShaderType st){
+	protected void renderTeam(Camera camera, BattleCreature[] team, ShaderType st){
 		for(BattleCreature bc : team){
 			if(!bc.isFainted() && bc.getShaderType() == st){
 				for(ModelPart part : bc.getModels())
-					renderModelPart(Game.getCreatureRenderer(), st, part, bc);
+					renderModelPart(camera, Game.getCreatureRenderer(), st, part, bc);
 			}
 		}
 	}
 	
-	protected void renderModelPart(CreatureRenderer renderer, ShaderType shaderType, ModelPart part, BattleCreature creature){
+	protected void renderModelPart(Camera camera, CreatureRenderer renderer, ShaderType shaderType, ModelPart part, BattleCreature creature){
 		renderer.prepareModel(part.getModel(), shaderType);
 		renderer.prepareTexture(part.getTexture(), shaderType);
-		renderer.renderInstance(part.getMatrix(creature.getMatrix()), shaderType, part.getModel().getVertexCount());
+		renderer.renderInstance(part.getMatrix(creature.getMatrix(camera)), shaderType, part.getModel().getVertexCount());
 		for(ModelPart child : part.getChildren())
 			if(child != null)
-				renderModelPart(renderer, shaderType, child, creature);
+				renderModelPart(camera, renderer, shaderType, child, creature);
 	}
 
 	@Override

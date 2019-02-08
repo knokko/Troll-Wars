@@ -81,7 +81,7 @@ public class ResourceShader extends ShaderProgram {
 		//System.out.println("ResourceShader.loadScale() scale is " + scale);
 	}
 	
-	public void loadWorldPosition(Vector3f position){
+	public void loadRenderPosition(Vector3f position){
 		loadVector(locationWorldPosition, position);
 		//System.out.println("ResourceShader.loadWorldPosition() position is " + position);
 	}

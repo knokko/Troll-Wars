@@ -51,8 +51,8 @@ public class Battle2dRenderer {
 	
 	public void renderResources(Camera camera, BattleCreature creature){
 		BattleRenderProperties props = creature.getRenderProperties();
-		renderHealth(props, creature.getHealth(), creature.getMaxHealth());
-		renderMana(props, creature.getMana(), creature.getMaxMana());
+		renderHealth(camera, props, creature.getHealth(), creature.getMaxHealth());
+		renderMana(camera, props, creature.getMana(), creature.getMaxMana());
 		renderFocus(props, creature.getFocus(), creature.getMaxFocus());
 	}
 	
@@ -66,15 +66,15 @@ public class Battle2dRenderer {
 		GL20.glDisableVertexAttribArray(0);
 	}
 	
-	private void renderHealth(BattleRenderProperties props, long health, long maxHealth){
+	private void renderHealth(Camera camera, BattleRenderProperties props, long health, long maxHealth){
 		RESOURCE_SHADER.setHealthColor();
-		renderResource(props.getHealthX(), props.getHealthY(), props.getHealthZ(), props.getHealthWidth() / 2, props.getHealthHeight() / 2, health, maxHealth);
+		renderResource(props.getHealthX(camera), props.getHealthY(camera), props.getHealthZ(camera), props.getHealthWidth() / 2, props.getHealthHeight() / 2, health, maxHealth);
 	}
 	
-	private void renderMana(BattleRenderProperties props, long mana, long maxMana){
+	private void renderMana(Camera camera, BattleRenderProperties props, long mana, long maxMana){
 		if(maxMana > 0){
 			RESOURCE_SHADER.setManaColor();
-			renderResource(props.getManaX(), props.getManaY(), props.getManaZ(), props.getManaWidth() / 2, props.getManaHeight() / 2, mana, maxMana);
+			renderResource(props.getManaX(camera), props.getManaY(camera), props.getManaZ(camera), props.getManaWidth() / 2, props.getManaHeight() / 2, mana, maxMana);
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class Battle2dRenderer {
 	
 	private void renderResource(float midX, float midY, float midZ, float scaleX, float scaleY, long current, long max){
 		RESOURCE_SHADER.loadProgress((float) current / max);
-		RESOURCE_SHADER.loadWorldPosition(new Vector3f(midX, midY, midZ));
+		RESOURCE_SHADER.loadRenderPosition(new Vector3f(midX, midY, midZ));
 		RESOURCE_SHADER.loadScale(new Vector2f(scaleX, scaleY));
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, QUAD.getVertexCount());
 	}

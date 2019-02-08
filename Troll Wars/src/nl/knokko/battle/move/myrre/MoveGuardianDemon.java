@@ -35,6 +35,8 @@ import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyMyrre;
 import nl.knokko.render.battle.EffectRenderer;
 import nl.knokko.util.Maths;
+import nl.knokko.view.camera.Camera;
+
 import static nl.knokko.util.Maths.AND;
 
 public class MoveGuardianDemon implements BattleMove {
@@ -106,24 +108,24 @@ public class MoveGuardianDemon implements BattleMove {
 		}
 	}
 	
-	private Vector3f getLeftHandCentre(){
-		Matrix4f matrix = leftHand.getMatrix(caster.getMatrix());
+	private Vector3f getLeftHandCentre(Camera camera){
+		Matrix4f matrix = leftHand.getMatrix(caster.getMatrix(camera));
 		return new Vector3f(matrix.m20, matrix.m21, -matrix.m22);
 	}
 	
-	private Vector3f getRightHandCentre(){
-		Matrix4f matrix = rightHand.getMatrix(caster.getMatrix());
+	private Vector3f getRightHandCentre(Camera camera){
+		Matrix4f matrix = rightHand.getMatrix(caster.getMatrix(camera));
 		return new Vector3f(matrix.m20, matrix.m21, -matrix.m22);
 	}
 
 	@Override
-	public void render(Matrix4f viewMatrix) {
+	public void render(Matrix4f viewMatrix, Camera camera) {
 		if(state == 1){
 			Vector3f color = getColor();
 			EffectRenderer ef = Game.getEffectRenderer();
 			ef.startSimpleShader(viewMatrix);
-			ef.renderSphere(getLeftHandCentre(), sphereRenderRadius, color);
-			ef.renderSphere(getRightHandCentre(), sphereRenderRadius, color);
+			ef.renderSphere(getLeftHandCentre(camera), sphereRenderRadius, color);
+			ef.renderSphere(getRightHandCentre(camera), sphereRenderRadius, color);
 			ef.stopSimpleShader();
 			renderCounter += 0.01f;
 		}
@@ -133,11 +135,11 @@ public class MoveGuardianDemon implements BattleMove {
 			Vector3f[] particlePositions = new Vector3f[10];
 			BattleRenderProperties props = target.getRenderProperties();
 			for(int extra = 0; extra < 10; extra++)
-				particlePositions[extra] = getCilPosition(new Vector3f(props.getCentreX(), props.getCentreY(), props.getCentreZ()), renderCounter + extra * 0.001f);
+				particlePositions[extra] = getCilPosition(new Vector3f(props.getCentreX(camera), props.getCentreY(camera), props.getCentreZ(camera)), renderCounter + extra * 0.001f);
 			ef.startSimpleShader(viewMatrix);
 			ef.renderParticles(particlePositions, color);
-			ef.renderSphere(getLeftHandCentre(), sphereRenderRadius, color);
-			ef.renderSphere(getRightHandCentre(), sphereRenderRadius, color);
+			ef.renderSphere(getLeftHandCentre(camera), sphereRenderRadius, color);
+			ef.renderSphere(getRightHandCentre(camera), sphereRenderRadius, color);
 			ef.stopSimpleShader();
 			renderCounter += 0.01f;
 		}

@@ -173,6 +173,7 @@ public class TileRenderer extends WorldRenderer {
 	}
 	
 	private void renderTileMapNew(Camera camera, TileRenderMap tiles, ShaderType shader){
+		Vector3f cameraPos = camera.getPosition();
 		for(TileModel model : TileModels.ALL){
 			if(model.getShaderType() == shader && tiles.hasModel(model)){
 				if(shader == ShaderType.NORMAL)
@@ -187,6 +188,7 @@ public class TileRenderer extends WorldRenderer {
 						prepareTileTexture(tile.getTexture(), shader);
 						for(Vector3f position : positions){
 							if(FrustumHelper.insideFrustum(position.x, position.y, position.z, 64)){//64 seems safe
+								position = Vector3f.sub(position, cameraPos, null);
 								if(shader == ShaderType.NORMAL)
 									DEFAULT_TILE_SHADER.loadTilePosition(position);
 								else if(shader == ShaderType.LIQUID)

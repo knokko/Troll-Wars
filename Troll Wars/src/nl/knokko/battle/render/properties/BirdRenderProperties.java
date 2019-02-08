@@ -30,6 +30,7 @@ import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyBird;
 import nl.knokko.util.Maths;
+import nl.knokko.view.camera.Camera;
 
 public class BirdRenderProperties implements BattleRenderProperties {
 	
@@ -54,32 +55,32 @@ public class BirdRenderProperties implements BattleRenderProperties {
 	}
 
 	@Override
-	public float getMinX() {
+	public float getRealMinX() {
 		return bird.getX() - radius;
 	}
 
 	@Override
-	public float getMinY() {
+	public float getRealMinY() {
 		return bird.getY() + flyHeight;
 	}
 
 	@Override
-	public float getMinZ() {
+	public float getRealMinZ() {
 		return bird.getZ() - radius;
 	}
 
 	@Override
-	public float getMaxX() {
+	public float getRealMaxX() {
 		return bird.getX() + radius;
 	}
 
 	@Override
-	public float getMaxY() {
+	public float getRealMaxY() {
 		return bird.getY() + flyHeight + 2 * radius;
 	}
 
 	@Override
-	public float getMaxZ() {
+	public float getRealMaxZ() {
 		return bird.getZ() + radius;
 	}
 
@@ -99,17 +100,17 @@ public class BirdRenderProperties implements BattleRenderProperties {
 	}
 
 	@Override
-	public float getCentreX() {
+	public float getRealCenterX() {
 		return bird.getX();
 	}
 
 	@Override
-	public float getCentreY() {
+	public float getRealCenterY() {
 		return bird.getY() + flyHeight + radius;
 	}
 
 	@Override
-	public float getCentreZ() {
+	public float getRealCenterZ() {
 		return bird.getZ();
 	}
 
@@ -120,16 +121,16 @@ public class BirdRenderProperties implements BattleRenderProperties {
 
 	@Override
 	public boolean isInside(float x, float y, float z) {
-		float dx = x - getCentreX();
-		float dy = y - getCentreY();
-		float dz = z - getCentreZ();
+		float dx = x - getRealCenterX();
+		float dy = y - getRealCenterY();
+		float dz = z - getRealCenterZ();
 		return dx * dx + dy * dy + dz * dz <= radius * radius;
 	}
 
 	@Override
-	public Vector3f[] getCastHands() {
+	public Vector3f[] getCastHands(Camera camera) {
 		//A little more difficult since birds don't have claws as extra ModelPart
-		Matrix4f birdMatrix = bird.getMatrix();
+		Matrix4f birdMatrix = bird.getMatrix(camera);
 		Matrix4f leftMatrix = leftLeg.getMatrix(birdMatrix);
 		Matrix4f rightMatrix = rightLeg.getMatrix(birdMatrix);
 		Vector3f vector = new Vector3f(0, -legLength, 0);
@@ -145,17 +146,17 @@ public class BirdRenderProperties implements BattleRenderProperties {
 	}
 
 	@Override
-	public float getHealthX() {
+	public float getRealHealthX() {
 		return bird.getX();
 	}
 
 	@Override
-	public float getHealthY() {
+	public float getRealHealthY() {
 		return bird.getY() + flyHeight + 2.9f * radius;
 	}
 
 	@Override
-	public float getHealthZ() {
+	public float getRealHealthZ() {
 		return bird.getZ();
 	}
 
@@ -170,17 +171,17 @@ public class BirdRenderProperties implements BattleRenderProperties {
 	}
 
 	@Override
-	public float getManaX() {
+	public float getRealManaX() {
 		return bird.getX();
 	}
 
 	@Override
-	public float getManaY() {
+	public float getRealManaY() {
 		return bird.getY() + flyHeight + 2.4f * radius;
 	}
 
 	@Override
-	public float getManaZ() {
+	public float getRealManaZ() {
 		return bird.getZ();
 	}
 

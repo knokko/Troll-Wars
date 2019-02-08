@@ -25,11 +25,13 @@ package nl.knokko.battle.move;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import nl.knokko.view.camera.Camera;
+
 public interface BattleMove {
 	
 	void update();
 	
-	void render(Matrix4f viewMatrix);
+	void render(Matrix4f viewMatrix, Camera camera);
 	
 	boolean isDone();
 }

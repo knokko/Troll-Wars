@@ -177,7 +177,7 @@ public class ModelPart {
 	}
 	
 	public Matrix4f getMatrix(AreaCreature owner){
-		return getMatrix(owner.getMatrix());
+		return getMatrix(owner.getRenderMatrix());
 	}
 	
 	public Matrix4f getMatrix(Matrix4f owner){

@@ -49,6 +49,7 @@ import nl.knokko.model.ModelPart;
 import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
+import nl.knokko.view.camera.Camera;
 
 public interface BattleCreature extends ModelOwner {
 	
@@ -151,7 +152,7 @@ public interface BattleCreature extends ModelOwner {
 	 */
 	Inventory getInventory();
 	
-	Matrix4f getMatrix();
+	Matrix4f getMatrix(Camera camera);
 	
 	/**
 	 * Values might be cast to int!

@@ -68,21 +68,23 @@ public class CreatureList {
 	public void render(CreatureRenderer renderer, Camera camera, Light light){
 		renderer.prepare(false);
 		for(AreaCreature creature : list){
+			creature.setRenderMatrix(camera);
 			renderer.prepareShader(camera, light, creature.getShaderType());
 			for(ModelPart part : creature.getModels()){
-				renderModelPart(renderer, part, creature);
+				renderModelPart(camera, renderer, part, creature);
 			}
+			creature.setRenderMatrix(camera);
 		}
 	}
 	
-	private void renderModelPart(CreatureRenderer renderer, ModelPart part, AreaCreature creature){
+	private void renderModelPart(Camera camera, CreatureRenderer renderer, ModelPart part, AreaCreature creature){
 		ShaderType st = creature.getShaderType();
 		renderer.prepareModel(part.getModel(), st);
 		renderer.prepareTexture(part.getTexture(), st);
 		renderer.renderInstance(part.getMatrix(creature), st, part.getModel().getVertexCount());
 		for(ModelPart child : part.getChildren())
 			if(child != null)
-				renderModelPart(renderer, child, creature);
+				renderModelPart(camera, renderer, child, creature);
 	}
 	
 	public List<AreaCreature> getList(){

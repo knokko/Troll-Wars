@@ -52,6 +52,7 @@ import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
+import nl.knokko.view.camera.Camera;
 
 public abstract class BattlePlayer implements BattleCreature, ModelOwner {
 	
@@ -280,8 +281,8 @@ public abstract class BattlePlayer implements BattleCreature, ModelOwner {
 	}
 
 	@Override
-	public Matrix4f getMatrix() {
-		return Maths.createTransformationMatrix(new Vector3f(renderProperties.getCentreX(), renderProperties.getMinY(), renderProperties.getCentreZ()), 0, -yaw, 0, 1);
+	public Matrix4f getMatrix(Camera camera) {
+		return Maths.createTransformationMatrix(new Vector3f(renderProperties.getCentreX(camera), renderProperties.getMinY(camera), renderProperties.getCentreZ(camera)), 0, -yaw, 0, 1);
 	}
 
 	@Override

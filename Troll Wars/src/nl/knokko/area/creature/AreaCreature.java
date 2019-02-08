@@ -39,6 +39,7 @@ import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 import nl.knokko.util.position.AreaPosition;
 import nl.knokko.util.position.SpawnPosition;
+import nl.knokko.view.camera.Camera;
 
 public abstract class AreaCreature implements ModelOwner {
 	
@@ -56,6 +57,8 @@ public abstract class AreaCreature implements ModelOwner {
 	
 	protected byte moveX;
 	protected byte moveZ;
+	
+	private Matrix4f renderMatrix;
 
 	public AreaCreature(SpawnPosition spawn){
 		models = new ArrayList<ModelPart>();
@@ -227,8 +230,19 @@ public abstract class AreaCreature implements ModelOwner {
 	
 	public abstract void interact();
 
-	public Matrix4f getMatrix(){
+	public Matrix4f getRealMatrix(){
 		return Maths.createTransformationMatrix(position, 0, -rotationY, 0, 1);
+	}
+	
+	public void setRenderMatrix(Camera camera) {
+		if (camera != null)
+			renderMatrix = Maths.createTransformationMatrix(position, camera, 0, -rotationY, 0, 1);
+		else
+			renderMatrix = null;
+	}
+	
+	public Matrix4f getRenderMatrix() {
+		return renderMatrix;
 	}
 	
 	public void refreshPosition(){

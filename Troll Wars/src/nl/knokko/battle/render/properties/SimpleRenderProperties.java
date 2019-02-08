@@ -46,32 +46,32 @@ public abstract class SimpleRenderProperties implements BattleRenderProperties {
 	}
 	
 	@Override
-	public float getMinX(){
+	public float getRealMinX(){
 		return creature.getX() + offsetX - cilinderRadius;
 	}
 
 	@Override
-	public float getMinY() {
+	public float getRealMinY() {
 		return creature.getY() + offsetY;
 	}
 	
 	@Override
-	public float getMinZ(){
+	public float getRealMinZ(){
 		return creature.getZ() + offsetZ - cilinderRadius;
 	}
 	
 	@Override
-	public float getMaxX(){
+	public float getRealMaxX(){
 		return creature.getX() + offsetX + cilinderRadius;
 	}
 
 	@Override
-	public float getMaxY() {
+	public float getRealMaxY() {
 		return creature.getY() + offsetY + height;
 	}
 	
 	@Override
-	public float getMaxZ(){
+	public float getRealMaxZ(){
 		return creature.getZ() + offsetZ + cilinderRadius;
 	}
 	
@@ -91,17 +91,17 @@ public abstract class SimpleRenderProperties implements BattleRenderProperties {
 	}
 
 	@Override
-	public float getCentreX() {
+	public float getRealCenterX() {
 		return creature.getX() + offsetX;
 	}
 	
 	@Override
-	public float getCentreY(){
+	public float getRealCenterY(){
 		return creature.getY() + offsetY + height / 2;
 	}
 
 	@Override
-	public float getCentreZ() {
+	public float getRealCenterZ() {
 		return creature.getZ() + offsetZ;
 	}
 
@@ -111,17 +111,17 @@ public abstract class SimpleRenderProperties implements BattleRenderProperties {
 	}
 	
 	@Override
-	public float getHealthX(){
+	public float getRealHealthX(){
 		return creature.getX() + offsetX;
 	}
 	
 	@Override
-	public float getHealthY(){
+	public float getRealHealthY(){
 		return creature.getY() + offsetY + 1.4f * height;
 	}
 	
 	@Override
-	public float getHealthZ(){
+	public float getRealHealthZ(){
 		return creature.getZ() + offsetZ;
 	}
 	
@@ -136,17 +136,17 @@ public abstract class SimpleRenderProperties implements BattleRenderProperties {
 	}
 	
 	@Override
-	public float getManaX(){
+	public float getRealManaX(){
 		return creature.getX() + offsetX;
 	}
 	
 	@Override
-	public float getManaY(){
+	public float getRealManaY(){
 		return creature.getY() + offsetY + 1.15f * height;
 	}
 	
 	@Override
-	public float getManaZ(){
+	public float getRealManaZ(){
 		return creature.getZ() + offsetZ;
 	}
 	
@@ -162,9 +162,9 @@ public abstract class SimpleRenderProperties implements BattleRenderProperties {
 	
 	@Override
 	public boolean isInside(float x, float y, float z){
-		if(y >= getMinY() && y <= getMaxY()){
-			float dx = x - getCentreX();
-			float dz = z - getCentreZ();
+		if(y >= getRealMinY() && y <= getRealMaxY()){
+			float dx = x - getRealCenterX();
+			float dz = z - getRealCenterZ();
 			float radius = getCilinderRadius();
 			return dx * dx + dz * dz <= radius * radius;
 		}

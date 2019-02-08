@@ -25,6 +25,8 @@ package nl.knokko.battle.move;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import nl.knokko.view.camera.Camera;
+
 public class MoveSkipTurn implements BattleMove {
 
 	public MoveSkipTurn() {}
@@ -33,7 +35,7 @@ public class MoveSkipTurn implements BattleMove {
 	public void update() {}
 	
 	@Override
-	public void render(Matrix4f viewMatrix){}
+	public void render(Matrix4f viewMatrix, Camera camera){}
 
 	@Override
 	public boolean isDone() {

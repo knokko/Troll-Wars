@@ -28,6 +28,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.creature.MovingBattleCreature;
 import nl.knokko.battle.move.BattleMove;
+import nl.knokko.view.camera.Camera;
 
 public abstract class MoveBirdAttack implements BattleMove {
 	
@@ -51,9 +52,9 @@ public abstract class MoveBirdAttack implements BattleMove {
 	@Override
 	public void update() {
 		if(state == 0){
-			float dx = target.getRenderProperties().getCentreX() - bird.getRenderProperties().getCentreX();
-			float dy = target.getRenderProperties().getCentreY() - bird.getRenderProperties().getCentreY();
-			float dz = target.getRenderProperties().getCentreZ() - bird.getRenderProperties().getCentreZ();
+			float dx = target.getRenderProperties().getRealCenterX() - bird.getRenderProperties().getRealCenterX();
+			float dy = target.getRenderProperties().getRealCenterY() - bird.getRenderProperties().getRealCenterY();
+			float dz = target.getRenderProperties().getRealCenterZ() - bird.getRenderProperties().getRealCenterZ();
 			float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
 			if(distance < requiredRange()){
 				state = 1;
@@ -88,7 +89,7 @@ public abstract class MoveBirdAttack implements BattleMove {
 	}
 	
 	@Override
-	public void render(Matrix4f matrix){}
+	public void render(Matrix4f matrix, Camera camera){}
 
 	@Override
 	public boolean isDone() {
