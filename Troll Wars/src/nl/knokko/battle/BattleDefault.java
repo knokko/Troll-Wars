@@ -91,6 +91,7 @@ public class BattleDefault implements Battle {
 
 	public BattleDefault(BattleDecoration decoration, BattleCreature[] players, BattleCreature[] opponents){
 		this.decoration = decoration;
+		decoration.refreshModel();
 		state = BattleState.STARTING;
 		playerTeam = players;
 		opposingTeam = opponents;
@@ -127,6 +128,7 @@ public class BattleDefault implements Battle {
 	@Override
 	public void load(BitInput buffer) {
 		decoration = BattleDecorations.fromID(buffer.readByte());
+		decoration.refreshModel();
 		state = BattleState.fromID(buffer.readNumber(BattleState.BIT_COUNT, false));
 		onTurn = buffer.readLong();
 		byte currentCreaturesSize = (byte) buffer.readNumber(CURRENT_CREATURES_BIT_COUNT, false);
@@ -198,6 +200,7 @@ public class BattleDefault implements Battle {
 		Color background = decoration.getBackgroundColor();
 		GL11.glClearColor(background.getRedF(), background.getGreenF(), background.getBlueF(), 1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		decoration.render(camera);
 		Matrix4f viewMatrix = Maths.createOriginViewMatrix(camera);
 		Game.getCreatureRenderer().prepare(false);
 		Game.getCreatureRenderer().prepareWorldShader(camera, LIGHT);

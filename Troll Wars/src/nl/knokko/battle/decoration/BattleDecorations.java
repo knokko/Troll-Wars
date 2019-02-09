@@ -11,8 +11,11 @@ public class BattleDecorations {
 	
 	public static final Light LIGHT_OUTSIDE = new DefaultLight();
 	
-	public static final BattleDecoration SORG_MOUNTAINS = new SimpleBattleDecoration((byte) 0, BACKGROUND_OUTSIDE, LIGHT_OUTSIDE);
-	public static final BattleDecoration SORG_CAVE = new SimpleBattleDecoration((byte) 1, BACKGROUND_INSIDE, LIGHT_OUTSIDE);
+	public static final byte ID_SORG_MOUNTAINS = 0;
+	public static final byte ID_SORG_CAVE = 1;
+	
+	public static final BattleDecoration SORG_MOUNTAINS = new DecorationSorgMountains();
+	public static final BattleDecoration SORG_CAVE = new DecorationSorgCave();
 	
 	private static final BattleDecoration[] DECORATIONS = {
 			SORG_MOUNTAINS, SORG_CAVE
