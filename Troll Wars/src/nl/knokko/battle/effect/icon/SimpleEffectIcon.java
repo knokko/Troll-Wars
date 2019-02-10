@@ -26,6 +26,7 @@ package nl.knokko.battle.effect.icon;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import nl.knokko.texture.factory.MyTextureLoader;
 import nl.knokko.util.resources.Resources;
 
 public class SimpleEffectIcon implements EffectIcon {
@@ -35,7 +36,7 @@ public class SimpleEffectIcon implements EffectIcon {
 
 	public SimpleEffectIcon(String iconName) {
 		image = Resources.loadImage("effects/" + iconName);
-		textureID = Resources.loadTexture(image, true);
+		textureID = MyTextureLoader.loadTexture(image, true);
 	}
 
 	@Override
@@ -58,6 +59,6 @@ public class SimpleEffectIcon implements EffectIcon {
 	}
 	
 	public void setImage(BufferedImage newImage){
-		setImage(newImage, Resources.loadTexture(newImage, true));
+		setImage(newImage, MyTextureLoader.loadTexture(newImage, true));
 	}
 }

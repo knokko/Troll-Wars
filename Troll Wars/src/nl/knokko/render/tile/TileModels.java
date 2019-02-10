@@ -25,6 +25,7 @@ package nl.knokko.render.tile;
 
 import java.lang.reflect.Field;
 
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.model.type.DefaultTileModel;
 import nl.knokko.model.type.LiquidTileModel;
 import nl.knokko.model.type.TileModel;
@@ -32,16 +33,15 @@ import nl.knokko.tiles.Tile;
 import nl.knokko.tiles.Tiles;
 import nl.knokko.util.Facing;
 import nl.knokko.util.Maths;
-import nl.knokko.util.resources.Resources;
 
 public final class TileModels {
 	
 	private static LiquidTileModel loadLiq(float[] vertices, float[] textureCoords, int[] indices){
-		return Resources.loadLiquidTileModel(vertices, textureCoords, indices);
+		return ModelLoader.loadLiquidTileModel(vertices, textureCoords, indices);
 	}
 	
 	private static DefaultTileModel loadDef(float[] vertices, float[] textureCoords, float[] normals, int[] indices){
-		return Resources.loadDefaultTileModel(vertices, textureCoords, normals, indices);
+		return ModelLoader.loadDefaultTileModel(vertices, textureCoords, normals, indices);
 	}
 	
 	private static DefaultTileModel loadLadder(Facing facing){

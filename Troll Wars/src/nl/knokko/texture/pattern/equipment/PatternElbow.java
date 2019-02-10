@@ -23,9 +23,9 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern.equipment;
 
+import nl.knokko.texture.factory.TextureBuilder;
 import nl.knokko.texture.pattern.TexturePattern;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources.TextureBuilder;
 
 public class PatternElbow extends TexturePattern {
 	

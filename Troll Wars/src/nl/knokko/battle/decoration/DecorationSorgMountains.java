@@ -1,8 +1,9 @@
 package nl.knokko.battle.decoration;
 
 import nl.knokko.model.ModelPart;
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.model.type.DefaultModel;
-import nl.knokko.util.resources.Resources;
+import nl.knokko.texture.factory.SimpleTextureFactory;
 
 import static nl.knokko.battle.decoration.BattleDecorations.*;
 
@@ -17,8 +18,8 @@ public class DecorationSorgMountains extends SimpleBattleDecoration {
 	@Override
 	protected ModelPart[] createModel() {
 		ModelPart[] result = new ModelPart[1];
-		DefaultModel model = Resources.loadDefaultModel(new float[] {0,0,0, 1,0,0, 1,1,0, 0,1,0}, new float[] {0,0, 1,0, 1,1, 0,1}, new float[] {0,0,1, 0,0,1, 0,0,1, 0,0,1}, new int[] {0,1,2, 2,3,0});
-		result[0] = new ModelPart(model, Resources.white(), new Vector3f());
+		DefaultModel model = ModelLoader.loadDefaultModel(new float[] {0,0,0, 1,0,0, 1,1,0, 0,1,0}, new float[] {0,0, 1,0, 1,1, 0,1}, new float[] {0,0,1, 0,0,1, 0,0,1, 0,0,1}, new int[] {0,1,2, 2,3,0});
+		result[0] = new ModelPart(model, SimpleTextureFactory.white(), new Vector3f());
 		return result;
 	}
 }

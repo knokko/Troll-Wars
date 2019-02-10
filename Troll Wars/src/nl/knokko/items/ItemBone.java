@@ -28,9 +28,9 @@ import nl.knokko.battle.element.BattleElement;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
 import nl.knokko.model.equipment.weapon.ModelBone;
+import nl.knokko.model.factory.equipment.WeaponFactory;
 import nl.knokko.texture.painter.BonePainter;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources;
 
 public class ItemBone extends ItemWeapon {
 	
@@ -58,7 +58,7 @@ public class ItemBone extends ItemWeapon {
 	
 	@Override
 	public ModelPart createModel(HumanoidHandProperties hand, boolean left){
-		return Resources.createModelBone(model, new BonePainter(color), hand, left);
+		return WeaponFactory.createModelBone(model, new BonePainter(color), hand, left);
 	}
 
 	@Override

@@ -44,13 +44,13 @@ import nl.knokko.items.ItemWeapon;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyHuman;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
+import nl.knokko.model.factory.creature.HumanFactory;
 import nl.knokko.story.npc.IntroHumanNPC;
 import nl.knokko.texture.painter.HumanPainter;
 import nl.knokko.texture.painter.ModelPainter;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
-import nl.knokko.util.resources.Resources;
 import static nl.knokko.model.body.BodyHuman.Helper.*;
 
 public abstract class BattleHuman extends ResourceBattleCreature implements MovingBattleCreature, ArmCreature {
@@ -179,7 +179,7 @@ public abstract class BattleHuman extends ResourceBattleCreature implements Movi
 	protected void addBody(Object body, ModelPainter painter) {
 		this.body = (BodyHuman) body;
 		this.painter = (HumanPainter) painter;
-		models.add(Resources.createModelHuman(this.body, this.painter));
+		models.add(HumanFactory.createModelHuman(this.body, this.painter));
 		prepareHitBox();
 	}
 
@@ -187,7 +187,7 @@ public abstract class BattleHuman extends ResourceBattleCreature implements Movi
 	protected void addBody(BitInput bits) {
 		body = BodyHuman.Models.loadInstance(bits);
 		painter = new HumanPainter(bits);
-		models.add(Resources.createModelHuman(body, painter));
+		models.add(HumanFactory.createModelHuman(body, painter));
 		prepareHitBox();
 	}
 

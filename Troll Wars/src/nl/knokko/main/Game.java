@@ -49,6 +49,7 @@ import nl.knokko.inventory.ArrayInventory;
 import nl.knokko.inventory.Inventory;
 import nl.knokko.inventory.trading.TradeOffers;
 import nl.knokko.items.Items;
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.players.Players;
 import nl.knokko.render.battle.Battle2dRenderer;
 import nl.knokko.render.battle.EffectRenderer;
@@ -61,9 +62,9 @@ import nl.knokko.story.dialogue.action.DialogueFunctions;
 import nl.knokko.story.event.EventManager;
 import nl.knokko.story.event.handler.EventHandler;
 import nl.knokko.story.npc.NPCManager;
+import nl.knokko.texture.factory.MyTextureLoader;
 import nl.knokko.tiles.Tiles;
 import nl.knokko.util.bits.BitInput;
-import nl.knokko.util.resources.Resources;
 import nl.knokko.util.resources.Saver;
 
 public class Game {
@@ -164,7 +165,8 @@ public class Game {
 			save();
 		for(GameState state : currentStates)
 			state.close();
-		Resources.cleanUp();
+		ModelLoader.cleanUp();
+		MyTextureLoader.cleanUp();
 	}
 	
 	public static void save(){

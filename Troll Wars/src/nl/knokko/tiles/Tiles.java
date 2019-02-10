@@ -29,23 +29,24 @@ import java.util.Random;
 import nl.knokko.main.Options;
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.factory.TileTextureFactory;
 import nl.knokko.util.Facing;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.resources.Resources;
 
 public class Tiles {
 	
-	private static final Texture[] GRASS_TEXTURES = Resources.createGrassTextures(Options.TEXTURES_PER_TILE);
-	private static final Texture[] BLUE_GRASS_TEXTURES = Resources.createGrassTextures(Options.TEXTURES_PER_TILE, new Color(0, 100, 200));
-	private static final Texture[] SORG_ROCK_TEXTURES = Resources.createRockTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
-	private static final Texture[] SORG_ROCK_HOLE_TEXTURES = Resources.createHoleTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
-	private static final Texture[] SORG_BRICKS_TEXTURES = Resources.createBrickTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
-	private static final Texture[] SORG_BRICKS_TL_TEXTURES = Resources.createBrickTriLeftTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
-	private static final Texture[] SORG_BRICKS_TR_TEXTURES = Resources.createBrickTriRightTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
-	private static final Texture[] AYUE_PLANKS_TEXTURES = Resources.createPlanksTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
-	private static final Texture[] AYUE_FENCE_TEXTURES = Resources.createFenceTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
-	private static final Texture[] AYUE_DOOR_TEXTURES = Resources.createDoorTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, new Color(10, 10, 10), 16, 4, 4);
-	private static final Texture[] AYUE_LADDER_TEXTURES = Resources.createLadderTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, new Color(30, 25, 50));
+	private static final Texture[] GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE);
+	private static final Texture[] BLUE_GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE, new Color(0, 100, 200));
+	private static final Texture[] SORG_ROCK_TEXTURES = TileTextureFactory.createRockTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
+	private static final Texture[] SORG_ROCK_HOLE_TEXTURES = TileTextureFactory.createHoleTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
+	private static final Texture[] SORG_BRICKS_TEXTURES = TileTextureFactory.createBrickTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
+	private static final Texture[] SORG_BRICKS_TL_TEXTURES = TileTextureFactory.createBrickTriLeftTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
+	private static final Texture[] SORG_BRICKS_TR_TEXTURES = TileTextureFactory.createBrickTriRightTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
+	private static final Texture[] AYUE_PLANKS_TEXTURES = TileTextureFactory.createPlanksTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
+	private static final Texture[] AYUE_FENCE_TEXTURES = TileTextureFactory.createFenceTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
+	private static final Texture[] AYUE_DOOR_TEXTURES = TileTextureFactory.createDoorTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, new Color(10, 10, 10), 16, 4, 4);
+	private static final Texture[] AYUE_LADDER_TEXTURES = TileTextureFactory.createLadderTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, new Color(30, 25, 50));
 	private static final Texture[] GIO_PATH_TEXTURES = Resources.createThinPathTextures(Options.TEXTURES_PER_TILE, new Color(30, 60, 170), 0.2f);
 	private static final Texture WATER_TEXTURE = Resources.createLiquidTexture(new Color(0, 0, 110));
 	

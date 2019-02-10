@@ -30,8 +30,8 @@ import nl.knokko.model.body.arm.HumanoidArm;
 import nl.knokko.model.body.belly.HumanoidBelly;
 import nl.knokko.model.equipment.chestplate.ModelArmorArm;
 import nl.knokko.model.equipment.chestplate.ModelArmorBelly;
+import nl.knokko.model.factory.equipment.ArmorFactory;
 import nl.knokko.texture.equipment.ArmorTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemChestplate extends ItemArmor {
 	
@@ -53,14 +53,14 @@ public class ItemChestplate extends ItemArmor {
 	}
 	
 	public ModelPart createModelBelly(HumanoidBelly belly){
-		return Resources.createModelArmorBelly(ModelArmorBelly.Factory.createInstance(1.3f), belly, armorTexture);
+		return ArmorFactory.createModelArmorBelly(ModelArmorBelly.Factory.createInstance(1.3f), belly, armorTexture);
 	}
 	
 	public ModelPart createModelUpperArm(HumanoidArm arm){
-		return Resources.createModelArmorUpperArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
+		return ArmorFactory.createModelArmorUpperArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
 	}
 	
 	public ModelPart createModelUnderArm(HumanoidArm arm){
-		return Resources.createModelArmorUnderArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
+		return ArmorFactory.createModelArmorUnderArm(ModelArmorArm.Factory.createInstance(1.3f, 1.3f), arm, armorTexture);
 	}
 }

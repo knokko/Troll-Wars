@@ -42,11 +42,11 @@ import nl.knokko.inventory.Inventory;
 import nl.knokko.model.ModelOwner;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyMyrre;
+import nl.knokko.model.factory.creature.MyrreFactory;
 import nl.knokko.texture.painter.ModelPainter;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
-import nl.knokko.util.resources.Resources;
 
 public class BattleMyrmora {
 	
@@ -147,7 +147,7 @@ public class BattleMyrmora {
 		}
 		
 		private void addBody(){
-			models.add(Resources.createModelMyrre(BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA));
+			models.add(MyrreFactory.createModelMyrre(BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA));
 			height = (int) (BodyMyrre.Models.MYRMORA.legLength() + BodyMyrre.Models.MYRMORA.bellyHeight());
 		}
 		

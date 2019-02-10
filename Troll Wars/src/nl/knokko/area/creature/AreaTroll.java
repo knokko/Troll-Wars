@@ -27,9 +27,9 @@ import nl.knokko.animation.body.AnimatorHumanoid;
 import nl.knokko.animation.body.BodyAnimator;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyTroll;
+import nl.knokko.model.factory.creature.TrollFactory;
 import nl.knokko.texture.painter.TrollPainter;
 import nl.knokko.util.position.SpawnPosition;
-import nl.knokko.util.resources.Resources;
 
 public abstract class AreaTroll extends AreaCreature {
 	
@@ -42,7 +42,7 @@ public abstract class AreaTroll extends AreaCreature {
 
 	@Override
 	protected void createBody() {
-		addModel(Resources.createModelTroll(getBody(), getTexture()));
+		addModel(TrollFactory.createModelTroll(getBody(), getTexture()));
 	}
 
 	@Override

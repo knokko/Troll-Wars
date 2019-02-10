@@ -28,8 +28,8 @@ import nl.knokko.inventory.InventoryType;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.leg.HumanoidLeg;
 import nl.knokko.model.equipment.pants.ModelArmorLeg;
+import nl.knokko.model.factory.equipment.ArmorFactory;
 import nl.knokko.texture.equipment.ArmorTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemPants extends ItemArmor {
 	
@@ -51,10 +51,10 @@ public class ItemPants extends ItemArmor {
 	}
 	
 	public ModelPart createModelUpperLeg(HumanoidLeg leg){
-		return Resources.createModelArmorUpperLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
+		return ArmorFactory.createModelArmorUpperLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
 	}
 	
 	public ModelPart createModelUnderLeg(HumanoidLeg leg){
-		return Resources.createModelArmorUnderLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
+		return ArmorFactory.createModelArmorUnderLeg(ModelArmorLeg.Factory.createInstance(1.3f), leg, armorTexture);
 	}
 }

@@ -43,9 +43,9 @@ import nl.knokko.main.Game;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyTroll;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
+import nl.knokko.model.factory.creature.TrollFactory;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
-import nl.knokko.util.resources.Resources;
 
 public class BattleGothrok extends BattlePlayer implements ArmCreature, MovingBattleCreature {
 	
@@ -92,7 +92,7 @@ public class BattleGothrok extends BattlePlayer implements ArmCreature, MovingBa
 	
 	@Override
 	protected void addBody(){
-		models.add(Resources.createModelTroll(BATTLE_GOTHROK, BodyTroll.Textures.createRargia()));
+		models.add(TrollFactory.createModelTroll(BATTLE_GOTHROK, BodyTroll.Textures.createRargia()));
 	}
 
 	@Override

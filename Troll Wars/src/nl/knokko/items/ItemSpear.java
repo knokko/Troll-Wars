@@ -30,8 +30,8 @@ import nl.knokko.battle.element.SimpleElementStats;
 import nl.knokko.battle.move.physical.MovePunch;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
+import nl.knokko.model.factory.equipment.WeaponFactory;
 import nl.knokko.texture.equipment.SpearTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemSpear extends ItemSimpleWeapon {
 	
@@ -52,7 +52,7 @@ public class ItemSpear extends ItemSimpleWeapon {
 
 	@Override
 	public ModelPart createModel(HumanoidHandProperties hand, boolean left) {
-		return Resources.createModelSpear(texture, hand);
+		return WeaponFactory.createModelSpear(texture, hand);
 	}
 
 	@Override

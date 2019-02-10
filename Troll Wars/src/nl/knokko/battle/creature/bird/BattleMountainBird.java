@@ -41,11 +41,11 @@ import nl.knokko.battle.render.properties.BattleRenderProperties;
 import nl.knokko.battle.render.properties.BirdRenderProperties;
 import nl.knokko.inventory.Inventory;
 import nl.knokko.model.body.BodyBird;
+import nl.knokko.model.factory.creature.BirdFactory;
 import nl.knokko.texture.painter.BirdPainter;
 import nl.knokko.texture.painter.ModelPainter;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
-import nl.knokko.util.resources.Resources;
 
 public class BattleMountainBird extends SimpleBattleCreature implements MovingBattleCreature {
 	
@@ -128,7 +128,7 @@ public class BattleMountainBird extends SimpleBattleCreature implements MovingBa
 	protected void addBody(Object body, ModelPainter texture) {
 		this.body = (BodyBird) body;
 		this.painter = (BirdPainter) texture;
-		models.add(Resources.createModelBird(this.body, painter));
+		models.add(BirdFactory.createModelBird(this.body, painter));
 		hitRadius = Math.max(Math.max(this.body.bellyDepth(), this.body.bellyHeight()), this.body.bellyWidth()) / 2 + this.body.legLength();
 	}
 
@@ -136,7 +136,7 @@ public class BattleMountainBird extends SimpleBattleCreature implements MovingBa
 	protected void addBody(BitInput bits) {
 		body = BodyBird.Models.loadInstance(bits);
 		painter = new BirdPainter(bits);
-		models.add(Resources.createModelBird(body, painter));
+		models.add(BirdFactory.createModelBird(body, painter));
 		hitRadius = Math.max(Math.max(body.bellyDepth(), body.bellyHeight()), body.bellyWidth()) / 2 + body.legLength();
 	}
 

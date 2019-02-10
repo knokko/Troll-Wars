@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
 
 import nl.knokko.gui.texture.GuiTexture;
 import nl.knokko.main.Game;
-import nl.knokko.util.resources.Resources;
+import nl.knokko.texture.factory.MyTextureLoader;
 
 public class ImageTexture extends Texture {
 	
@@ -40,7 +40,7 @@ public class ImageTexture extends Texture {
 	}
 	
 	public ImageTexture(BufferedImage image, boolean createTexture){
-		super(createTexture ? Resources.loadTexture(image, true) : -1);
+		super(createTexture ? MyTextureLoader.loadTexture(image, true) : -1);
 		this.image = image;
 	}
 	

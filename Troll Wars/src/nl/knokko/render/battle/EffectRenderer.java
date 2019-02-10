@@ -26,9 +26,9 @@ package nl.knokko.render.battle;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.model.type.SimpleEffectModel;
 import nl.knokko.util.Maths;
-import nl.knokko.util.resources.Resources;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -81,10 +81,10 @@ public class EffectRenderer {
 	}
 	
 	private static SimpleEffectModel createSphereModel(float radius){
-		return Resources.loadSimpleEffectModel(createSpherePositions(radius), SPHERE_INDICES);
+		return ModelLoader.loadSimpleEffectModel(createSpherePositions(radius), SPHERE_INDICES);
 	}
 	
-	private final SimpleEffectModel simpleModel = Resources.loadSimpleEffectModel(PARTICLE_POSITIONS, PARTICLE_INDICES);
+	private final SimpleEffectModel simpleModel = ModelLoader.loadSimpleEffectModel(PARTICLE_POSITIONS, PARTICLE_INDICES);
 	
 	private final Map<Float,SimpleEffectModel> sphereModels = new HashMap<Float,SimpleEffectModel>();
 	

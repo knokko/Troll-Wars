@@ -29,9 +29,9 @@ import nl.knokko.equipment.EquipmentFull;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyHuman;
 import nl.knokko.model.body.BodyHuman.Helper;
+import nl.knokko.model.factory.creature.HumanFactory;
 import nl.knokko.texture.painter.HumanPainter;
 import nl.knokko.util.position.SpawnPosition;
-import nl.knokko.util.resources.Resources;
 
 public class AreaSimpleHuman extends AreaCreature {
 	
@@ -52,7 +52,7 @@ public class AreaSimpleHuman extends AreaCreature {
 
 	@Override
 	protected void createBody() {
-		addModel(Resources.createModelHuman(body, colors));
+		addModel(HumanFactory.createModelHuman(body, colors));
 		BodyHuman.Helper.setEquipment(this, equipment, body);
 	}
 

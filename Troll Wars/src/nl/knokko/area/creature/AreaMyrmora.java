@@ -26,9 +26,9 @@ package nl.knokko.area.creature;
 import nl.knokko.animation.body.AnimatorMyrre;
 import nl.knokko.animation.body.BodyAnimator;
 import nl.knokko.model.body.BodyMyrre;
+import nl.knokko.model.factory.creature.MyrreFactory;
 import nl.knokko.shaders.ShaderType;
 import nl.knokko.util.position.SpawnPosition;
-import nl.knokko.util.resources.Resources;
 
 public class AreaMyrmora {
 
@@ -43,7 +43,7 @@ public class AreaMyrmora {
 
 		@Override
 		protected void createBody() {
-			addModel(Resources.createModelMyrre(BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA));
+			addModel(MyrreFactory.createModelMyrre(BodyMyrre.Models.MYRMORA, BodyMyrre.Textures.MYRMORA));
 		}
 
 		@Override

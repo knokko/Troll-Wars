@@ -29,8 +29,8 @@ import nl.knokko.battle.element.ElementalStatistics;
 import nl.knokko.battle.move.physical.MovePunch;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
+import nl.knokko.model.factory.equipment.WeaponFactory;
 import nl.knokko.texture.equipment.SwordTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemSword extends ItemSimpleWeapon {
 	
@@ -49,7 +49,7 @@ public class ItemSword extends ItemSimpleWeapon {
 
 	@Override
 	public ModelPart createModel(HumanoidHandProperties hand, boolean left) {
-		return Resources.createModelSword(texture, hand);
+		return WeaponFactory.createModelSword(texture, hand);
 	}
 
 	@Override

@@ -23,8 +23,8 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern;
 
+import nl.knokko.texture.factory.TextureBuilder;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources.TextureBuilder;
 
 public class PatternCircle extends TexturePattern {
 	

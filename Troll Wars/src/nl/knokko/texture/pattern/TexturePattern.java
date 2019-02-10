@@ -24,7 +24,7 @@
 package nl.knokko.texture.pattern;
 
 import nl.knokko.texture.area.TextureArea;
-import nl.knokko.util.resources.Resources.TextureBuilder;
+import nl.knokko.texture.factory.TextureBuilder;
 
 public abstract class TexturePattern {
 	

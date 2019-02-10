@@ -25,9 +25,9 @@ package nl.knokko.texture.pattern;
 
 import java.util.Random;
 
+import nl.knokko.texture.factory.TextureBuilder;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources.TextureBuilder;
 
 public class PatternFace extends PatternAverage {
 	

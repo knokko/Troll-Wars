@@ -28,8 +28,8 @@ import nl.knokko.inventory.InventoryType;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
 import nl.knokko.model.equipment.hands.ModelArmorGlobe;
+import nl.knokko.model.factory.equipment.ArmorFactory;
 import nl.knokko.texture.equipment.ArmorTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemGlobe extends ItemArmor {
 	
@@ -51,10 +51,10 @@ public class ItemGlobe extends ItemArmor {
 	}
 	
 	public ModelPart createModelLeft(HumanoidHandProperties hand){
-		return Resources.createModelArmorGlobe(ModelArmorGlobe.Factory.createInstance(1.1f), hand, armorTexture, true);
+		return ArmorFactory.createModelArmorGlobe(ModelArmorGlobe.Factory.createInstance(1.1f), hand, armorTexture, true);
 	}
 	
 	public ModelPart createModelRight(HumanoidHandProperties hand){
-		return Resources.createModelArmorGlobe(ModelArmorGlobe.Factory.createInstance(1.1f), hand, armorTexture, false);
+		return ArmorFactory.createModelArmorGlobe(ModelArmorGlobe.Factory.createInstance(1.1f), hand, armorTexture, false);
 	}
 }

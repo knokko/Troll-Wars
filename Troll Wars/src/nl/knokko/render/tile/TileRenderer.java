@@ -32,6 +32,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.area.TileMap;
 import nl.knokko.main.Game;
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.model.type.DefaultModel;
 import nl.knokko.model.type.LiquidModel;
 import nl.knokko.model.type.SpiritModel;
@@ -39,13 +40,13 @@ import nl.knokko.model.type.TileModel;
 import nl.knokko.render.main.WorldRenderer;
 import nl.knokko.shaders.ShaderType;
 import nl.knokko.texture.ModelTexture;
+import nl.knokko.texture.factory.SimpleTextureFactory;
 import nl.knokko.tiles.Tile;
 import nl.knokko.tiles.Tiles;
 import nl.knokko.tiles.Tiles.RenderForm;
 import nl.knokko.util.FrustumHelper;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
-import nl.knokko.util.resources.Resources;
 import nl.knokko.view.camera.Camera;
 import nl.knokko.view.light.Light;
 import static nl.knokko.shaders.WorldShader.WORLD_SHADER;
@@ -60,14 +61,14 @@ public class TileRenderer extends WorldRenderer {
 	private static long totalTime = 0;
 	private static long times = 0;
 	
-	public static final ModelTexture RED = new ModelTexture(Resources.createFilledTexture(Color.RED), 0.1f, 0.1f);
-	public static final ModelTexture GREEN = new ModelTexture(Resources.createFilledTexture(Color.GREEN), 0.1f, 0.1f);
-	public static final DefaultModel QUAD = Resources.loadDefaultModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new float[]{0,1,0, 0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2, 0,3,2});
-	public static final LiquidModel LIQUID_QUAD = Resources.loadLiquidModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new int[]{0,1,2, 0,3,2});
-	public static final SpiritModel SPIRIT_QUAD = Resources.loadSpiritModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new int[]{0,1,2, 0,3,2});
-	public static final DefaultModel TRIANGLE = Resources.loadDefaultModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new float[]{0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2});
-	public static final LiquidModel LIQUID_TRIANGLE = Resources.loadLiquidModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new int[]{0,1,2});
-	public static final SpiritModel SPIRIT_TRIANGLE = Resources.loadSpiritModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new int[]{0,1,2});
+	public static final ModelTexture RED = new ModelTexture(SimpleTextureFactory.createFilledTexture(Color.RED), 0.1f, 0.1f);
+	public static final ModelTexture GREEN = new ModelTexture(SimpleTextureFactory.createFilledTexture(Color.GREEN), 0.1f, 0.1f);
+	public static final DefaultModel QUAD = ModelLoader.loadDefaultModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new float[]{0,1,0, 0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2, 0,3,2});
+	public static final LiquidModel LIQUID_QUAD = ModelLoader.loadLiquidModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new int[]{0,1,2, 0,3,2});
+	public static final SpiritModel SPIRIT_QUAD = ModelLoader.loadSpiritModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new int[]{0,1,2, 0,3,2});
+	public static final DefaultModel TRIANGLE = ModelLoader.loadDefaultModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new float[]{0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2});
+	public static final LiquidModel LIQUID_TRIANGLE = ModelLoader.loadLiquidModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new int[]{0,1,2});
+	public static final SpiritModel SPIRIT_TRIANGLE = ModelLoader.loadSpiritModel(new float[]{-1,0,-1, 1,0,-1, 1,0,1}, new float[]{0,0, 1,0, 1,1}, new int[]{0,1,2});
 	
 	public void renderTiles(TileMap tiles, Camera camera, Light light){
 		long startTime = System.nanoTime();
@@ -286,7 +287,7 @@ public class TileRenderer extends WorldRenderer {
 		if(tile.getShaderType() == ShaderType.NORMAL){
 			prepareDefaultTileShader(camera);
 			prepareDefaultTileModel(tile.getModel());
-			prepareNormalTileTexture(Resources.white());
+			prepareNormalTileTexture(SimpleTextureFactory.white());
 			DEFAULT_TILE_SHADER.loadTilePosition(new Vector3f(tileX * 64, tileY * 16, tileZ * 64));
 			GL11.glDrawElements(GL11.GL_TRIANGLES, tile.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbindDefaultTileModel();

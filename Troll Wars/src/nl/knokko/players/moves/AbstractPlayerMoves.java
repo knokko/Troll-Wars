@@ -34,11 +34,20 @@ import nl.knokko.items.ItemWeapon;
 import nl.knokko.model.body.arm.HumanoidArm;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.factory.MyTextureLoader;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
-import nl.knokko.util.resources.Resources;
 
 public abstract class AbstractPlayerMoves implements PlayerMoves {
+	
+	public static Texture[] loadGuiMoveTexture(String moveName){
+		Texture[] textures = new Texture[3];
+		String pre = "gui/moves/";
+		textures[0] = new Texture(MyTextureLoader.loadTexture(pre + "learned/" + moveName));
+		textures[1] = new Texture(MyTextureLoader.loadTexture(pre + "notlearned/" + moveName));
+		textures[2] = new Texture(MyTextureLoader.loadTexture(pre + "cantlearn/" + moveName));
+		return textures;
+	}
 	
 	protected FightMoveOption[] learnedMoves;
 	protected PlayerMoveOption[] learnableMoves;
@@ -87,7 +96,7 @@ public abstract class AbstractPlayerMoves implements PlayerMoves {
 			this.x = x;
 			this.y = y;
 			this.name = name;
-			this.textures = Resources.loadGuiMoveTexture(name);
+			this.textures = loadGuiMoveTexture(name);
 			this.move = createMoveOption();
 		}
 		

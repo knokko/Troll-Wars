@@ -25,6 +25,7 @@ package nl.knokko.render.battle;
 
 import nl.knokko.battle.creature.BattleCreature;
 import nl.knokko.battle.render.properties.BattleRenderProperties;
+import nl.knokko.model.factory.ModelLoader;
 import nl.knokko.model.type.AbstractModel;
 import nl.knokko.model.type.GuiModel;
 import nl.knokko.view.camera.Camera;
@@ -37,61 +38,63 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import static nl.knokko.shaders.battle.ResourceShader.RESOURCE_SHADER;
-import nl.knokko.util.resources.Resources;
 
 public class Battle2dRenderer {
-    
-        public static final GuiModel QUAD = Resources.loadGuiModel(new float[]{-1,1, -1,-1, 1,1, 1,-1});
-	
-	public void startResourceShader(Matrix4f viewMatrix){
+
+	public static final GuiModel QUAD = ModelLoader.loadGuiModel(new float[] { -1, 1, -1, -1, 1, 1, 1, -1 });
+
+	public void startResourceShader(Matrix4f viewMatrix) {
 		RESOURCE_SHADER.start();
 		RESOURCE_SHADER.loadViewMatrix(viewMatrix);
 		prepareModel(QUAD);
 	}
-	
-	public void renderResources(Camera camera, BattleCreature creature){
+
+	public void renderResources(Camera camera, BattleCreature creature) {
 		BattleRenderProperties props = creature.getRenderProperties();
 		renderHealth(camera, props, creature.getHealth(), creature.getMaxHealth());
 		renderMana(camera, props, creature.getMana(), creature.getMaxMana());
 		renderFocus(props, creature.getFocus(), creature.getMaxFocus());
 	}
-	
-	private void prepareModel(AbstractModel model){
+
+	private void prepareModel(AbstractModel model) {
 		GL30.glBindVertexArray(model.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 	}
-	
-	private void unbindModel(){
+
+	private void unbindModel() {
 		GL30.glBindVertexArray(0);
 		GL20.glDisableVertexAttribArray(0);
 	}
-	
-	private void renderHealth(Camera camera, BattleRenderProperties props, long health, long maxHealth){
+
+	private void renderHealth(Camera camera, BattleRenderProperties props, long health, long maxHealth) {
 		RESOURCE_SHADER.setHealthColor();
-		renderResource(props.getHealthX(camera), props.getHealthY(camera), props.getHealthZ(camera), props.getHealthWidth() / 2, props.getHealthHeight() / 2, health, maxHealth);
+		renderResource(props.getHealthX(camera), props.getHealthY(camera), props.getHealthZ(camera),
+				props.getHealthWidth() / 2, props.getHealthHeight() / 2, health, maxHealth);
 	}
-	
-	private void renderMana(Camera camera, BattleRenderProperties props, long mana, long maxMana){
-		if(maxMana > 0){
+
+	private void renderMana(Camera camera, BattleRenderProperties props, long mana, long maxMana) {
+		if (maxMana > 0) {
 			RESOURCE_SHADER.setManaColor();
-			renderResource(props.getManaX(camera), props.getManaY(camera), props.getManaZ(camera), props.getManaWidth() / 2, props.getManaHeight() / 2, mana, maxMana);
+			renderResource(props.getManaX(camera), props.getManaY(camera), props.getManaZ(camera),
+					props.getManaWidth() / 2, props.getManaHeight() / 2, mana, maxMana);
 		}
 	}
-	
-	private void renderFocus(BattleRenderProperties props, long focus, long maxFocus){
-		if(maxFocus > 0){
+
+	private void renderFocus(BattleRenderProperties props, long focus, long maxFocus) {
+		if (maxFocus > 0) {
 			RESOURCE_SHADER.setFocusColor();
 		}
 	}
-	
-	private void renderResource(float midX, float midY, float midZ, float scaleX, float scaleY, long current, long max){
+
+	private void renderResource(float midX, float midY, float midZ, float scaleX, float scaleY, long current,
+			long max) {
 		RESOURCE_SHADER.loadProgress((float) current / max);
 		RESOURCE_SHADER.loadRenderPosition(new Vector3f(midX, midY, midZ));
 		RESOURCE_SHADER.loadScale(new Vector2f(scaleX, scaleY));
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, QUAD.getVertexCount());
 	}
-	
-	public void stopResourceShader(){
+
+	public void stopResourceShader() {
 		RESOURCE_SHADER.stop();
 		unbindModel();
 	}

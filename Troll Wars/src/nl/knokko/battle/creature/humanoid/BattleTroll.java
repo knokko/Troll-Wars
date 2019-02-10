@@ -45,12 +45,12 @@ import nl.knokko.items.ItemWeapon;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.BodyTroll;
 import nl.knokko.model.body.hand.HumanoidHandProperties;
+import nl.knokko.model.factory.creature.TrollFactory;
 import nl.knokko.texture.painter.ModelPainter;
 import nl.knokko.texture.painter.TrollPainter;
 import nl.knokko.util.Maths;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
-import nl.knokko.util.resources.Resources;
 import static nl.knokko.model.body.BodyTroll.Helper.*;
 
 public class BattleTroll extends SimpleBattleCreature implements MovingBattleCreature, ArmCreature {
@@ -170,7 +170,7 @@ public class BattleTroll extends SimpleBattleCreature implements MovingBattleCre
 
 	@Override
 	protected void addBody(Object body, ModelPainter painter) {
-		this.models.add(Resources.createModelTroll((BodyTroll) body, (TrollPainter) painter));
+		this.models.add(TrollFactory.createModelTroll((BodyTroll) body, (TrollPainter) painter));
 		this.body = (BodyTroll) body;
 		this.painter = (TrollPainter) painter;
 		prepareHitBox();
@@ -180,7 +180,7 @@ public class BattleTroll extends SimpleBattleCreature implements MovingBattleCre
 	protected void addBody(BitInput bits){
 		body = BodyTroll.Models.load(bits);
 		painter = new TrollPainter(bits);
-		models.add(Resources.createModelTroll(body, painter));
+		models.add(TrollFactory.createModelTroll(body, painter));
 		prepareHitBox();
 	}
 	

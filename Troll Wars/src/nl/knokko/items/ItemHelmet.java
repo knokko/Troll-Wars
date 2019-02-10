@@ -28,8 +28,8 @@ import nl.knokko.inventory.InventoryType;
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.body.head.HeadProperties;
 import nl.knokko.model.equipment.helmet.ModelArmorHead;
+import nl.knokko.model.factory.equipment.ArmorFactory;
 import nl.knokko.texture.equipment.ArmorTexture;
-import nl.knokko.util.resources.Resources;
 
 public class ItemHelmet extends ItemArmor {
 	
@@ -51,6 +51,6 @@ public class ItemHelmet extends ItemArmor {
 	}
 	
 	public ModelPart createModel(HeadProperties head){
-		return Resources.createModelArmorHelmet(ModelArmorHead.Factory.createInstance(1.3f), head, armorTexture);
+		return ArmorFactory.createModelArmorHelmet(ModelArmorHead.Factory.createInstance(1.3f), head, armorTexture);
 	}
 }

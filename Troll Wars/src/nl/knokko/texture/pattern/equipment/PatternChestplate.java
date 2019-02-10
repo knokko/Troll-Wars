@@ -23,8 +23,8 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern.equipment;
 
+import nl.knokko.texture.factory.TextureBuilder;
 import nl.knokko.texture.pattern.TexturePattern;
-import nl.knokko.util.resources.Resources.TextureBuilder;
 
 public class PatternChestplate extends TexturePattern {
 	
