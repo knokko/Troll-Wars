@@ -24,11 +24,16 @@
 package nl.knokko.battle.decoration;
 
 import nl.knokko.model.ModelPart;
-import nl.knokko.model.factory.ModelLoader;
-import nl.knokko.model.type.DefaultModel;
+import nl.knokko.model.factory.ModelBuilder;
+import nl.knokko.model.type.AbstractModel;
+import nl.knokko.texture.ModelTexture;
+import nl.knokko.texture.Texture;
 import nl.knokko.texture.factory.SimpleTextureFactory;
+import nl.knokko.texture.factory.TextureBuilder;
 
 import static nl.knokko.battle.decoration.BattleDecorations.*;
+
+import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -41,8 +46,91 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 	@Override
 	protected ModelPart[] createModel() {
 		ModelPart[] result = new ModelPart[1];
-		DefaultModel model = ModelLoader.loadDefaultModel(new float[] {0,0,0, 100,0,0, 100,100,0, 0,100,0}, new float[] {0,0, 1,0, 1,1, 0,1}, new float[] {0,0,1, 0,0,1, 0,0,1, 0,0,1}, new int[] {0,1,2, 2,3,0});
-		result[0] = new ModelPart(model, SimpleTextureFactory.white(), new Vector3f());
+		
+		Random random = new Random();
+		ModelBuilder builder = new ModelBuilder();
+		builder.addPlane(0, 0, 1, 0, 0, -300, 0, 0, 100, 0, -300, 1, 0, 100, 100, -300, 1, 1, 0, 100, -300, 0, 1);
+		
+		// Build the cave wall
+		WallBuilder wall = new WallBuilder(random);
+		
+		TextureBuilder textureBuilder = new TextureBuilder((int) wall.caveWallLength, (int) wall.caveWallHeight, false);
+		for (int progressXZ = 0; progressXZ < 1000; progressXZ++) {
+			float currentProgress = progressXZ * 0.001f;
+			float nextProgress = (progressXZ + 1) * 0.001f;
+			float currentX = wall.getX(currentProgress);
+			float currentZ = wall.getZ(currentProgress);
+			float nextX = wall.getX(nextProgress);
+			float nextZ = wall.getZ(nextProgress);
+		}
+		
+		// Finally create the wall model part
+		result[0] = new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), 0f, 0f), new Vector3f());
 		return result;
+	}
+	
+	private static class WallBuilder {
+		
+		/**
+		 * The horizontal distance between the middle of the cave path and the wall
+		 */
+		private final float caveRadius;
+		
+		/**
+		 * The length of the cave model in the positive x-direction
+		 */
+		private final float posCaveLength;
+		
+		/**
+		 * The length of the cave model in the negative x-direction
+		 */
+		private final float negCaveLength;
+		
+		/**
+		 * The total length of the cave wall
+		 */
+		private final float caveWallLength;
+		
+		/**
+		 * The point where the cave wall should start forming a sphere rather than continuing its path
+		 */
+		private final float progressBorder1;
+		
+		/**
+		 * The point where the cave wall has made a half sphere and needs to move in the opposite direction
+		 */
+		private final float progressBorder2;
+		
+		/**
+		 * The height of the cave wall
+		 */
+		private final float caveWallHeight;
+		
+		private WallBuilder(Random random) {
+			
+			// Independent fields
+			caveRadius = 400 + random.nextFloat() * 50;
+			posCaveLength = 10000 + random.nextFloat() * 400;
+			negCaveLength = 10000 + random.nextFloat() * 400;
+			caveWallHeight = 2000 + random.nextFloat() * 200;;
+			
+			// Dependent fields
+			// The total length of the cave wall
+			caveWallLength = 2 * caveRadius + 2 * posCaveLength + 2 * negCaveLength;
+			
+			// The point where the cave wall should start forming a sphere rather than continuing its path
+			progressBorder1 = posCaveLength / caveWallLength;
+			
+			// The point where the cave wall has made a half sphere and needs to move in the opposite direction
+			progressBorder2 = (posCaveLength + 2 * caveRadius) / caveWallLength;
+		}
+		
+		private float getX(float progress) {
+			
+		}
+		
+		private float getZ(float progress) {
+			
+		}
 	}
 }
