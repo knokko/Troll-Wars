@@ -141,7 +141,7 @@ public class ArrayFloatList extends AbstractFloatList {
 	@Override
 	public void ensureCapacity(int capacity) {
 		if(data.length < capacity){
-			float[] newData = new float[capacity];
+			float[] newData = new float[capacity + capacity / 3];
 			System.arraycopy(data, 0, newData, 0, size);
 			data = newData;
 		}
