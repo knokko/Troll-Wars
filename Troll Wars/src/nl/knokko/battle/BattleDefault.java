@@ -283,7 +283,7 @@ public class BattleDefault implements Battle {
 	}
 	
 	protected Camera createCamera(){
-		return new CameraFlying();
+		return new CameraBattle();
 	}
 	
 	/**
