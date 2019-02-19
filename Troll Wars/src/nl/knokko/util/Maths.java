@@ -35,6 +35,8 @@ public class Maths {
 	
 	private static final int[] POWERS = new int[30];
 	
+	public static final float PI = (float) Math.PI;
+	
 	static {
 		int power = 1;
 		for(int i = 0; i < POWERS.length; i++){

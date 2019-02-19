@@ -25,11 +25,11 @@ package nl.knokko.battle.decoration;
 
 import nl.knokko.model.ModelPart;
 import nl.knokko.model.factory.ModelBuilder;
-import nl.knokko.model.type.AbstractModel;
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.Texture;
-import nl.knokko.texture.factory.SimpleTextureFactory;
 import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.util.Maths;
+import nl.knokko.util.color.Color;
 
 import static nl.knokko.battle.decoration.BattleDecorations.*;
 
@@ -54,7 +54,10 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		// Build the cave wall
 		WallBuilder wall = new WallBuilder(random);
 		
-		TextureBuilder textureBuilder = new TextureBuilder((int) wall.caveWallLength, (int) wall.caveWallHeight, false);
+		TextureBuilder textureBuilder = new TextureBuilder(2048, 256, false);
+		
+		// TODO create a proper texture later
+		textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.RED, 0.4f, random);
 		for (int progressXZ = 0; progressXZ < 1000; progressXZ++) {
 			float currentProgress = progressXZ * 0.001f;
 			float nextProgress = (progressXZ + 1) * 0.001f;
@@ -62,6 +65,9 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 			float currentZ = wall.getZ(currentProgress);
 			float nextX = wall.getX(nextProgress);
 			float nextZ = wall.getZ(nextProgress);
+			
+			// TODO improve texture coords and normals later
+			builder.addPlane(0, 0, 1, currentX, 0, currentZ, currentProgress, 0, nextX, 0, nextZ, nextProgress, 0, nextX, wall.caveWallHeight, nextZ, nextProgress, 1, currentX, wall.caveWallHeight, currentZ, currentProgress, 1);
 		}
 		
 		// Finally create the wall model part
@@ -102,6 +108,26 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		private final float progressBorder2;
 		
 		/**
+		 * The point where the cave wall should start forming a sphere for the second time
+		 */
+		private final float progressBorder3;
+		
+		/**
+		 * The point where the cave wall has made a half sphere for the second time
+		 */
+		private final float progressBorder4;
+		
+		/**
+		 * The difference between progressBorder2 and progressBorder1
+		 */
+		private final float progressBorderLength12;
+		
+		/**
+		 * The difference between progressBorder4 and progressBorder3
+		 */
+		private final float progressBorderLength34;
+		
+		/**
 		 * The height of the cave wall
 		 */
 		private final float caveWallHeight;
@@ -109,28 +135,93 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		private WallBuilder(Random random) {
 			
 			// Independent fields
-			caveRadius = 400 + random.nextFloat() * 50;
-			posCaveLength = 10000 + random.nextFloat() * 400;
-			negCaveLength = 10000 + random.nextFloat() * 400;
-			caveWallHeight = 2000 + random.nextFloat() * 200;;
+			caveRadius = 200 + random.nextFloat() * 50;
+			posCaveLength = 5000 + random.nextFloat() * 400;
+			negCaveLength = 5000 + random.nextFloat() * 400;
+			caveWallHeight = 1000 + random.nextFloat() * 200;
 			
 			// Dependent fields
 			// The total length of the cave wall
-			caveWallLength = 2 * caveRadius + 2 * posCaveLength + 2 * negCaveLength;
+			caveWallLength = 4 * caveRadius + 2 * posCaveLength + 2 * negCaveLength;
 			
 			// The point where the cave wall should start forming a sphere rather than continuing its path
 			progressBorder1 = posCaveLength / caveWallLength;
 			
 			// The point where the cave wall has made a half sphere and needs to move in the opposite direction
 			progressBorder2 = (posCaveLength + 2 * caveRadius) / caveWallLength;
+			
+			// The point where the cave wall should start forming a sphere for the second time
+			progressBorder3 = (2 * caveRadius + 2 * posCaveLength + negCaveLength) / caveWallLength;
+			
+			// The point where the cave wall has made a half sphere for the second time
+			progressBorder4 = (4 * caveRadius + 2 * posCaveLength + negCaveLength) / caveWallLength;
+			
+			progressBorderLength12 = progressBorder2 - progressBorder1;
+			
+			progressBorderLength34 = progressBorder4 - progressBorder3;
 		}
 		
 		private float getX(float progress) {
-			
+			if (progress <= progressBorder1) {
+				
+				// Progress is in range [0, progressBorder1]
+				// This is the part until the first half cilinder
+				return progress * posCaveLength / progressBorder1;
+			} else if (progress <= progressBorder2) {
+				
+				// Progress is in range (progressBorder1, progressBorder2]
+				// This is the first half cylinder
+				return posCaveLength + caveRadius * Maths.sin(180f * (progress - progressBorder1) / progressBorderLength12);
+			} else if (progress <= 0.5f) {
+				
+				// Progress is in range (progressBorder2, 0.5]
+				// This is after the first half cylinder
+				return posCaveLength - (progress - progressBorder2) / (0.5f - progressBorder2) * posCaveLength;
+			} else if (progress <= progressBorder3) {
+				
+				// Progress is in range (0.5, progressBorder3]
+				// This is the part until the second half cylinder
+				return -(progress - 0.5f) * negCaveLength / (progressBorder3 - 0.5f);
+			} else if (progress <= progressBorder4) {
+				
+				// Progress is in range (progressBorder3, progressBorder4]
+				// This is the second half cylinder
+				return -negCaveLength - caveRadius * Maths.sin(180f * (progress - progressBorder3) / progressBorderLength34);
+			} else {
+				
+				// Progress is in range (progressBorder4, 1]
+				// This is the part after the second half cylinder
+				return -negCaveLength + (progress - progressBorder4) / (1f - progressBorder4) * negCaveLength;
+			}
 		}
 		
 		private float getZ(float progress) {
-			
+			// TODO smoothen this later
+			if (progress <= progressBorder1) {
+				
+				// Progress is in range [0, progressBorder1]
+				// This is the part until the first half sphere begins
+				return caveRadius;
+			} else if (progress <= progressBorder2) {
+				
+				// Progress is in range (progressBorder1, progressBorder2]
+				// The first half sphere should be in this region
+				return caveRadius * Maths.sin(180f * (progress - progressBorder1) / progressBorderLength12 + 90f);
+			}  else if (progress <= progressBorder3) {
+				
+				// Progress is in range (progressBorder2, progressBorder3]
+				// This is the part until the second half sphere begins
+				return -caveRadius;
+			} else if (progress <= progressBorder4) {
+				
+				// Progress is in range (progressBorder3, progressBorder4]
+				// The second half sphere should be in this region
+				return caveRadius * Maths.sin(180f * (progress - progressBorder3) / progressBorderLength34 - 90f);
+			} else {
+				
+				// Progress is in range (0.75, 1]
+				return caveRadius;
+			}
 		}
 	}
 }
