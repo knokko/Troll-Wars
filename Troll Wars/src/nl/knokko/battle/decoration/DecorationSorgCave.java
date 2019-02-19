@@ -48,8 +48,14 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		ModelPart[] result = new ModelPart[1];
 		
 		Random random = new Random();
+		
+		// This is needed because we want to reuse some positions
+		float[] randomOffsets = new float[1000];
+		for (int index = 0; index < randomOffsets.length; index++) {
+			randomOffsets[index] = random.nextFloat();
+		}
+		
 		ModelBuilder builder = new ModelBuilder();
-		builder.addPlane(0, 0, 1, 0, 0, -300, 0, 0, 100, 0, -300, 1, 0, 100, 100, -300, 1, 1, 0, 100, -300, 0, 1);
 		
 		// Build the cave wall
 		WallBuilder wall = new WallBuilder(random);
@@ -57,17 +63,23 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		TextureBuilder textureBuilder = new TextureBuilder(2048, 256, false);
 		
 		// TODO create a proper texture later
-		textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.RED, 0.4f, random);
+		textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.IRON, 0.2f, random);
 		for (int progressXZ = 0; progressXZ < 1000; progressXZ++) {
 			float currentProgress = progressXZ * 0.001f;
 			float nextProgress = (progressXZ + 1) * 0.001f;
-			float currentX = wall.getX(currentProgress);
-			float currentZ = wall.getZ(currentProgress);
-			float nextX = wall.getX(nextProgress);
-			float nextZ = wall.getZ(nextProgress);
 			
 			// TODO improve texture coords and normals later
-			builder.addPlane(0, 0, 1, currentX, 0, currentZ, currentProgress, 0, nextX, 0, nextZ, nextProgress, 0, nextX, wall.caveWallHeight, nextZ, nextProgress, 1, currentX, wall.caveWallHeight, currentZ, currentProgress, 1);
+			for (int progressY = 0; progressY < 5; progressY++) {
+				float currentX = wall.getX(currentProgress) + randomOffsets[(progressXZ + 250 + 40 * progressY) % 1000] * 0;
+				float currentZ = wall.getZ(currentProgress) + randomOffsets[(progressXZ + 40 * progressY) % 1000] * 30;
+				float nextX = wall.getX(nextProgress) + randomOffsets[(progressXZ + 251 + 40 * progressY) % 1000] * 0;
+				float nextZ = wall.getZ(nextProgress) + randomOffsets[(progressXZ + 1 + 40 * progressY) % 1000] * 30;
+				float v = progressY / 5f;
+				float nextV = (progressY + 1f) / 5f;
+				float y = v * wall.caveWallHeight;
+				float nextY = nextV * wall.caveWallHeight;
+				builder.addPlane(0, 0, 1, currentX, y, currentZ, currentProgress, v, nextX, y, nextZ, nextProgress, v, nextX, nextY, nextZ, nextProgress, nextV, currentX, nextY, currentZ, currentProgress, nextV);
+			}
 		}
 		
 		// Finally create the wall model part
@@ -135,7 +147,7 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		private WallBuilder(Random random) {
 			
 			// Independent fields
-			caveRadius = 200 + random.nextFloat() * 50;
+			caveRadius = 450 + random.nextFloat() * 50;
 			posCaveLength = 5000 + random.nextFloat() * 400;
 			negCaveLength = 5000 + random.nextFloat() * 400;
 			caveWallHeight = 1000 + random.nextFloat() * 200;
@@ -196,31 +208,32 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		}
 		
 		private float getZ(float progress) {
+			float extra = 10 * caveRadius * (float) Math.pow(Maths.sin(360f * progress), 2);
 			// TODO smoothen this later
 			if (progress <= progressBorder1) {
 				
 				// Progress is in range [0, progressBorder1]
 				// This is the part until the first half sphere begins
-				return caveRadius;
+				return caveRadius + extra;
 			} else if (progress <= progressBorder2) {
 				
 				// Progress is in range (progressBorder1, progressBorder2]
 				// The first half sphere should be in this region
-				return caveRadius * Maths.sin(180f * (progress - progressBorder1) / progressBorderLength12 + 90f);
+				return caveRadius * Maths.sin(180f * (progress - progressBorder1) / progressBorderLength12 + 90f) + extra;
 			}  else if (progress <= progressBorder3) {
 				
 				// Progress is in range (progressBorder2, progressBorder3]
 				// This is the part until the second half sphere begins
-				return -caveRadius;
+				return -caveRadius + extra;
 			} else if (progress <= progressBorder4) {
 				
 				// Progress is in range (progressBorder3, progressBorder4]
 				// The second half sphere should be in this region
-				return caveRadius * Maths.sin(180f * (progress - progressBorder3) / progressBorderLength34 - 90f);
+				return caveRadius * Maths.sin(180f * (progress - progressBorder3) / progressBorderLength34 - 90f) + extra;
 			} else {
 				
 				// Progress is in range (0.75, 1]
-				return caveRadius;
+				return caveRadius + extra;
 			}
 		}
 	}
