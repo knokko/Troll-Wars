@@ -60,25 +60,46 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		// Build the cave wall
 		WallBuilder wall = new WallBuilder(random);
 		
-		TextureBuilder textureBuilder = new TextureBuilder(2048, 256, false);
+		TextureBuilder textureBuilder = new TextureBuilder(4096, 512, false);
 		
 		// TODO create a proper texture later
-		textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.IRON, 0.2f, random);
+		textureBuilder.addDecayingCirclePattern(new Color(150, 200, 50), 0.25f, 5, 10, 0.003f, random);
+		//textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.IRON, 0.2f, random);
 		for (int progressXZ = 0; progressXZ < 1000; progressXZ++) {
 			float currentProgress = progressXZ * 0.001f;
-			float nextProgress = (progressXZ + 1) * 0.001f;
+			int nextProgressXZ = progressXZ + 1;
+			float nextProgress = nextProgressXZ * 0.001f;
+			
+			float baseX = wall.getX(currentProgress);
+			float baseZ = wall.getZ(currentProgress);
+			float nextBaseX = wall.getX(nextProgress);
+			float nextBaseZ = wall.getZ(nextProgress);
 			
 			// TODO improve texture coords and normals later
 			for (int progressY = 0; progressY < 5; progressY++) {
-				float currentX = wall.getX(currentProgress) + randomOffsets[(progressXZ + 250 + 40 * progressY) % 1000] * 0;
-				float currentZ = wall.getZ(currentProgress) + randomOffsets[(progressXZ + 40 * progressY) % 1000] * 30;
-				float nextX = wall.getX(nextProgress) + randomOffsets[(progressXZ + 251 + 40 * progressY) % 1000] * 0;
-				float nextZ = wall.getZ(nextProgress) + randomOffsets[(progressXZ + 1 + 40 * progressY) % 1000] * 30;
+				
+				// For the lower y
+				float currentX1 = baseX + randomOffsets[(progressXZ + 250 + 40 * progressY) % 1000] * 0;
+				float currentZ1 = baseZ + randomOffsets[(progressXZ + 40 * progressY) % 1000] * 0;
+				float nextX1 = nextBaseX + randomOffsets[(nextProgressXZ + 250 + 40 * progressY) % 1000] * 0;
+				float nextZ1 = nextBaseZ + randomOffsets[(nextProgressXZ + 40 * progressY) % 1000] * 0;
+				
+				// For the higher y
+				int nextProgressY = progressY + 1;
+				float currentX2 = baseX + randomOffsets[(progressXZ + 250 + 40 * nextProgressY) % 1000] * 0;
+				float currentZ2 = baseZ + randomOffsets[(progressXZ + 40 * nextProgressY) % 1000] * 0;
+				float nextX2 = nextBaseX + randomOffsets[(nextProgressXZ + 250 + 40 * nextProgressY) % 1000] * 0;
+				float nextZ2 = nextBaseZ + randomOffsets[(nextProgressXZ + 40 * nextProgressY) % 1000] * 0;
 				float v = progressY / 5f;
-				float nextV = (progressY + 1f) / 5f;
+				float nextV = nextProgressY / 5f;
 				float y = v * wall.caveWallHeight;
 				float nextY = nextV * wall.caveWallHeight;
-				builder.addPlane(0, 0, 1, currentX, y, currentZ, currentProgress, v, nextX, y, nextZ, nextProgress, v, nextX, nextY, nextZ, nextProgress, nextV, currentX, nextY, currentZ, currentProgress, nextV);
+				
+				builder.addPlane(0, 0, 1, 
+						currentX1, y, currentZ1, currentProgress, v, 
+						nextX1, y, nextZ1, nextProgress, v, 
+						nextX2, nextY, nextZ2, nextProgress, nextV, 
+						currentX2, nextY, currentZ2, currentProgress, nextV);
 			}
 		}
 		
