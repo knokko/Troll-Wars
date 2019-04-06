@@ -51,6 +51,6 @@ public class ItemHelmet extends ItemArmor {
 	}
 	
 	public ModelPart createModel(HeadProperties head){
-		return ArmorFactory.createModelArmorHelmet(ModelArmorHead.Factory.createInstance(1.3f), head, armorTexture);
+		return ArmorFactory.createModelArmorHelmet(ModelArmorHead.Factory.createInstance(1.15f), head, armorTexture);
 	}
 }
