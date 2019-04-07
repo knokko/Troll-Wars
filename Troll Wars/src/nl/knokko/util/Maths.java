@@ -45,14 +45,14 @@ public class Maths {
 		}
 	}
 	
-	public static final boolean powerOf2(int number){
+	public static boolean powerOf2(int number){
 		for(int power : POWERS)
 			if(number == power)
 				return true;
 		return false;
 	}
 	
-	public static final byte log2Up(int number){
+	public static byte log2Up(int number){
 		if(number < 1)
 			throw new IllegalArgumentException("Number (" + number + ") is too small!");
 		for(byte i = 0; i < POWERS.length; i++){
@@ -62,7 +62,7 @@ public class Maths {
 		throw new IllegalArgumentException("Number (" + number + ") is greater than 2^30 !");
 	}
 	
-	public static final int next2Power(int number){
+	public static int next2Power(int number){
 		if(number < 1)
 			throw new IllegalArgumentException("Number (" + number + ") is too small!");
 		for(int i = 0; i < POWERS.length; i++){
@@ -72,7 +72,7 @@ public class Maths {
 		throw new IllegalArgumentException("Number (" + number + ") is greater than 2^30 !");
 	}
 	
-	public static final Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale){
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
@@ -80,7 +80,7 @@ public class Maths {
 		return matrix;
 	}
 
-	public static final Matrix4f createTransformationMatrix(Vector3f position, float rx, float ry, float rz, float size){
+	public static Matrix4f createTransformationMatrix(Vector3f position, float rx, float ry, float rz, float size){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(position, matrix, matrix);
@@ -91,18 +91,18 @@ public class Maths {
 		return matrix;
 	}
 	
-	public static final Matrix4f createTransformationMatrix(AreaPosition position, float rotX, float rotY, float rotZ, float size){
+	public static Matrix4f createTransformationMatrix(AreaPosition position, float rotX, float rotY, float rotZ, float size){
 		Matrix4f matrix = createTransformationMatrix(new Vector3f(position.getX() * 2, position.getY() * 2, position.getZ() * 2), rotX, rotY, rotZ, size);
 		return matrix;
 	}
 	
-	public static final Matrix4f createTransformationMatrix(AreaPosition position, Camera camera, float rotX, float rotY, float rotZ, float size){
+	public static Matrix4f createTransformationMatrix(AreaPosition position, Camera camera, float rotX, float rotY, float rotZ, float size){
 		Vector3f c = camera.getPosition();
 		Matrix4f matrix = createTransformationMatrix(new Vector3f(position.getX() * 2 - c.x, position.getY() * 2 - c.y, position.getZ() * 2 - c.z), rotX, rotY, rotZ, size);
 		return matrix;
 	}
 	
-	public static final Matrix4f createTransformationMatrix(Vector3f position, float rx, float ry, float rz, float sx, float sy, float sz){
+	public static Matrix4f createTransformationMatrix(Vector3f position, float rx, float ry, float rz, float sx, float sy, float sz){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(position, matrix, matrix);
@@ -113,7 +113,7 @@ public class Maths {
 		return matrix;
 	}
 	
-	public static final Matrix4f createTransformationMatrix(Vector3f position, float size){
+	public static Matrix4f createTransformationMatrix(Vector3f position, float size){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(position, matrix, matrix);
@@ -121,7 +121,7 @@ public class Maths {
 		return matrix;
 	}
 	
-	public static final Matrix4f createTransformationMatrix(Vector3f position, float scaleX, float scaleY, float scaleZ){
+	public static Matrix4f createTransformationMatrix(Vector3f position, float scaleX, float scaleY, float scaleZ){
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(position, matrix, matrix);
@@ -139,7 +139,7 @@ public class Maths {
 	}
 	*/
 	
-	public static final Matrix4f createViewMatrix(Camera camera){
+	public static Matrix4f createViewMatrix(Camera camera){
 		Matrix4f view = new Matrix4f();
 		view.setIdentity();
 		Matrix4f.rotate(camera.getRadPitch(), new Vector3f(1, 0, 0), view, view);
@@ -151,7 +151,7 @@ public class Maths {
 		return view;
 	}
 	
-	public static final Matrix4f createOriginViewMatrix(Camera camera) {
+	public static Matrix4f createOriginViewMatrix(Camera camera) {
 		Matrix4f view = new Matrix4f();
 		view.setIdentity();
 		Matrix4f.rotate(camera.getRadPitch(), new Vector3f(1, 0, 0), view, view);
@@ -160,18 +160,18 @@ public class Maths {
 		return view;
 	}
 	
-	public static final Vector3f getRotationVector(float pitch, float yaw, float roll){
+	public static Vector3f getRotationVector(float pitch, float yaw, float roll){
 		float r = (float) toRadians(roll);
 		Matrix4f mat = createTransformationMatrix(new Vector3f(), pitch, yaw, 0, 1);
 		Vector3f vector = new Vector3f(mat.m20, mat.m21, -mat.m22);
 		return new Vector3f((float)(vector.x * cos(r) + vector.y * sin(r)), (float)(vector.y * cos(r) - vector.x * sin(r)), vector.z);
 	}
 	
-	public static final double getDistance(Vector3f v1, Vector3f v2){
+	public static double getDistance(Vector3f v1, Vector3f v2){
 		return Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 	}
 	
-	public static final double getYaw(Vector3f vector){
+	public static double getYaw(Vector3f vector){
 		Vector3f vec = new Vector3f(vector);
 		vec.y = 0;
 		if(vec.length() == 0)
@@ -187,11 +187,11 @@ public class Maths {
 		return angle;
 	}
 
-	public static final double getPitch(Vector3f normalized) {
+	public static double getPitch(Vector3f normalized) {
 		return toDegrees(-asin(normalized.y));
 	}
 	
-	public static final float max(float... floats){
+	public static float max(float... floats){
 		float max = floats[0];
 		for(float f : floats)
 			if(f > max)
@@ -199,7 +199,7 @@ public class Maths {
 		return max;
 	}
 	
-	public static final float min(float... floats){
+	public static float min(float... floats){
 		float min = floats[0];
 		for(float f : floats)
 			if(f < min)
@@ -207,51 +207,71 @@ public class Maths {
 		return min;
 	}
 	
-	public static final float sinRad(float angle){
+	public static int min(int...ints) {
+		int min = ints[0];
+		for (int i : ints) {
+			if (i < min) {
+				min = i;
+			}
+		}
+		return min;
+	}
+	
+	public static int max(int...ints) {
+		int max = ints[0];
+		for (int i : ints) {
+			if (i > max) {
+				max = i;
+			}
+		}
+		return max;
+	}
+	
+	public static float sinRad(float angle){
 		return (float) Math.sin(angle);
 	}
 	
-	public static final float cosRad(float angle){
+	public static float cosRad(float angle){
 		return (float) Math.cos(angle);
 	}
 	
-	public static final float sin(float angle){
+	public static float sin(float angle){
 		return (float) Math.sin(toRadians(angle));
 	}
 	
-	public static final float cos(float angle){
+	public static float cos(float angle){
 		return (float) Math.cos(toRadians(angle));
 	}
 	
-	public static final float tan(float angle){
+	public static float tan(float angle){
 		return (float) Math.tan(toRadians(angle));
 	}
 	
-	public static final float asin(float value){
+	public static float asin(float value){
 		return (float) Math.toDegrees(Math.asin(value));
 	}
 	
-	public static final float atan(float value){
+	public static float atan(float value){
 		return (float) Math.toDegrees(Math.atan(value));
 	}
 	
-	public static final float toRadians(float degrees){
+	public static float toRadians(float degrees){
 		return (float) Math.toRadians(degrees);
 	}
 	
-	public static final float toDegrees(float radians){
+	public static float toDegrees(float radians){
 		return (float) Math.toDegrees(radians);
 	}
 	
-	public static final float sqrt(float value){
+	public static float sqrt(float value){
 		return (float) Math.sqrt(value);
 	}
 	
-	public static final boolean AND(boolean condition1, boolean condition2){
+	public static boolean AND(boolean condition1, boolean condition2){
 		return condition1 && condition2;
 	}
 	
-	public static final boolean AND(boolean condition1, boolean condition2, boolean condition3){
+	public static boolean AND(boolean condition1, boolean condition2, boolean condition3){
 		return condition1 && condition2 && condition3;
 	}
 	
