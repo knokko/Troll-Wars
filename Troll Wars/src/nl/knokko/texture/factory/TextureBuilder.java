@@ -23,8 +23,10 @@
  *******************************************************************************/
 package nl.knokko.texture.factory;
 
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import nl.knokko.util.bits.BitHelper;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.color.ColorAlpha;
 
@@ -300,5 +302,16 @@ public class TextureBuilder {
 	
 	public int loadNormal(){
 		return MyTextureLoader.loadTexture(data, width, height, useAlpha);
+	}
+	
+	public BufferedImage createBufferedImage() {
+		BufferedImage image = new BufferedImage(width, height, useAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				int dataIndex = (useAlpha ? 4 : 3) * (y * width + x);
+				image.setRGB(x, y, BitHelper.makeInt(data[dataIndex + 2], data[dataIndex + 1], data[dataIndex], (byte) 255));
+			}
+		}
+		return image;
 	}
 }
