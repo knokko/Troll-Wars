@@ -24,14 +24,13 @@
 package nl.knokko.shaders.tile;
 
 import nl.knokko.main.Game;
-import nl.knokko.shaders.ShaderProgram;
 import nl.knokko.util.Maths;
 import nl.knokko.view.camera.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class SpiritTileShader extends ShaderProgram {
+public class SpiritTileShader extends TileShader {
 	
 	public static final String VERTEX_FILE = "nl/knokko/shaders/tile/spirit.vshad";
 	public static final String FRAGMENT_FILE = "nl/knokko/shaders/tile/spirit.fshad";
@@ -62,6 +61,7 @@ public class SpiritTileShader extends ShaderProgram {
 		bindAttribute(1, "textureCoords");
 	}
 	
+	@Override
 	public void loadTilePosition(Vector3f position){
 		loadVector(locationTilePosition, position);
 	}

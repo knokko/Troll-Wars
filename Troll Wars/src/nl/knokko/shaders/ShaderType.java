@@ -26,6 +26,7 @@ package nl.knokko.shaders;
 public enum ShaderType {
 	
 	NORMAL,
+	BIG_NORMAL,
 	LIQUID,
 	SPIRIT;
 }

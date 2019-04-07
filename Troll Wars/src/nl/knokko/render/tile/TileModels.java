@@ -26,6 +26,7 @@ package nl.knokko.render.tile;
 import java.lang.reflect.Field;
 
 import nl.knokko.model.factory.ModelLoader;
+import nl.knokko.model.type.BigTileModel;
 import nl.knokko.model.type.DefaultTileModel;
 import nl.knokko.model.type.LiquidTileModel;
 import nl.knokko.model.type.TileModel;
@@ -42,6 +43,10 @@ public final class TileModels {
 	
 	private static DefaultTileModel loadDef(float[] vertices, float[] textureCoords, float[] normals, int[] indices){
 		return ModelLoader.loadDefaultTileModel(vertices, textureCoords, normals, indices);
+	}
+	
+	private static BigTileModel loadBig(float[] vertices, float[] normals, int[] indices) {
+		return ModelLoader.loadBigTileModel(vertices, normals, indices);
 	}
 	
 	private static DefaultTileModel loadLadder(Facing facing){
@@ -229,6 +234,7 @@ public final class TileModels {
 	}
 	
 	public static final DefaultTileModel BOTTOM = loadDef(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new float[]{0,1,0, 0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2, 0,3,2});
+	public static final BigTileModel BOTTOM_BIG = loadBig(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,1,0, 0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2, 0,3,2});
 	public static final DefaultTileModel BOTTOM_COVER = loadDef(new float[]{-1,0.1f,-1, 1,0.1f,-1, 1,0.1f,1, -1,0.1f,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new float[]{0,1,0, 0,1,0, 0,1,0, 0,1,0}, new int[]{0,1,2, 0,3,2});
 	public static final LiquidTileModel BOTTOM_LIQUID = loadLiq(new float[]{-1,0,-1, 1,0,-1, 1,0,1, -1,0,1}, new float[]{0,0, 1,0, 1,1, 0,1}, new int[]{0,1,2, 0,3,2});
 	

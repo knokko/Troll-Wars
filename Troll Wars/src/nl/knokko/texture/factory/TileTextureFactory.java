@@ -26,6 +26,7 @@ package nl.knokko.texture.factory;
 import java.util.Random;
 
 import nl.knokko.texture.Texture;
+import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 
 public class TileTextureFactory {
@@ -41,6 +42,135 @@ public class TileTextureFactory {
 		for(int i = 0; i < textures.length; i++)
 			textures[i] = createGrassTexture(i * 28376583, color);
 		return textures;
+	}
+	
+	public static Texture createBigGrassTexture(Color grassColor, Color brightGrassColor, Color groundColor) {
+		
+		// Calculate and define the most used variables before starting the actual stuff
+		int textureWidth = 1024;
+		int textureHeight = 1024;
+		
+		int redBase = grassColor.getRedI();
+		int greenBase = grassColor.getGreenI();
+		int blueBase = grassColor.getBlueI();
+		
+		int redLeft = brightGrassColor.getRedI() - redBase;
+		int greenLeft = brightGrassColor.getGreenI() - greenBase;
+		int blueLeft = brightGrassColor.getBlueI() - blueBase;
+		
+		byte redGround = groundColor.getRed();
+		byte greenGround = groundColor.getGreen();
+		byte blueGround = groundColor.getBlue();
+		
+		TextureBuilder builder = new TextureBuilder(textureWidth, textureHeight, false);
+		
+		// First color the ground
+		for (int x = 0; x < textureWidth; x++) {
+			for (int y = 0; y < textureHeight; y++) {
+				builder.setPixel(x, y, redGround, greenGround, blueGround);
+			}
+		}
+		
+		// Use the height map to make sure the highest grass is always shown
+		byte[][] heightMap = new byte[textureWidth][textureHeight];
+		Random random = new Random();
+		
+		// Draw that many grass 'lines'
+		for (int counter = 0; counter < 15000; counter++) {
+			int startX = random.nextInt(textureWidth);
+			int startY = random.nextInt(textureHeight);
+			float angle = random.nextFloat() * 360f;
+			
+			// The angle between vertical and the angle at the end of the grass
+			float vertAngle = random.nextFloat() * 70f;
+			int length = 50 + random.nextInt(30);
+			
+			// A dirty trick that should work
+			length *= Maths.sin(vertAngle);
+			
+			int width = 4 + random.nextInt(3);
+			int endX = startX + (int) (Maths.cos(angle) * length);
+			int endY = startY + (int) (Maths.sin(angle) * length);
+			
+			// The line through these coordinates will be perpendicular to angle and go through (startX,startY)
+			int startX1 = startX - (int) (Maths.sin(angle) * width);
+			int startY1 = startY + (int) (Maths.cos(angle) * width);
+			int startX2 = startX + (int) (Maths.sin(angle) * width);
+			int startY2 = startY - (int) (Maths.cos(angle) * width);
+			
+			// revertA and revertB will be used to transform the effective region such that it becomes vertical
+			float revertA = Maths.cos(-angle + 90);
+			float revertB = Maths.sin(-angle + 90);
+			
+			// The next variables will make it easier to loop
+			int minX = Maths.min(startX1, startX2, endX);
+			int minY = Maths.min(startY1, startY2, endY);
+			int maxX = Maths.max(startX1, startX2, endX);
+			int maxY = Maths.max(startY1, startY2, endY);
+			int effectiveWidth = maxX - minX + 1;
+			int effectiveHeight = maxY - minY + 1;
+			int fictiveStartX = startX - minX;
+			int fictiveStartY = startY - minY;
+			
+			// Loop over all relevant coordinates
+			for (int x = 0; x < effectiveWidth; x++) {
+				for (int y = 0; y < effectiveHeight; y++) {
+					
+					// Rotate (x - fictiveStartX, y - fictiveStartY)
+					float transformedX = revertA * (x - fictiveStartX) - revertB * (y - fictiveStartY);
+					float transformedY = revertA * (y - fictiveStartY) + revertB * (x - fictiveStartX);
+					
+					// Check if the pixel at this location should be affected
+					if (transformedX > -width && transformedX < width && transformedY >= 0 
+							&& transformedY < length) {
+						float progress = transformedY / length;
+						if (Math.abs(transformedX) <= grassWidth(progress, width)) {
+							
+							// Let's now get back to the texture coordinates
+							int realX = minX + x;
+							int realY = minY + y;
+							
+							// If we get a little outside of the texture range, we continue on the other side
+							if (realX >= textureWidth) {
+								realX -= textureWidth;
+							}
+							if (realX < 0) {
+								realX += textureWidth;
+							}
+							if (realY >= textureHeight) {
+								realY -= textureHeight;
+							}
+							if (realY < 0) {
+								realY += textureHeight;
+							}
+							
+							// Finally test if we are not 'below' some other grass 'line'
+							byte realHeight = (byte) grassHeight(progress, length, vertAngle);
+							if (realHeight >= heightMap[realX][realY]) {
+								heightMap[realX][realY] = realHeight;
+								
+								float extraColor = extraGrassColor(progress, vertAngle);
+								builder.setPixel(realX, realY, (byte) (redBase + extraColor * redLeft), 
+										(byte) (greenBase + extraColor * greenLeft), (byte) (blueBase + extraColor * blueLeft));
+							}
+						}
+					}
+				}
+			}
+		}
+		return new Texture(builder.loadNormal());
+	}
+	
+	private static float grassWidth(float progress, int maxWidth) {
+		return Maths.sqrt(1 - progress) * maxWidth;
+	}
+	
+	private static float grassHeight(float progress, int maxHeight, float vertAngle) {
+		return Maths.cos(vertAngle) * progress * maxHeight;
+	}
+	
+	private static float extraGrassColor(float progress, float vertAngle) {
+		return Maths.sin(vertAngle) * progress * progress;
 	}
 	
 	private static Texture createGrassTexture(long seed, Color color){

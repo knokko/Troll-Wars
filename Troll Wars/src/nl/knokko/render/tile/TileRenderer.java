@@ -39,6 +39,7 @@ import nl.knokko.model.type.SpiritModel;
 import nl.knokko.model.type.TileModel;
 import nl.knokko.render.main.WorldRenderer;
 import nl.knokko.shaders.ShaderType;
+import nl.knokko.shaders.tile.TileShader;
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.factory.SimpleTextureFactory;
 import nl.knokko.tiles.Tile;
@@ -53,6 +54,7 @@ import static nl.knokko.shaders.WorldShader.WORLD_SHADER;
 import static nl.knokko.shaders.LiquidShader.LIQUID_SHADER;
 import static nl.knokko.shaders.SpiritShader.SPIRIT_SHADER;
 import static nl.knokko.shaders.tile.DefaultTileShader.DEFAULT_TILE_SHADER;
+import static nl.knokko.shaders.tile.BigTileShader.BIG_TILE_SHADER;
 import static nl.knokko.shaders.tile.LiquidTileShader.LIQUID_TILE_SHADER;
 import static nl.knokko.shaders.tile.SpiritTileShader.SPIRIT_TILE_SHADER;
 
@@ -91,6 +93,8 @@ public class TileRenderer extends WorldRenderer {
 		stopLiquidTileShader();
 		prepareSpiritTileShader(camera);
 		renderTileMapNew(camera, renderMap, ShaderType.SPIRIT);
+		prepareBigTileShader(camera);
+		renderTileMapNew(camera, renderMap, ShaderType.BIG_NORMAL);
 		stopSpiritTileShader();
 	}
 	
@@ -129,6 +133,11 @@ public class TileRenderer extends WorldRenderer {
 		DEFAULT_TILE_SHADER.loadViewMatrix(camera);
 	}
 	
+	private void prepareBigTileShader(Camera camera) {
+		BIG_TILE_SHADER.start();
+		BIG_TILE_SHADER.loadViewMatrix(camera);
+	}
+	
 	private void prepareLiquidTileShader(Camera camera){
 		LIQUID_TILE_SHADER.start();
 		LIQUID_TILE_SHADER.loadViewMatrix(camera);
@@ -161,6 +170,13 @@ public class TileRenderer extends WorldRenderer {
 		GL20.glEnableVertexAttribArray(3);
 	}
 	
+	private void prepareBigTileModel(TileModel model) {
+		GL30.glBindVertexArray(model.getVaoID());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
+	}
+	
 	private void prepareLiquidTileModel(TileModel model){
 		GL30.glBindVertexArray(model.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -175,10 +191,21 @@ public class TileRenderer extends WorldRenderer {
 	
 	private void renderTileMapNew(Camera camera, TileRenderMap tiles, ShaderType shader){
 		Vector3f cameraPos = camera.getPosition();
+		TileShader currentShader;
+		if (shader == ShaderType.NORMAL)
+			currentShader = DEFAULT_TILE_SHADER;
+		else if (shader == ShaderType.BIG_NORMAL)
+			currentShader = BIG_TILE_SHADER;
+		else if (shader == ShaderType.LIQUID)
+			currentShader = LIQUID_TILE_SHADER;
+		else
+			currentShader = SPIRIT_TILE_SHADER;
 		for(TileModel model : TileModels.ALL){
 			if(model.getShaderType() == shader && tiles.hasModel(model)){
 				if(shader == ShaderType.NORMAL)
 					prepareDefaultTileModel(model);
+				else if (shader == ShaderType.BIG_NORMAL)
+					prepareBigTileModel(model);
 				else if(shader == ShaderType.LIQUID)
 					prepareLiquidTileModel(model);
 				else
@@ -186,16 +213,16 @@ public class TileRenderer extends WorldRenderer {
 				for(Tile tile : model.getTiles()){
 					Vector3f[] positions = tiles.getPositions(tile);
 					if(positions.length > 0){
-						prepareTileTexture(tile.getTexture(), shader);
+						if (tile.getBigTexture() == null)
+							prepareTileTexture(tile.getTexture(), shader);
+						else
+							prepareTileTexture(tile.getBigTexture(), shader);
 						for(Vector3f position : positions){
 							if(FrustumHelper.insideFrustum(position.x, position.y, position.z, 64)){//64 seems safe
+								if (shader == ShaderType.BIG_NORMAL)
+									BIG_TILE_SHADER.loadRealTilePosition(position);
 								position = Vector3f.sub(position, cameraPos, null);
-								if(shader == ShaderType.NORMAL)
-									DEFAULT_TILE_SHADER.loadTilePosition(position);
-								else if(shader == ShaderType.LIQUID)
-									LIQUID_TILE_SHADER.loadTilePosition(position);
-								else
-									SPIRIT_TILE_SHADER.loadTilePosition(position);
+								currentShader.loadTilePosition(position);
 								GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 							}
 						}

@@ -60,6 +60,10 @@ public abstract class Tile {
 	
 	public abstract ModelTexture getTexture();
 	
+	public ModelTexture getBigTexture() {
+		return null;
+	}
+	
 	public abstract Tiles.RenderForm getRenderForm();
 	
 	public abstract ShaderType getShaderType();

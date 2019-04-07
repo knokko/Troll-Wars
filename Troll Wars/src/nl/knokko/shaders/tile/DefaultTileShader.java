@@ -24,14 +24,13 @@
 package nl.knokko.shaders.tile;
 
 import nl.knokko.main.Game;
-import nl.knokko.shaders.ShaderProgram;
 import nl.knokko.util.Maths;
 import nl.knokko.view.camera.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class DefaultTileShader extends ShaderProgram {
+public class DefaultTileShader extends TileShader {
 	
 	public static final String VERTEX_FILE = "nl/knokko/shaders/tile/default.vshad";
 	public static final String FRAGMENT_FILE = "nl/knokko/shaders/tile/default.fshad";
@@ -63,6 +62,7 @@ public class DefaultTileShader extends ShaderProgram {
 		bindAttribute(3, "brightness");
 	}
 	
+	@Override
 	public void loadTilePosition(Vector3f position){
 		loadVector(locationTilePosition, position);
 	}

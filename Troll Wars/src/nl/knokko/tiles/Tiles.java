@@ -37,7 +37,9 @@ import nl.knokko.util.resources.Resources;
 public class Tiles {
 	
 	private static final Texture[] GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE);
+	private static final Texture BIG_GRASS_TEXTURE = TileTextureFactory.createBigGrassTexture(new Color(0,100,40), new Color(200, 255, 150), new Color(30,13,0));
 	private static final Texture[] BLUE_GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE, new Color(0, 100, 200));
+	private static final Texture BIG_BLUE_GRASS_TEXTURE = TileTextureFactory.createBigGrassTexture(new Color(10, 50, 100), new Color(40, 120, 230), new Color(0,0,0));
 	private static final Texture[] SORG_ROCK_TEXTURES = TileTextureFactory.createRockTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_ROCK_HOLE_TEXTURES = TileTextureFactory.createHoleTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_BRICKS_TEXTURES = TileTextureFactory.createBrickTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
@@ -336,11 +338,11 @@ public class Tiles {
 	static class TileCreator {
 		
 		public static Tile createGrass(int index){
-			return new TileBottom(new ModelTexture(GRASS_TEXTURES[index], 1f, 0.1f));
+			return new TileBottom(new ModelTexture(GRASS_TEXTURES[index], 1f, 0.1f), new ModelTexture(BIG_GRASS_TEXTURE, 1f, 0.1f));
 		}
 		
 		public static Tile createBlueGrass(int index){
-			return new TileBottom(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f));
+			return new TileBottom(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), new ModelTexture(BIG_BLUE_GRASS_TEXTURE, 1f, 0.1f));
 		}
 		
 		public static Tile createBlueGrassSlopeNorth1(int index){

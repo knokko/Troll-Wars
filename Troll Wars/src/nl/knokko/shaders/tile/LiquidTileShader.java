@@ -27,11 +27,10 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.main.Game;
-import nl.knokko.shaders.ShaderProgram;
 import nl.knokko.util.Maths;
 import nl.knokko.view.camera.Camera;
 
-public class LiquidTileShader extends ShaderProgram {
+public class LiquidTileShader extends TileShader {
 	
 	public static final String VERTEX_FILE = "nl/knokko/shaders/tile/liquid.vshad";
 	public static final String FRAGMENT_FILE = "nl/knokko/shaders/tile/liquid.fshad";
@@ -62,6 +61,7 @@ public class LiquidTileShader extends ShaderProgram {
 		bindAttribute(1, "textureCoords");
 	}
 	
+	@Override
 	public void loadTilePosition(Vector3f position){
 		loadVector(locationTilePosition, position);
 	}

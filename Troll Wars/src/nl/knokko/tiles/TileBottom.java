@@ -38,9 +38,15 @@ import org.lwjgl.util.vector.Vector3f;
 public class TileBottom extends Tile {
 	
 	private final ModelTexture texture;
+	private final ModelTexture bigTexture;
 
 	TileBottom(ModelTexture texture) {
+		this(texture, null);
+	}
+	
+	TileBottom(ModelTexture texture, ModelTexture bigTexture){
 		this.texture = texture;
+		this.bigTexture = bigTexture;
 	}
 	
 	@Override
@@ -50,7 +56,7 @@ public class TileBottom extends Tile {
 	
 	@Override
 	public TileModel getModel(){
-		return TileModels.BOTTOM;
+		return bigTexture == null ? TileModels.BOTTOM : TileModels.BOTTOM_BIG;
 	}
 
 	@Override
@@ -61,6 +67,10 @@ public class TileBottom extends Tile {
 	@Override
 	public ModelTexture getTexture() {
 		return texture;
+	}
+	
+	public ModelTexture getBigTexture() {
+		return bigTexture;
 	}
 
 	@Override

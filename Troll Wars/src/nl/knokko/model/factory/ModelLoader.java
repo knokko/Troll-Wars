@@ -34,6 +34,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 
+import nl.knokko.model.type.BigTileModel;
 import nl.knokko.model.type.DefaultModel;
 import nl.knokko.model.type.DefaultTileModel;
 import nl.knokko.model.type.GuiModel;
@@ -119,6 +120,32 @@ public class ModelLoader {
 		storeDataInAttributeList(3, 1, brightnesses);
 		unbindVAO();
 		return new DefaultTileModel(vaoID, indices.length);
+	}
+	
+	public static BigTileModel loadBigTileModel(float[] positions, float[] normals, int[] indices) {
+		float[] reflectedLightDirections = new float[positions.length];
+		float[] brightnesses = new float[positions.length / 3];
+		for(int i = 0; i < positions.length; i += 3){
+			positions[i] *= 32;
+			positions[i + 1] *= 16;
+			positions[i + 1] -= 8;
+			positions[i + 2] *= 32;
+		}
+		for(int i = 0; i < brightnesses.length; i++){
+			Vector3f normal = new Vector3f(normals[i * 3], normals[i * 3 + 1], normals[i * 3 + 2]);
+			float dot = Vector3f.dot(normal, LD);
+			reflectedLightDirections[i * 3] = LD.x - 2 * dot * normal.x;
+			reflectedLightDirections[i * 3 + 1] = LD.y - 2 * dot * normal.y;
+			reflectedLightDirections[i * 3 + 2] = LD.z - 2 * dot * normal.z;
+			brightnesses[i] = Math.max(0.5f, Vector3f.dot(normal, UP));
+		}
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(1, 3, reflectedLightDirections);
+		storeDataInAttributeList(2, 1, brightnesses);
+		unbindVAO();
+		return new BigTileModel(vaoID, indices.length);
 	}
 	
 	public static LiquidTileModel loadLiquidTileModel(float[] positions, float[] textureCoords, int[] indices){
