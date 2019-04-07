@@ -46,8 +46,8 @@ public class Options {
 	public int keyCameraUp = KeyCode.KEY_W;
 	public int keyCameraDown = KeyCode.KEY_S;
         
-        public int keyZoomIn = KeyCode.KEY_MINUS_BASE;
-        public int keyZoomOut = KeyCode.KEY_EQUALS;
+    public int keyZoomIn = KeyCode.KEY_EQUALS;
+    public int keyZoomOut = KeyCode.KEY_MINUS_BASE;
 	
 	public int keyInteract = KeyCode.KEY_SPACE;
 	
