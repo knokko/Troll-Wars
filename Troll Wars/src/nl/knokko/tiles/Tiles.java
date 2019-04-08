@@ -39,7 +39,7 @@ public class Tiles {
 	private static final Texture[] GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE);
 	private static final Texture BIG_GRASS_TEXTURE = TileTextureFactory.createBigGrassTexture(new Color(0,100,40), new Color(200, 255, 150), new Color(30,13,0));
 	private static final Texture[] BLUE_GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE, new Color(0, 100, 200));
-	private static final Texture BIG_BLUE_GRASS_TEXTURE = TileTextureFactory.createBigGrassTexture(new Color(10, 50, 100), new Color(40, 120, 230), new Color(0,0,0));
+	private static final ModelTexture BIG_BLUE_GRASS_TEXTURE = new ModelTexture(TileTextureFactory.createBigGrassTexture(new Color(10, 50, 100), new Color(40, 120, 230), new Color(0,0,0)), 0.5f, 0.4f);
 	private static final Texture[] SORG_ROCK_TEXTURES = TileTextureFactory.createRockTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_ROCK_HOLE_TEXTURES = TileTextureFactory.createHoleTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_BRICKS_TEXTURES = TileTextureFactory.createBrickTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
@@ -342,23 +342,23 @@ public class Tiles {
 		}
 		
 		public static Tile createBlueGrass(int index){
-			return new TileBottom(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), new ModelTexture(BIG_BLUE_GRASS_TEXTURE, 1f, 0.1f));
+			return new TileBottom(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), BIG_BLUE_GRASS_TEXTURE);
 		}
 		
 		public static Tile createBlueGrassSlopeNorth1(int index){
-			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), Facing.NORTH, 1);
+			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), BIG_BLUE_GRASS_TEXTURE, Facing.NORTH, 1);
 		}
 		
 		public static Tile createBlueGrassSlopeEast1(int index){
-			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), Facing.EAST, 1);
+			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), BIG_BLUE_GRASS_TEXTURE, Facing.EAST, 1);
 		}
 		
 		public static Tile createBlueGrassSlopeSouth1(int index){
-			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), Facing.SOUTH, 1);
+			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), BIG_BLUE_GRASS_TEXTURE, Facing.SOUTH, 1);
 		}
 		
 		public static Tile createBlueGrassSlopeWest1(int index){
-			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), Facing.WEST, 1);
+			return new TileSlope(new ModelTexture(BLUE_GRASS_TEXTURES[index], 1f, 0.1f), BIG_BLUE_GRASS_TEXTURE, Facing.WEST, 1);
 		}
 		
 		public static Tile createSorgRock(int index){

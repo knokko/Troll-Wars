@@ -46,13 +46,15 @@ public class TileHalfSlope extends Tile {
 	
 	private final Facing facing;
 	private final ModelTexture texture;
+	private final ModelTexture bigTexture;
 	private final TileModel model;
 
-	public TileHalfSlope(ModelTexture texture, Facing facing, int height, boolean side, boolean up) {
+	public TileHalfSlope(ModelTexture texture, ModelTexture bigTexture, Facing facing, int height, boolean side, boolean up) {
 		this.facing = facing;
 		this.angle = (float) Math.toDegrees(Math.atan2(height * 0.25f, 1));
 		this.length = (float) (height / Math.sin(Math.toRadians(angle)));
 		this.texture = texture;
+		this.bigTexture = bigTexture;
 		this.height = height;
 		this.side = side;
 		this.up = up;
@@ -62,6 +64,10 @@ public class TileHalfSlope extends Tile {
 		} catch(Exception ex){
 			throw new Error(ex);
 		}
+	}
+	
+	public TileHalfSlope(ModelTexture texture, Facing facing, int height, boolean side, boolean up) {
+		this(texture, null, facing, height, side, up);
 	}
 	
 	@Override
@@ -78,6 +84,11 @@ public class TileHalfSlope extends Tile {
 	@Override
 	public ModelTexture getTexture() {
 		return texture;
+	}
+	
+	@Override
+	public ModelTexture getBigTexture() {
+		return bigTexture;
 	}
 
 	@Override

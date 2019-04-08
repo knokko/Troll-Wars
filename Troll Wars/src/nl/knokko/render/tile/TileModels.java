@@ -124,6 +124,38 @@ public final class TileModels {
 		return loadDef(vertices, textureCoords, normals, indices);
 	}
 	
+	private static BigTileModel loadBigSlope(Facing facing, int height){
+		float[] vertices = null;
+		float nx = -1;
+		float nz = -1;
+		float pitch = (float) Math.toDegrees(Math.atan2(height * 0.25f, 1));
+		float ny = Maths.cos(pitch);
+		float nxz = Maths.sin(pitch);
+		if(facing == Facing.NORTH){
+			vertices = new float[]{-1,height,-1, 1,height,-1, 1,0,1, -1,0,1};
+			nx = 0;
+			nz = -nxz;
+		}
+		if(facing == Facing.EAST){
+			vertices = new float[]{-1,0,-1, 1,height,-1, 1,height,1, -1,0,1};
+			nx = nxz;
+			nz = 0;
+		}
+		if(facing == Facing.SOUTH){
+			vertices = new float[]{-1,0,-1, 1,0,-1, 1,height,1, -1,height,1};
+			nx = 0;
+			nz = nxz;
+		}
+		if(facing == Facing.WEST){
+			vertices = new float[]{-1,height,-1, 1,0,-1, 1,0,1, -1,height,1};
+			nx = -nxz;
+			nz = 0;
+		}
+		float[] normals = {nx,ny,nz, nx,ny,nz, nx,ny,nz, nx,ny,nz, nx,ny,nz};
+		int[] indices = new int[]{0,1,2, 0,3,2};
+		return loadBig(vertices, normals, indices);
+	}
+	
 	private static DefaultTileModel loadHalfSlope(Facing facing, int height, boolean side, boolean up){
 		float[] vertices = null;
 		float[] textureCoords = null;
@@ -269,6 +301,23 @@ public final class TileModels {
 	public static final DefaultTileModel SLOPE_EAST_4 = loadSlope(Facing.EAST, 4);
 	public static final DefaultTileModel SLOPE_SOUTH_4 = loadSlope(Facing.SOUTH, 4);
 	public static final DefaultTileModel SLOPE_WEST_4 = loadSlope(Facing.WEST, 4);
+	
+	public static final BigTileModel SLOPE_BIG_NORTH_1 = loadBigSlope(Facing.NORTH, 1);
+	public static final BigTileModel SLOPE_BIG_EAST_1 = loadBigSlope(Facing.EAST, 1);
+	public static final BigTileModel SLOPE_BIG_SOUTH_1 = loadBigSlope(Facing.SOUTH, 1);
+	public static final BigTileModel SLOPE_BIG_WEST_1 = loadBigSlope(Facing.WEST, 1);
+	public static final BigTileModel SLOPE_BIG_NORTH_2 = loadBigSlope(Facing.NORTH, 2);
+	public static final BigTileModel SLOPE_BIG_EAST_2 = loadBigSlope(Facing.EAST, 2);
+	public static final BigTileModel SLOPE_BIG_SOUTH_2 = loadBigSlope(Facing.SOUTH, 2);
+	public static final BigTileModel SLOPE_BIG_WEST_2 = loadBigSlope(Facing.WEST, 2);
+	public static final BigTileModel SLOPE_BIG_NORTH_3 = loadBigSlope(Facing.NORTH, 3);
+	public static final BigTileModel SLOPE_BIG_EAST_3 = loadBigSlope(Facing.EAST, 3);
+	public static final BigTileModel SLOPE_BIG_SOUTH_3 = loadBigSlope(Facing.SOUTH, 3);
+	public static final BigTileModel SLOPE_BIG_WEST_3 = loadBigSlope(Facing.WEST, 3);
+	public static final BigTileModel SLOPE_BIG_NORTH_4 = loadBigSlope(Facing.NORTH, 4);
+	public static final BigTileModel SLOPE_BIG_EAST_4 = loadBigSlope(Facing.EAST, 4);
+	public static final BigTileModel SLOPE_BIG_SOUTH_4 = loadBigSlope(Facing.SOUTH, 4);
+	public static final BigTileModel SLOPE_BIG_WEST_4 = loadBigSlope(Facing.WEST, 4);
 	
 	public static final DefaultTileModel SLOPE_HALF_NORTH_1_0_0 = loadHalfSlope(Facing.NORTH, 1, false, false);
 	public static final DefaultTileModel SLOPE_HALF_NORTH_1_1_0 = loadHalfSlope(Facing.NORTH, 1, true, false);

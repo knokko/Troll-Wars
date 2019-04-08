@@ -43,19 +43,27 @@ public class TileSlope extends Tile {
 	
 	private final Facing facing;
 	private final ModelTexture texture;
+	private final ModelTexture bigTexture;
 	private final TileModel model;
+	private final TileModel bigModel;
 
-	public TileSlope(ModelTexture texture, Facing facing, int height) {
+	public TileSlope(ModelTexture texture, ModelTexture bigTexture, Facing facing, int height) {
 		this.facing = facing;
 		this.angle = (float) Math.toDegrees(Math.atan2(height * 0.25f, 1));
 		this.length = (float) (height / Math.sin(Math.toRadians(angle)));
 		this.texture = texture;
+		this.bigTexture = bigTexture;
 		this.height = height;
 		try {
 			model = (TileModel) TileModels.class.getField("SLOPE_" + facing + "_" + height).get(null);
+			bigModel = (TileModel) TileModels.class.getField("SLOPE_BIG_" + facing + "_" + height).get(null);
 		} catch(Exception ex){
 			throw new Error("Can't get model for slope with facing " + facing + " and height " + height);
 		}
+	}
+	
+	public TileSlope(ModelTexture texture, Facing facing, int height) {
+		this(texture, null, facing, height);
 	}
 	
 	public Matrix4f getMatrix(int tileX, int tileY, int tileZ){
@@ -64,7 +72,7 @@ public class TileSlope extends Tile {
 	
 	@Override
 	public TileModel getModel(){
-		return model;
+		return bigTexture == null ? model : bigModel;
 	}
 
 	@Override
@@ -75,6 +83,11 @@ public class TileSlope extends Tile {
 	@Override
 	public ModelTexture getTexture() {
 		return texture;
+	}
+	
+	@Override
+	public ModelTexture getBigTexture() {
+		return bigTexture;
 	}
 
 	@Override
