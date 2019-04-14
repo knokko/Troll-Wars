@@ -23,13 +23,65 @@
  *******************************************************************************/
 package nl.knokko.texture.factory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.factory.modifier.CircleFunctionFloatMod;
+import nl.knokko.texture.factory.modifier.ColorModifier;
+import nl.knokko.texture.factory.modifier.ColorTable;
+import nl.knokko.texture.factory.modifier.ConstantColorModifier;
+import nl.knokko.texture.factory.modifier.FloatModifier;
+import nl.knokko.texture.factory.modifier.MaxFloatModifiers;
+import nl.knokko.texture.factory.modifier.UniformColorModifier;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 
 public class TileTextureFactory {
+	
+	public static Texture createBigRockTexture(Color darkColor, Color lightColor, Color...gemColors) {
+		
+		int textureWidth = 1024;
+		int textureHeight = 1024;
+		TextureBuilder texture = new TextureBuilder(textureWidth, textureHeight, false);
+		Collection<ColorModifier> modifiers = new ArrayList<ColorModifier>(2);
+		
+		modifiers.add(new ConstantColorModifier(1f, darkColor.getRedF(), darkColor.getGreenF(), darkColor.getBlueF(), 0, 0, textureWidth, textureHeight));
+		
+		Random random = new Random();
+		
+		// Now the light color...
+		FloatModifier[] lightModifiers = new FloatModifier[20];
+		for (int index = 0; index < lightModifiers.length; index++) {
+			lightModifiers[index] = new CircleFunctionFloatMod(random.nextInt(textureWidth), random.nextInt(textureHeight), (float angle) -> {
+				return angle / 2;
+			}, (float radius, float value) -> {
+				if (value < radius) {
+					return 4 * value / radius;
+				} else {
+					return 0;
+				}
+			});
+		}
+		modifiers.add(new UniformColorModifier(new MaxFloatModifiers(lightModifiers), lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+		
+		ColorTable.sumModifiers(texture, modifiers, 0, 1);
+		
+		try {
+			ImageIO.write(texture.createBufferedImage(), "PNG", new File("testrock.png"));
+		} catch (IOException io) {
+			io.printStackTrace();
+		}
+		
+		return new Texture(texture.loadNormal());
+	}
+	
+	
 	
 	private static final Color GREEN_GRASS_COLOR = new Color(100, 200, 50);
 	

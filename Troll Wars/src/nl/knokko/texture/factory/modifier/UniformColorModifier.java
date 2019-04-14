@@ -1,23 +1,23 @@
 package nl.knokko.texture.factory.modifier;
 
 /**
- * Uniform color modifiers use a single FloatModifier to determine its 'power' for given texture
- * coordinates. The result of the getRed, getGreen and getBlue for given coordinates are the
- * product of the power for the coordinates and the red, green and blue values that were
- * given to the constructor.
+ * Uniform color modifiers use a single FloatModifier to determine its weight for given texture
+ * coordinates. The result of the getRed, getGreen and getBlue for given coordinates are simply
+ * the values that are passed via the constructor. The getWeight will return the values returned
+ * by the weight parameter of the constructor.
  * @author knokko
  *
  */
 public class UniformColorModifier implements ColorModifier {
 	
-	private final FloatModifier modifier;
+	private final FloatModifier weight;
 	
 	private final float red;
 	private final float green;
 	private final float blue;
 	
-	public UniformColorModifier(FloatModifier floatModifier, float red, float green, float blue) {
-		modifier = floatModifier;
+	public UniformColorModifier(FloatModifier weight, float red, float green, float blue) {
+		this.weight = weight;
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
@@ -25,36 +25,41 @@ public class UniformColorModifier implements ColorModifier {
 
 	@Override
 	public float getRed(int x, int y) {
-		return red * modifier.getValue(x, y);
+		return red;
 	}
 
 	@Override
 	public float getGreen(int x, int y) {
-		return green * modifier.getValue(x, y);
+		return green;
 	}
 
 	@Override
 	public float getBlue(int x, int y) {
-		return blue * modifier.getValue(x, y);
+		return blue;
+	}
+	
+	@Override
+	public float getWeight(int x, int y) {
+		return weight.getValue(x, y);
 	}
 
 	@Override
 	public int getMinX() {
-		return modifier.getMinX();
+		return weight.getMinX();
 	}
 
 	@Override
 	public int getMinY() {
-		return modifier.getMinY();
+		return weight.getMinY();
 	}
 
 	@Override
 	public int getMaxX() {
-		return modifier.getMaxX();
+		return weight.getMaxX();
 	}
 
 	@Override
 	public int getMaxY() {
-		return modifier.getMaxY();
+		return weight.getMaxY();
 	}
 }

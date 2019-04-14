@@ -38,13 +38,18 @@ public class Tiles {
 	
 	private static final Texture[] GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE);
 	private static final Texture BIG_GRASS_TEXTURE = TileTextureFactory.createBigGrassTexture(new Color(0,100,40), new Color(200, 255, 150), new Color(30,13,0));
+	
 	private static final Texture[] BLUE_GRASS_TEXTURES = TileTextureFactory.createGrassTextures(Options.TEXTURES_PER_TILE, new Color(0, 100, 200));
 	private static final ModelTexture BIG_BLUE_GRASS_TEXTURE = new ModelTexture(TileTextureFactory.createBigGrassTexture(new Color(10, 50, 100), new Color(40, 120, 230), new Color(0,0,0)), 0.5f, 0.4f);
+	
 	private static final Texture[] SORG_ROCK_TEXTURES = TileTextureFactory.createRockTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_ROCK_HOLE_TEXTURES = TileTextureFactory.createHoleTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_TINTS, new int[]{4, 4});
 	private static final Texture[] SORG_BRICKS_TEXTURES = TileTextureFactory.createBrickTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
 	private static final Texture[] SORG_BRICKS_TL_TEXTURES = TileTextureFactory.createBrickTriLeftTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
 	private static final Texture[] SORG_BRICKS_TR_TEXTURES = TileTextureFactory.createBrickTriRightTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
+	
+	static final ModelTexture BIG_SORCK_ROCK_TEXTURE = new ModelTexture(TileTextureFactory.createBigRockTexture(Color.BLACK, Color.WHITE), 0.5f, 0.4f);
+	
 	private static final Texture[] AYUE_PLANKS_TEXTURES = TileTextureFactory.createPlanksTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
 	private static final Texture[] AYUE_FENCE_TEXTURES = TileTextureFactory.createFenceTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
 	private static final Texture[] AYUE_DOOR_TEXTURES = TileTextureFactory.createDoorTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, new Color(10, 10, 10), 16, 4, 4);

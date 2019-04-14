@@ -3,8 +3,8 @@ package nl.knokko.texture.factory.modifier;
 import nl.knokko.util.Maths;
 
 /**
- * Simple color modifiers are color modifiers that have a separate FloatModifier for red, green and blue.
- * The getRed, getGreen and getBlue simply returns the getValue of the corresponding float modifier.
+ * Simple color modifiers are color modifiers that have a separate FloatModifier for red, green, blue and weight.
+ * The getRed, getGreen, getBlue and getWeight methods simply return the getValue of the corresponding float modifier.
  * @author knokko
  *
  */
@@ -18,8 +18,9 @@ public class SimpleColorModifier implements ColorModifier {
 	private final FloatModifier red;
 	private final FloatModifier green;
 	private final FloatModifier blue;
+	private final FloatModifier weight;
 	
-	public SimpleColorModifier(FloatModifier red, FloatModifier green, FloatModifier blue) {
+	public SimpleColorModifier(FloatModifier weight, FloatModifier red, FloatModifier green, FloatModifier blue) {
 		this.minX = Maths.min(red.getMinX(), green.getMinX(), blue.getMinX());
 		this.minY = Maths.min(red.getMinY(), green.getMinY(), blue.getMinY());
 		this.maxX = Maths.max(red.getMaxX(), green.getMaxX(), blue.getMaxX());
@@ -27,6 +28,7 @@ public class SimpleColorModifier implements ColorModifier {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
+		this.weight = weight;
 	}
 
 	@Override
@@ -42,6 +44,11 @@ public class SimpleColorModifier implements ColorModifier {
 	@Override
 	public float getBlue(int x, int y) {
 		return blue.getValue(x, y);
+	}
+	
+	@Override
+	public float getWeight(int x, int y) {
+		return weight.getValue(x, y);
 	}
 
 	@Override

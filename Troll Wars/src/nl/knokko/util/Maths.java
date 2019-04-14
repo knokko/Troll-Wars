@@ -45,6 +45,15 @@ public class Maths {
 		}
 	}
 	
+	public static int ceil(float number) {
+		int asInt = (int) number;
+		if (asInt == number || number < 0) {
+			return asInt;
+		} else {
+			return asInt + 1;
+		} 
+	}
+	
 	public static boolean powerOf2(int number){
 		for(int power : POWERS)
 			if(number == power)
