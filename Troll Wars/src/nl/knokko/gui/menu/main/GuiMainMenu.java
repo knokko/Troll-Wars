@@ -23,23 +23,25 @@
  *******************************************************************************/
 package nl.knokko.gui.menu.main;
 
-import java.awt.Color;
-
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.button.ButtonProps;
 import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.color.SimpleGuiColor;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.text.TextButton;
+import nl.knokko.gui.component.text.TextComponent;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.main.Game;
 
 public class GuiMainMenu extends GuiMenu {
 	
-	private static final Properties BUTTON_PROPERTIES = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
-	private static final Properties HOVER_PROPERTIES = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 0, 50));
+	//private static final Properties BUTTON_PROPERTIES = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
+	//private static final Properties HOVER_PROPERTIES = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 0, 50));
+	private static final Properties BUTTON_PROPERTIES = ButtonProps.MAIN_MENU;
+	private static final Properties HOVER_PROPERTIES = ButtonProps.MAIN_MENU_HOVER;
 	
-	private static final GuiColor BACKGROUND = new SimpleGuiColor(0, 0, 150);
+	public static final GuiColor BACKGROUND = new SimpleGuiColor(0, 150, 200);
 	
 	private final StateMainMenu menu;
 
@@ -52,9 +54,12 @@ public class GuiMainMenu extends GuiMenu {
 		return BACKGROUND;
 	}
 	
+	private static final float OFFSET_Y = 0.10f;
+	
 	@Override
 	protected void addComponents(){
-		addComponent(new ButtonLink("new game", menu, menu.getGuiNewGame(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.3f, 0.825f, 0.7f, 0.975f);
+		addComponent(new TextComponent("Troll Wars", ButtonProps.MAIN_MENU_TITLE), 0.3f, 0.75f, 0.7f, 0.95f);
+		addComponent(new ButtonLink("new game", menu, menu.getGuiNewGame(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.35f, OFFSET_Y + 0.5f, 0.65f, OFFSET_Y + 0.6f);
 		addComponent(new ButtonLink("load game", menu, menu.getGuiLoadGame(), BUTTON_PROPERTIES, HOVER_PROPERTIES){
 			
 			@Override
@@ -62,15 +67,14 @@ public class GuiMainMenu extends GuiMenu {
 				super.click(x, y, button);
 				((GuiLoadGame) menu.getGuiLoadGame()).refresh();
 			}
-		}, 0.3f, 0.625f, 0.7f, 0.775f);
-		addComponent(new ButtonLink("options", menu, menu.getGuiOptions(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.3f, 0.425f, 0.7f, 0.575f);
-		addComponent(new ButtonLink("help menu", menu, menu.getGuiHelpMenu(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.3f, 0.225f, 0.7f, 0.375f);
+		}, 0.35f, OFFSET_Y + 0.375f, 0.65f, OFFSET_Y + 0.475f);
+		addComponent(new ButtonLink("options", menu, menu.getGuiOptions(), BUTTON_PROPERTIES, HOVER_PROPERTIES), 0.35f, OFFSET_Y + 0.2f, 0.65f, OFFSET_Y + 0.3f);
 		addComponent(new TextButton("quit game", BUTTON_PROPERTIES, HOVER_PROPERTIES, new Runnable(){
 
 			@Override
 			public void run() {
 				Game.stop(false);
 			}
-		}), 0.3f, 0.025f, 0.7f, 0.175f);
+		}), 0.35f, OFFSET_Y, 0.65f, OFFSET_Y + 0.1f);
 	}
 }

@@ -23,33 +23,36 @@
  *******************************************************************************/
 package nl.knokko.gui.menu.main;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.button.ButtonProps;
 import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.color.SimpleGuiColor;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.gui.component.simple.SimpleColorComponent;
 import nl.knokko.gui.component.text.ActivatableTextButton;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.util.Condition;
 import nl.knokko.gui.util.TextBuilder.Properties;
-import nl.knokko.input.MouseInput;
-import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
 import nl.knokko.util.resources.Saver;
 import nl.knokko.util.resources.Saver.SaveTime;
 
 public class GuiLoadGame extends GuiMenu {
 	
-	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
-	private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 50, 50));
-	private static final Properties SELECTED_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(255, 100, 255), new Color(0, 50, 50));
+	//private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
+	//private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 50, 50));
+	private static final Properties BUTTON_PROPS = ButtonProps.MAIN_MENU;
+	private static final Properties HOVER_PROPS = ButtonProps.MAIN_MENU_HOVER;
+	//private static final Properties SELECTED_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(255, 100, 255), new Color(0, 50, 50));
+	private static final Properties SELECTED_PROPS = ButtonProps.MAIN_MENU_SELECTED;
 	
-	private static final GuiColor BACKGROUND = new SimpleGuiColor(0, 0, 150);
+	//private static final GuiColor BACKGROUND = new SimpleGuiColor(0, 0, 150);
+	private static final GuiColor BACKGROUND = GuiMainMenu.BACKGROUND;
+	private static final GuiColor SEPARATOR = new SimpleGuiColor(0, 60, 70);
 	
 	private final StateMainMenu state;
 	
@@ -62,7 +65,7 @@ public class GuiLoadGame extends GuiMenu {
 		protected void addComponents() {
 			String[] saves = Saver.getSaveFiles();
 			for(int index = 0; index < saves.length; index++)
-				addComponent(new ButtonSaveFile(saves[index]), 0f, 0.725f - index * 0.125f, 1f, 0.825f - index * 0.125f);
+				addComponent(new ButtonSaveFile(saves[index]), 0f, 0.9f - index * 0.125f, 1f, 1f - index * 0.125f);
 		}
 		
 		@Override
@@ -91,31 +94,33 @@ public class GuiLoadGame extends GuiMenu {
 			if(selectedSave != null){
 				SaveTime[] saves = Saver.getSaveTimes(selectedSave);
 				for(int index = 0; index < saves.length; index++)
-					addComponent(new ButtonSaveTime(saves[index].getText(), saves[index].getMilliTime()), 0f, 0.725f - index * 0.125f, 1f, 0.825f - index * 0.125f);
+					addComponent(new ButtonSaveTime(saves[index].getText(), saves[index].getMilliTime()), 0f, 0.9f - index * 0.125f, 1f, 1f - index * 0.125f);
 			}
 		}
 	}
 	
 	private String selectedSave;
 	private long selectedTime;
-	
-	private float saveScroll = 0f;
-	private float timeScroll = 0f;
 
 	public GuiLoadGame(StateMainMenu menu) {
 		state = menu;
 	}
 	
+	private static final float OFFSET_Y = 0.35f;
+	
 	@Override
 	protected void addComponents(){
 		savesButtons = new SavesButtons();
 		timesButtons = new TimesButtons();
+		addComponent(new SimpleColorComponent(SEPARATOR), 0.3275f, 0f, 0.3475f, 0.8025f);
+		addComponent(new SimpleColorComponent(SEPARATOR), 0.6525f, 0f, 0.6725f, 0.8025f);
+		addComponent(new SimpleColorComponent(SEPARATOR), 0f, 0.8025f, 1f, 0.8225f);
 		addComponent(timesButtons, 0.35f, 0f, 0.65f, 0.8f);
 		addComponent(savesButtons, 0.025f, 0f, 0.325f, 0.8f);
-		addComponent(new ButtonSaveFileOption("delete", new DeleteSaveFileAction()), 0.675f, 0.875f, 0.975f, 0.975f);
-		addComponent(new ButtonSaveTimeOption("load", new LoadSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.725f, 0.975f, 0.825f);
-		addComponent(new ButtonSaveTimeOption("delete", new DeleteSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.6f, 0.975f, 0.7f);
-		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, 0.475f, 0.975f, 0.575f);
+		addComponent(new ButtonSaveFileOption("delete all", new DeleteSaveFileAction()), 0.675f, 0.875f, 0.975f, 0.975f);
+		addComponent(new ButtonSaveTimeOption("load", new LoadSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, OFFSET_Y + 0.2f, 0.975f, OFFSET_Y + 0.28f);
+		addComponent(new ButtonSaveTimeOption("delete", new DeleteSaveTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, OFFSET_Y + 0.1f, 0.975f, OFFSET_Y + 0.18f);
+		addComponent(new ButtonSaveTimeOption("delete older", new DeleteOlderTimeAction(), BUTTON_PROPS, HOVER_PROPS), 0.675f, OFFSET_Y, 0.975f, OFFSET_Y + 0.08f);
 		addComponent(new ButtonLink("back", state, state.getGuiMainMenu(), BUTTON_PROPS, HOVER_PROPS), 0.025f, 0.875f, 0.325f, 0.975f);
 		addSavesButtons();
 	}
@@ -127,29 +132,6 @@ public class GuiLoadGame extends GuiMenu {
 	
 	public void refresh(){
 		addSavesButtons();
-	}
-	
-	@Override
-	public void update(){
-		super.update();
-		if(MouseInput.getY() < 0.7f){
-			float x = MouseInput.getX();
-			if(x <= 0.3f){
-				ArrayList<MouseScrollEvent> scrolls = MouseInput.getMouseScrolls();
-				if(x <= -0.3f){
-					for(MouseScrollEvent scroll : scrolls)
-						saveScroll += scroll.getDeltaScroll() * 0.001f;
-					if(saveScroll < 0)
-						saveScroll = 0;
-				}
-				else {
-					for(MouseScrollEvent scroll : scrolls)
-						timeScroll += scroll.getDeltaScroll() * 0.001f;
-					if(timeScroll < 0)
-						timeScroll = 0;
-				}
-			}
-		}
 	}
 	
 	private void addSavesButtons(){
@@ -196,6 +178,7 @@ public class GuiLoadGame extends GuiMenu {
 				@Override
 				public void run() {
 					selectedSave = save;
+					selectedTime = 0;
 					timesButtons.refresh();
 				}
 			}, new Condition() {

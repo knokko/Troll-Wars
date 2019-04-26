@@ -34,7 +34,7 @@ public class StateMainMenu implements GameState {
 	private GuiComponent currentGui;
 
 	public StateMainMenu() {
-		guis = new GuiComponent[]{new GuiMainMenu(this), new GuiNewGame(this), new GuiLoadGame(this), new GuiMainOptions(this), new GuiMainHelp(this)};
+		guis = new GuiComponent[]{new GuiMainMenu(this), new GuiNewGame(this), new GuiLoadGame(this), new GuiMainOptions(this)};
 		for(GuiComponent gui : guis){
 			gui.setState(Game.getGuiState());
 			gui.init();
@@ -98,10 +98,6 @@ public class StateMainMenu implements GameState {
 	
 	public GuiComponent getGuiOptions(){
 		return guis[3];
-	}
-	
-	public GuiComponent getGuiHelpMenu(){
-		return guis[4];
 	}
 
 	@Override

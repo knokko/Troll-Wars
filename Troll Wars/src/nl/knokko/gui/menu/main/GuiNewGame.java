@@ -27,6 +27,8 @@ import java.awt.Color;
 
 import nl.knokko.gamestate.StateMainMenu;
 import nl.knokko.gui.button.ButtonLink;
+import nl.knokko.gui.button.ButtonProps;
+import nl.knokko.gui.color.GuiColor;
 import nl.knokko.gui.component.menu.GuiMenu;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.component.text.TextComponent;
@@ -37,11 +39,13 @@ import nl.knokko.util.resources.Saver;
 
 public class GuiNewGame extends GuiMenu {
 	
-	private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
-	private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 0, 50));
+	//private static final Properties BUTTON_PROPS = Properties.createButton(new Color(150, 0, 150), new Color(50, 0, 50));
+	//private static final Properties HOVER_PROPS = Properties.createButton(new Color(250, 0, 250), new Color(80, 0, 80), new Color(50, 0, 50));
+	private static final Properties BUTTON_PROPS = ButtonProps.MAIN_MENU;
+	private static final Properties HOVER_PROPS = ButtonProps.MAIN_MENU_HOVER;
 	
-	private static final Properties EDIT_PROPS = Properties.createEdit();
-	private static final Properties ACTIVE_PROPS = Properties.createEdit(Color.YELLOW);
+	private static final Properties EDIT_PROPS = Properties.createEdit(512, 128);
+	private static final Properties ACTIVE_PROPS = Properties.createEdit(Color.YELLOW, 512, 128);
 	
 	private static final Properties ERROR_PROPS = Properties.createLabel(Color.RED);
 	
@@ -73,5 +77,10 @@ public class GuiNewGame extends GuiMenu {
 		}), 0.3f, 0.225f, 0.7f, 0.375f);
 		errorText = new TextComponent("", ERROR_PROPS);
 		addComponent(errorText, 0.025f, 0.025f, 0.975f, 0.175f);
+	}
+	
+	@Override
+	public GuiColor getBackgroundColor() {
+		return GuiMainMenu.BACKGROUND;
 	}
 }
