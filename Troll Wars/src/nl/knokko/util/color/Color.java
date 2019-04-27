@@ -56,7 +56,7 @@ public class Color implements Comparable<Color>, GuiColor {
 	
 	public static final Color SORG_BASE = new Color(35, 32, 43);
 	public static final Color SORG_DARK = new Color(25, 23, 31);
-	public static final Color SORG_LIGHT = new Color(47, 43, 60);
+	public static final Color SORG_LIGHT = new Color(75, 69, 93);
 	public static final Color SORG_BRICK_EDGE = new Color(15, 18, 13);
 	public static final Color[] SORG_TINTS = {new Color(97, 58, 72), new Color(88, 65, 150)};
 	

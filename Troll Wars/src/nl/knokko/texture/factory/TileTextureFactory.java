@@ -23,6 +23,8 @@
  *******************************************************************************/
 package nl.knokko.texture.factory;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,43 +39,111 @@ import nl.knokko.texture.factory.modifier.ColorModifier;
 import nl.knokko.texture.factory.modifier.ColorTable;
 import nl.knokko.texture.factory.modifier.ConstantColorModifier;
 import nl.knokko.texture.factory.modifier.FloatModifier;
-import nl.knokko.texture.factory.modifier.MaxFloatModifiers;
+import nl.knokko.texture.factory.modifier.SumFloatModifiers;
 import nl.knokko.texture.factory.modifier.UniformColorModifier;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 
 public class TileTextureFactory {
 	
+	private static int[] spreadCircles(Random random, int minX, int minY, int maxX, int maxY, int amount, int attemptsPerCircle) {
+		int[] coords = new int[amount * 2];
+		int width = maxX - minX + 1;
+		int height = maxY - minY + 1;
+		coords[0] = minX + random.nextInt(width);
+		coords[1] = minY + random.nextInt(height);
+		for (int index = 1; index < amount; index++) {
+			
+			// Low score is better, so this score should be overwritten at the first attempt
+			double bestScore = Double.POSITIVE_INFINITY;
+			int bestX = -1;
+			int bestY = -1;
+			
+			for (int counter = 0; counter < attemptsPerCircle; counter++) {
+				int maybeX = minX + random.nextInt(width);
+				int maybeY = minY + random.nextInt(height);
+				double maybeScore = 0;
+				for (int scoreIndex = 0; scoreIndex < index; scoreIndex++) {
+					int difX1 = coords[2 * scoreIndex] - maybeX;
+					int difY1 = coords[2 * scoreIndex + 1] - maybeY;
+					
+					int difX2 = Math.abs(difX1 - width);
+					int difY2 = Math.abs(difY1 - height);
+					
+					int difX3 = Math.abs(difX1 + width);
+					int difY3 = Math.abs(difY1 + height);
+					
+					int difX = Maths.min(Math.abs(difX1), difX2, difX3);
+					int difY = Maths.min(Math.abs(difY1), difY2, difY3);
+					double distanceSQ = difX * difX + difY * difY;
+					maybeScore += 1.0 / Math.pow(distanceSQ, 3);
+				}
+				if (maybeScore < bestScore) {
+					bestScore = maybeScore;
+					bestX = maybeX;
+					bestY = maybeY;
+				}
+			}
+			
+			coords[index * 2] = bestX;
+			coords[index * 2 + 1] = bestY;
+		}
+		return coords;
+	}
+	
 	public static Texture createBigRockTexture(Color darkColor, Color lightColor, Color...gemColors) {
+		
+		long startTime = System.currentTimeMillis();
 		
 		int textureWidth = 1024;
 		int textureHeight = 1024;
 		TextureBuilder texture = new TextureBuilder(textureWidth, textureHeight, false);
 		Collection<ColorModifier> modifiers = new ArrayList<ColorModifier>(2);
-		
+
 		modifiers.add(new ConstantColorModifier(1f, darkColor.getRedF(), darkColor.getGreenF(), darkColor.getBlueF(), 0, 0, textureWidth, textureHeight));
 		
 		Random random = new Random();
 		
-		// Now the light color...
-		FloatModifier[] lightModifiers = new FloatModifier[20];
-		for (int index = 0; index < lightModifiers.length; index++) {
-			lightModifiers[index] = new CircleFunctionFloatMod(random.nextInt(textureWidth), random.nextInt(textureHeight), (float angle) -> {
-				return angle / 2;
-			}, (float radius, float value) -> {
-				if (value < radius) {
-					return 4 * value / radius;
-				} else {
-					return 0;
-				}
-			});
+		int amount = 20;
+		int[] lightCircleCoords = spreadCircles(random, 0, 0, textureWidth, textureHeight, amount, 3);
+		FloatModifier[] lightModifiers = new FloatModifier[amount];
+		for (int index = 0; index < amount; index++) {
+			float offset1 = 180 * random.nextFloat();
+			float offset2 = 180 * random.nextFloat();
+			float offset3 = 180 * random.nextFloat();
+			float offset4 = 180 * random.nextFloat();
+			float offset5 = 180 * random.nextFloat();
+			lightModifiers[index] = new CircleFunctionFloatMod(lightCircleCoords[index * 2], 
+					lightCircleCoords[index * 2 + 1], (float angle) -> {
+						return 200 + 6f * (Maths.sin(angle - offset1) + Maths.sin((angle - offset2) * 2) + Maths.sin((angle - offset3) * 3) + Maths.sin((angle - offset4) * 4) + Maths.sin((angle - offset5) * 5));
+					}, (float radius, float distance) -> {
+						return Math.max(0.5f - 0.5f * distance / radius, 0);
+					});
 		}
-		modifiers.add(new UniformColorModifier(new MaxFloatModifiers(lightModifiers), lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+		modifiers.add(new UniformColorModifier(new SumFloatModifiers(textureWidth, textureHeight, lightModifiers), lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+		
+		// TODO Now the gem colors
 		
 		ColorTable.sumModifiers(texture, modifiers, 0, 1);
 		
+		long endTime = System.currentTimeMillis();
+		System.out.println("Took " + (endTime - startTime) + " ms");
+		
 		try {
-			ImageIO.write(texture.createBufferedImage(), "PNG", new File("testrock.png"));
+			BufferedImage image = texture.createBufferedImage();
+			BufferedImage multiple = new BufferedImage(3 * textureWidth, 3 * textureHeight, image.getType());
+			Graphics2D g = multiple.createGraphics();
+			g.drawImage(image, 0, 0, null);
+			g.drawImage(image, 0, textureHeight, null);
+			g.drawImage(image, 0, 2 * textureHeight, null);
+			g.drawImage(image, textureWidth, 0, null);
+			g.drawImage(image, textureWidth, textureHeight, null);
+			g.drawImage(image, textureWidth, 2 * textureHeight, null);
+			g.drawImage(image, 2 * textureWidth, 0, null);
+			g.drawImage(image, 2 * textureWidth, textureHeight, null);
+			g.drawImage(image, 2 * textureWidth, 2 * textureHeight, null);
+			g.dispose();
+			ImageIO.write(multiple, "PNG", new File("testrock.png"));
 		} catch (IOException io) {
 			io.printStackTrace();
 		}

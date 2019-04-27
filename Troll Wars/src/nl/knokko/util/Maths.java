@@ -45,6 +45,10 @@ public class Maths {
 		}
 	}
 	
+	public static float log(float base, float number) {
+		return (float) (Math.log(number) / Math.log(base));
+	}
+	
 	public static int ceil(float number) {
 		int asInt = (int) number;
 		if (asInt == number || number < 0) {

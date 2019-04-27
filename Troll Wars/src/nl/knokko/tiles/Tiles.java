@@ -48,7 +48,7 @@ public class Tiles {
 	private static final Texture[] SORG_BRICKS_TL_TEXTURES = TileTextureFactory.createBrickTriLeftTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
 	private static final Texture[] SORG_BRICKS_TR_TEXTURES = TileTextureFactory.createBrickTriRightTextures(Options.TEXTURES_PER_TILE, Color.SORG_BASE, Color.SORG_BRICK_EDGE, 8, 4);
 	
-	static final ModelTexture BIG_SORCK_ROCK_TEXTURE = new ModelTexture(TileTextureFactory.createBigRockTexture(Color.BLACK, Color.WHITE), 0.5f, 0.4f);
+	static final ModelTexture BIG_SORCK_ROCK_TEXTURE = new ModelTexture(TileTextureFactory.createBigRockTexture(Color.SORG_DARK, Color.SORG_LIGHT, Color.SORG_TINTS), 0.5f, 0.4f);
 	
 	private static final Texture[] AYUE_PLANKS_TEXTURES = TileTextureFactory.createPlanksTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
 	private static final Texture[] AYUE_FENCE_TEXTURES = TileTextureFactory.createFenceTextures(Options.TEXTURES_PER_TILE, Color.AYUE_PLANK, Color.AYUE_EDGE, 16, 4, 4);
