@@ -87,6 +87,27 @@ public final class TileModels {
 		return loadDef(vertices, textureCoords, normals, indices);
 	}
 	
+	private static BigTileModel loadBigWall(Facing facing, float height){
+		float nx = -facing.getDX();
+		float nz = -facing.getDZ();
+		float[] normals = {nx,0,nz, nx,0,nz, nx,0,nz, nx,0,nz};
+		int[] indices = {0,1,2, 2,3,0};
+		float[] vertices = null;
+		if(facing == Facing.NORTH){
+			vertices = new float[]{-1,0,-1, 1,0,-1, 1,height,-1, -1,height,-1};
+		}
+		if(facing == Facing.EAST){
+			vertices = new float[]{1,0,-1, 1,0,1, 1,height,1, 1,height,-1};
+		}
+		if(facing == Facing.SOUTH){
+			vertices = new float[]{-1,0,1, 1,0,1, 1,height,1, -1,height,1};
+		}
+		if(facing == Facing.WEST){
+			vertices = new float[]{-1,0,-1, -1,0,1, -1,height,1, -1,height,-1};
+		}
+		return loadBig(vertices, normals, indices);
+	}
+	
 	private static DefaultTileModel loadSlope(Facing facing, int height){
 		float[] vertices = null;
 		float[] textureCoords = null;
@@ -274,6 +295,11 @@ public final class TileModels {
 	public static final DefaultTileModel WALL_EAST = loadWall(Facing.EAST, 4);
 	public static final DefaultTileModel WALL_SOUTH = loadWall(Facing.SOUTH, 4);
 	public static final DefaultTileModel WALL_WEST = loadWall(Facing.WEST, 4);
+	
+	public static final BigTileModel WALL_NORTH_BIG = loadBigWall(Facing.NORTH, 4);
+	public static final BigTileModel WALL_EAST_BIG = loadBigWall(Facing.EAST, 4);
+	public static final BigTileModel WALL_SOUTH_BIG = loadBigWall(Facing.SOUTH, 4);
+	public static final BigTileModel WALL_WEST_BIG = loadBigWall(Facing.WEST, 4);
 	
 	public static final DefaultTileModel WALL_HALF_NORTH = loadWall(Facing.NORTH, 2);
 	public static final DefaultTileModel WALL_HALF_EAST = loadWall(Facing.EAST, 2);

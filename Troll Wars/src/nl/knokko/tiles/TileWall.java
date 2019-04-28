@@ -36,34 +36,50 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class TileWall extends Tile {
-	
+
 	private final ModelTexture texture;
+	private final ModelTexture bigTexture;
 	final Facing facing;
 	private final TileModel model;
 
 	public TileWall(ModelTexture texture, Facing facing) {
+		this(texture, null, facing);
+	}
+
+	public TileWall(ModelTexture texture, ModelTexture bigTexture, Facing facing) {
 		this.texture = texture;
+		this.bigTexture = bigTexture;
 		this.facing = facing;
 		this.model = createModel();
 	}
-	
-	protected TileModel createModel(){
-		if(facing == Facing.NORTH)
-			return TileModels.WALL_NORTH;
-		if(facing == Facing.EAST)
-			return TileModels.WALL_EAST;
-		if(facing == Facing.SOUTH)
-			return TileModels.WALL_SOUTH;
-		return TileModels.WALL_WEST;
+
+	protected TileModel createModel() {
+		if (bigTexture == null) {
+			if (facing == Facing.NORTH)
+				return TileModels.WALL_NORTH;
+			if (facing == Facing.EAST)
+				return TileModels.WALL_EAST;
+			if (facing == Facing.SOUTH)
+				return TileModels.WALL_SOUTH;
+			return TileModels.WALL_WEST;
+		} else {
+			if (facing == Facing.NORTH) return TileModels.WALL_NORTH_BIG;
+			if (facing == Facing.EAST) return TileModels.WALL_EAST_BIG;
+			if (facing == Facing.SOUTH) return TileModels.WALL_SOUTH_BIG;
+			return TileModels.WALL_WEST_BIG;
+		}
 	}
 
 	@Override
 	public Matrix4f getMatrix(int tileX, int tileY, int tileZ) {
-		return Maths.createTransformationMatrix(new Vector3f((float) (tileX * 64 - 32 * Math.sin(-facing.getRadianYaw())), tileY * 16 + 32, (float) (tileZ * 64 - 32 * Math.cos(-facing.getRadianYaw()))), 90, -facing.getDegreeYaw(), 0, 32);
+		return Maths.createTransformationMatrix(
+				new Vector3f((float) (tileX * 64 - 32 * Math.sin(-facing.getRadianYaw())), tileY * 16 + 32,
+						(float) (tileZ * 64 - 32 * Math.cos(-facing.getRadianYaw()))),
+				90, -facing.getDegreeYaw(), 0, 32);
 	}
-	
+
 	@Override
-	public TileModel getModel(){
+	public TileModel getModel() {
 		return model;
 	}
 
@@ -78,12 +94,17 @@ public class TileWall extends Tile {
 	}
 
 	@Override
+	public ModelTexture getBigTexture() {
+		return bigTexture;
+	}
+
+	@Override
 	public RenderForm getRenderForm() {
 		return RenderForm.QUAD;
 	}
-	
+
 	@Override
-	public ShaderType getShaderType(){
+	public ShaderType getShaderType() {
 		return ShaderType.NORMAL;
 	}
 
@@ -109,11 +130,13 @@ public class TileWall extends Tile {
 
 	@Override
 	public int getExitTileY(int ownTileY, Facing facing) {
-		throw new RuntimeException("Creatures can not move to another tile from this tile because they can not walk over this tile!");
+		throw new RuntimeException(
+				"Creatures can not move to another tile from this tile because they can not walk over this tile!");
 	}
-	
+
 	@Override
 	public boolean canExitTile(int ownTileY, Facing facing) {
-		throw new RuntimeException("Creatures can not move to another tile from this tile because they can not walk over this tile!");
+		throw new RuntimeException(
+				"Creatures can not move to another tile from this tile because they can not walk over this tile!");
 	}
 }

@@ -42,7 +42,11 @@ public class CircleFunctionFloatMod implements FloatModifier {
 		// Use Math.max and Math.min to prevent array index issues when floating point inaccuracy occurs
 		float radius = radiuses[Math.max(180 + Math.min((int) (180 * Math.atan2(y - centerY, x - centerX) / Math.PI), 179), 0)];
 		float distance = Maths.sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
-		return valueFunction.getValue(radius, distance);
+		if (distance > radius) {
+			return 0;
+		} else {
+			return valueFunction.getValue(radius, distance);
+		}
 	}
 
 	@Override

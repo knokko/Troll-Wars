@@ -69,6 +69,7 @@ public class TileBottom extends Tile {
 		return texture;
 	}
 	
+	@Override
 	public ModelTexture getBigTexture() {
 		return bigTexture;
 	}

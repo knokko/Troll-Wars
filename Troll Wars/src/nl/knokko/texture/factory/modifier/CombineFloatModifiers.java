@@ -2,7 +2,8 @@ package nl.knokko.texture.factory.modifier;
 
 public abstract class CombineFloatModifiers implements FloatModifier {
 	
-	public static int findMinX(FloatModifier...modifiers) {
+	public static int findMinX(int textureWidth, int textureHeight, FloatModifier...modifiers) {
+		if (textureWidth != -1 || textureHeight != -1) return 0;
 		int minX = modifiers[0].getMinX();
 		for (int index = 1; index < modifiers.length; index++) {
 			int localMinX = modifiers[index].getMinX();
@@ -13,7 +14,8 @@ public abstract class CombineFloatModifiers implements FloatModifier {
 		return minX;
 	}
 	
-	public static int findMinY(FloatModifier...modifiers) {
+	public static int findMinY(int textureWidth, int textureHeight, FloatModifier...modifiers) {
+		if (textureWidth != -1 || textureHeight != -1) return 0;
 		int minY = modifiers[0].getMinY();
 		for (int index = 1; index < modifiers.length; index++) {
 			int localMinY = modifiers[index].getMinY();
@@ -24,7 +26,8 @@ public abstract class CombineFloatModifiers implements FloatModifier {
 		return minY;
 	}
 	
-	public static int findMaxX(FloatModifier...modifiers) {
+	public static int findMaxX(int textureWidth, int textureHeight, FloatModifier...modifiers) {
+		if (textureWidth != -1 || textureHeight != -1) return textureWidth - 1;
 		int maxX = modifiers[0].getMaxX();
 		for (int index = 1; index < modifiers.length; index++) {
 			int localMaxX = modifiers[index].getMaxX();
@@ -35,7 +38,8 @@ public abstract class CombineFloatModifiers implements FloatModifier {
 		return maxX;
 	}
 	
-	public static int findMaxY(FloatModifier...modifiers) {
+	public static int findMaxY(int textureWidth, int textureHeight, FloatModifier...modifiers) {
+		if (textureWidth != -1 || textureHeight != -1) return textureHeight - 1;
 		int maxY = modifiers[0].getMaxY();
 		for (int index = 1; index < modifiers.length; index++) {
 			int localMaxY = modifiers[index].getMaxY();
@@ -68,7 +72,9 @@ public abstract class CombineFloatModifiers implements FloatModifier {
 	}
 	
 	public CombineFloatModifiers(int textureWidth, int textureHeight, FloatModifier...modifiers) {
-		this(findMinX(modifiers), findMinY(modifiers), findMaxX(modifiers), findMaxY(modifiers), textureWidth, textureHeight, modifiers);
+		this(findMinX(textureWidth, textureHeight, modifiers), findMinY(textureWidth, textureHeight, modifiers), 
+				findMaxX(textureWidth, textureHeight, modifiers), 
+				findMaxY(textureWidth, textureHeight, modifiers), textureWidth, textureHeight, modifiers);
 	}
 
 	@Override
@@ -80,23 +86,35 @@ public abstract class CombineFloatModifiers implements FloatModifier {
 		return value;
 	}
 	
+	private boolean doWrapping() {
+		return width != -1 && height != -1;
+	}
+	
 	private final float valueAt(FloatModifier mod, int x, int y) {
 		float result = tryValueAt(mod, x, y);
 		
-		if (width == -1 || height == -1) return result;
+		if (!doWrapping()) return result;
 		
-		result = combine(result, tryValueAt(mod, x + width, y));
-		result = combine(result, tryValueAt(mod, x - width, y));
+		result = maybeCombine(result, tryValueAt(mod, x + width, y));
+		result = maybeCombine(result, tryValueAt(mod, x - width, y));
 		
-		result = combine(result, tryValueAt(mod, x, y + height));
-		result = combine(result, tryValueAt(mod, x + width, y + height));
-		result = combine(result, tryValueAt(mod, x - width, y + height));
+		result = maybeCombine(result, tryValueAt(mod, x, y + height));
+		result = maybeCombine(result, tryValueAt(mod, x + width, y + height));
+		result = maybeCombine(result, tryValueAt(mod, x - width, y + height));
 		
-		result = combine(result, tryValueAt(mod, x, y - height));
-		result = combine(result, tryValueAt(mod, x + width, y - height));
-		result = combine(result, tryValueAt(mod, x - width, y - height));
+		result = maybeCombine(result, tryValueAt(mod, x, y - height));
+		result = maybeCombine(result, tryValueAt(mod, x + width, y - height));
+		result = maybeCombine(result, tryValueAt(mod, x - width, y - height));
 		
 		return result;
+	}
+	
+	private final float maybeCombine(float f1, float f2) {
+		if (f2 == 0) {
+			return f1;
+		} else {
+			return combine(f1, f2);
+		}
 	}
 	
 	private final float tryValueAt(FloatModifier mod, int x, int y) {
