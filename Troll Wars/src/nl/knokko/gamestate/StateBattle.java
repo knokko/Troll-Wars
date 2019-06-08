@@ -64,25 +64,21 @@ public class StateBattle implements GameState {
 		if(battle == null)
 			throw new IllegalStateException("There is no battle!");
 		Game.getWindow().setRenderContinuously(true);
-		System.out.println("continous true (battle)");
 	}
 
 	@Override
 	public void close() {
 		Game.getWindow().setRenderContinuously(false);
-		System.out.println("continous false (battle)");
 	}
 
 	@Override
 	public void enable() {
 		Game.getWindow().setRenderContinuously(true);
-		System.out.println("continous true (battle)");
 	}
 
 	@Override
 	public void disable() {
 		Game.getWindow().setRenderContinuously(false);
-		System.out.println("continous false (battle)");
 	}
 
 	@Override
