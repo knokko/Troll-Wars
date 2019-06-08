@@ -40,7 +40,6 @@ import nl.knokko.gui.util.Condition;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.items.Item;
 import nl.knokko.main.Game;
-import nl.knokko.main.GameScreen;
 import nl.knokko.util.color.Color;
 
 public class GuiBattleCharacter extends GuiMenu {
@@ -121,11 +120,11 @@ public class GuiBattleCharacter extends GuiMenu {
                         return showState == State.ELEMENTS;
                     }
                 }), 0.05f, 0.15f, 0.35f, 0.25f);
-		int width = (int) (1.0f * GameScreen.getWidth());
-		int height = (int) (1.0f * GameScreen.getHeight());
+		int width = Game.getWindow().getWidth();
+		int height = Game.getWindow().getHeight();
 		BufferedImage backGroundImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-		int dx = GameScreen.getWidth() / 20;
-		int dy = GameScreen.getHeight() / 20;
+		int dx = width / 20;
+		int dy = height / 20;
 		Graphics2D g = backGroundImage.createGraphics();
 		g.setColor(BACKGROUND_EDGE);
 		g.fillRect(0, 0, dx, height);

@@ -43,7 +43,7 @@ import nl.knokko.battle.move.ItemMoveOption;
 import nl.knokko.battle.render.properties.BattleRenderProperties;
 import nl.knokko.equipment.Equipment;
 import nl.knokko.inventory.Inventory;
-import nl.knokko.main.GameScreen;
+import nl.knokko.main.Game;
 import nl.knokko.model.ModelOwner;
 import nl.knokko.model.ModelPart;
 import nl.knokko.shaders.ShaderType;
@@ -213,12 +213,12 @@ public interface BattleCreature extends ModelOwner {
 	
 	public static final class StepDuration {
 		
-		public static final int TROLL = GameScreen.fps() * 1;
-		public static final int HUMAN = GameScreen.fps() * 7 / 9;
+		public static final int TROLL = Game.fps() * 1;
+		public static final int HUMAN = Game.fps() * 7 / 9;
 	}
 	
 	public static final class MoveSpeed {
 		
-		public static final float BIRD = 120f / GameScreen.fps();
+		public static final float BIRD = 120f / Game.fps();
 	}
 }

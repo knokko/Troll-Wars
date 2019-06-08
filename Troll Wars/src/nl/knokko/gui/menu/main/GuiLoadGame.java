@@ -180,6 +180,7 @@ public class GuiLoadGame extends GuiMenu {
 					selectedSave = save;
 					selectedTime = 0;
 					timesButtons.refresh();
+					Game.getWindow().markChange();
 				}
 			}, new Condition() {
 
@@ -225,6 +226,7 @@ public class GuiLoadGame extends GuiMenu {
 		public void run() {
 			Saver.deleteSaveFile(selectedSave);
 			addSavesButtons();
+			Game.getWindow().markChange();
 		}
 	}
 	
@@ -238,6 +240,7 @@ public class GuiLoadGame extends GuiMenu {
 				@Override
 				public void run() {
 					selectedTime = time;
+					Game.getWindow().markChange();
 				}
 			}, new Condition() {
 
@@ -294,6 +297,7 @@ public class GuiLoadGame extends GuiMenu {
 			Saver.deleteSaveTime(selectedSave, selectedTime);
 			selectedTime = 0;
 			timesButtons.refresh();
+			Game.getWindow().markChange();
 		}
 	}
 	
@@ -308,6 +312,7 @@ public class GuiLoadGame extends GuiMenu {
 					Saver.deleteSaveTime(selectedSave, time);
 			}
 			timesButtons.refresh();
+			Game.getWindow().markChange();
 		}
 	}
 }

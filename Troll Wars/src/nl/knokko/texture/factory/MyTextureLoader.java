@@ -41,17 +41,15 @@ import static org.lwjgl.opengl.GL11.glTexParameteri;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-import org.newdawn.slick.opengl.TextureLoader;
 
+import nl.knokko.main.Game;
 import nl.knokko.texture.Texture;
-import nl.knokko.util.resources.Resources;
 
 public class MyTextureLoader {
 	
@@ -67,13 +65,14 @@ public class MyTextureLoader {
 	}
 	
 	public static int loadTexture(String fileName){
+		/*
 		org.newdawn.slick.opengl.Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", Resources.class.getClassLoader().getResource("textures/" + fileName + ".png").openStream());
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		int id = texture.getTextureID();
+		}*/
+		int id = Game.getWindow().getTextureLoader().loadTexture("textures/" + fileName + ".png").getTextureID();
 		textures.add(id);
 		return id;
 	}

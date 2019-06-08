@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import nl.knokko.battle.Battle;
@@ -111,7 +110,11 @@ public class Game {
 		prepare();
 		open();
 		init();
-		window.run(GameScreen.fps());
+		window.run(fps());
+	}
+	
+	public static int fps() {
+		return 64;
 	}
 	
 	private static void prepare(){
@@ -124,7 +127,7 @@ public class Game {
 		guiComponent = new CurrentGuiComponent();
 		window.setMainComponent(guiComponent);
 		window.setWindowListener(new GameWindowListener());
-		GameScreen.openScreen();
+		window.open("Troll Wars", true);
 		MouseInput.setGuiState(getGuiState());
 	}
 	
@@ -333,7 +336,7 @@ public class Game {
 	}
 	
 	public static void gameOver(){
-		stop(false);//TODO a proper game over...
+		stop(false);//TODO a proper game over screen
 	}
 	
 	public static void loadGame(String saveName, long saveTime){
@@ -389,13 +392,13 @@ public class Game {
 	}
 	
 	public static Matrix4f getProjectionMatrix(){
-		if ((float) Display.getWidth() / (float) Display.getHeight() != aspectRatio)
+		if ((float) window.getWidth() / (float) window.getHeight() != aspectRatio)
 			createProjectionMatrix();
 		return projectionMatrix;
 	}
 	
 	public static void createProjectionMatrix(){
-        aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+        aspectRatio = (float) window.getWidth() / (float) window.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;

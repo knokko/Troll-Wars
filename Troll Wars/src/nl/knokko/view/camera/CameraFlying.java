@@ -32,7 +32,6 @@ import nl.knokko.util.Maths;
 import nl.knokko.util.position.SpawnPosition;
 import nl.knokko.gui.keycode.KeyCode;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 public class CameraFlying implements Camera {
@@ -144,7 +143,7 @@ public class CameraFlying implements Camera {
 		}
 		if(KeyInput.isKeyDown(KeyCode.KEY_SPACE))
 			position.y += speed;
-		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		if(KeyInput.isKeyDown(KeyCode.KEY_SHIFT))
 			position.y -= speed;
 	}
 }

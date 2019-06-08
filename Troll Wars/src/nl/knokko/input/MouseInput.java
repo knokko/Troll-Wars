@@ -27,9 +27,6 @@ import java.util.ArrayList;
 
 import nl.knokko.gui.component.state.GuiComponentState;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-
 public final class MouseInput {
 
 	// private static byte clickCooldown;
@@ -72,37 +69,5 @@ public final class MouseInput {
 
 	public void addClick(float x, float y, int button) {
 		CLICKS.add(new MouseClickEvent(x, y, button));
-	}
-
-	public static int getCurrentX() {
-		return Mouse.getX();
-	}
-
-	public static int getCurrentY() {
-		return Mouse.getY();
-	}
-
-	public static float getRelativeX() {
-		return getRelativeX(getCurrentX());
-	}
-
-	public static float getRelativeX(int screenX) {
-		return (float) screenX * 2f / Display.getWidth() - 1f;
-	}
-
-	public static float getRelativeY() {
-		return getRelativeY(getCurrentY());
-	}
-
-	public static float getRelativeY(int screenY) {
-		return (float) screenY * 2f / Display.getHeight() - 1f;
-	}
-
-	public static float getX() {
-		return getRelativeX(getCurrentX());
-	}
-
-	public static float getY() {
-		return getRelativeY(getCurrentY());
 	}
 }

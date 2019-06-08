@@ -30,8 +30,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.filechooser.FileSystemView;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -48,7 +46,6 @@ import nl.knokko.input.KeyInput;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseScrollEvent;
 import nl.knokko.main.Game;
-import nl.knokko.main.GameScreen;
 import nl.knokko.render.tile.TileModels;
 import nl.knokko.render.tile.TileRenderer;
 import nl.knokko.shaders.WorldShader;
@@ -56,7 +53,6 @@ import nl.knokko.tiles.Tile;
 import nl.knokko.tiles.Tiles;
 import nl.knokko.util.Facing;
 import nl.knokko.util.resources.Compressor;
-import nl.knokko.util.resources.Natives;
 import nl.knokko.util.resources.Resources;
 import nl.knokko.view.camera.Camera;
 import nl.knokko.view.camera.CameraFlying;
@@ -104,7 +100,6 @@ public class AreaDesigner {
 	private static boolean moveTileState;
 
 	public static void main(String[] args) {
-		prepare();
 		init();
 		open();
 		postInit();
@@ -114,10 +109,6 @@ public class AreaDesigner {
 		}
 		finish();
 		close();
-	}
-	
-	private static void prepare(){
-		Natives.prepare(new File(FileSystemView.getFileSystemView().getDefaultDirectory() + File.separator + "TrollWars"));
 	}
 	
 	private static void open(){
@@ -320,7 +311,7 @@ public class AreaDesigner {
 			tileRenderer.renderGreenTop(camera, tiles[tileIndex].getTile(random), markedX, markedY, markedZ);
 		tileRenderer.unprepare();
 		window.render();
-		Display.sync(GameScreen.fps());
+		Display.sync(Game.fps());
 	}
 	
 	private static void finish(){

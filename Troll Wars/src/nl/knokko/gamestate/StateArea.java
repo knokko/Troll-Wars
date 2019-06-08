@@ -23,8 +23,6 @@
  *******************************************************************************/
 package nl.knokko.gamestate;
 
-import org.lwjgl.input.Mouse;
-
 import nl.knokko.area.Area;
 import nl.knokko.area.AreaDoor.Location;
 import nl.knokko.area.creature.AreaPlayer;
@@ -76,7 +74,8 @@ public class StateArea implements GameState {
 
 	@Override
 	public void open() {
-		Mouse.setGrabbed(true);
+		// TODO Grab mouse
+		//Mouse.setGrabbed(true);
 		tileRenderer = new TileRenderer();
 		creatureRenderer = new CreatureRenderer();
 		light = new DefaultLight();
@@ -84,17 +83,17 @@ public class StateArea implements GameState {
 
 	@Override
 	public void close() {
-		Mouse.setGrabbed(false);
+		//Mouse.setGrabbed(false);
 	}
 
 	@Override
 	public void enable() {
-		Mouse.setGrabbed(true);
+		//Mouse.setGrabbed(true);
 	}
 
 	@Override
 	public void disable() {
-		Mouse.setGrabbed(false);
+		//Mouse.setGrabbed(false);
 	}
 
 	@Override

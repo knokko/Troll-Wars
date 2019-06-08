@@ -40,7 +40,6 @@ import nl.knokko.gui.component.text.ConditionalTextButton;
 import nl.knokko.gui.component.text.TextButton;
 import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.gui.util.Condition;
-import nl.knokko.input.MouseInput;
 import nl.knokko.main.Game;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
@@ -204,8 +203,8 @@ public class GuiBattle extends GuiMenu {
 					Maths.createViewMatrix(battle.getCamera()), null);
 			invertProjViewMatrix.invert();
 			Vector3f cam = new Vector3f(battle.getCamera().getPosition());
-			float relY = MouseInput.getRelativeY();
-			float relX = MouseInput.getRelativeX();
+			float relY = Game.getWindow().getMouseY() * 2 - 1;
+			float relX = Game.getWindow().getMouseX() * 2 - 1;
 
 			/*
 			 * gl_Position = projViewMatrix * worldPosition; gl_Posiiton = (relX,relY,-1,1);

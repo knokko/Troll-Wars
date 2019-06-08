@@ -23,7 +23,7 @@
  *******************************************************************************/
 package nl.knokko.texture;
 
-import nl.knokko.main.GameScreen;
+import nl.knokko.main.Game;
 
 public class SizedTexture extends Texture {
 	
@@ -45,10 +45,10 @@ public class SizedTexture extends Texture {
 	}
 	
 	public float getRelativeWidth(){
-		return (float) width / GameScreen.getWidth();
+		return (float) width / Game.getWindow().getWidth();
 	}
 	
 	public float getRelativeHeight(){
-		return (float) height / GameScreen.getHeight();
+		return (float) height / Game.getWindow().getHeight();
 	}
 }
