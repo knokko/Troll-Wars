@@ -74,25 +74,30 @@ public class StateArea implements GameState {
 
 	@Override
 	public void open() {
-		// TODO Grab mouse
+		// TODO Grab mouse or improve controls
 		//Mouse.setGrabbed(true);
 		tileRenderer = new TileRenderer();
 		creatureRenderer = new CreatureRenderer();
 		light = new DefaultLight();
+		
+		Game.getWindow().setRenderContinuously(true);
 	}
 
 	@Override
 	public void close() {
 		//Mouse.setGrabbed(false);
+		Game.getWindow().setRenderContinuously(false);
 	}
 
 	@Override
 	public void enable() {
+		Game.getWindow().setRenderContinuously(true);
 		//Mouse.setGrabbed(true);
 	}
 
 	@Override
 	public void disable() {
+		Game.getWindow().setRenderContinuously(false);
 		//Mouse.setGrabbed(false);
 	}
 
