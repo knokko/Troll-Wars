@@ -302,6 +302,13 @@ public class Game {
 		return window;
 	}
 	
+	/**
+	 * This is a dirty hack for AreaDesigner
+	 */
+	public static void setWindow(GLGuiWindow newWindow) {
+		window = newWindow;
+	}
+	
 	public static GuiComponentState getGuiState(){
 		return new RelativeComponentState.Static(guiComponent.getState(), 0, 0, 1, 1);
 	}

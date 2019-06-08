@@ -30,9 +30,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 import nl.knokko.area.Area;
@@ -98,21 +96,34 @@ public class AreaDesigner {
 	private static int renderCount;
 	
 	private static boolean moveTileState;
+	
+	private static boolean pressedMouseRecently;
+	private static int previousMouseButton;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		init();
 		open();
 		postInit();
+		
+		// 30 fps
+		long delayTime = 1000000000 / 30;
 		while(shouldContinue()){
+			long startTime = System.nanoTime();
 			update();
 			render();
+			long passedTime = System.nanoTime() - startTime;
+			long sleepTime = delayTime - passedTime;
+			if (sleepTime > 0) {
+				Thread.sleep(sleepTime / 1000000, (int) (sleepTime % 1000000));
+			}
 		}
 		finish();
 		close();
 	}
 	
 	private static void open(){
-		window.open("Troll Wars Area Designer", false);
+		window.open("Troll Wars Area Designer", 800, 600, true);
+		Game.createProjectionMatrix();
 	}
 	
 	private static void postInit() {
@@ -132,19 +143,22 @@ public class AreaDesigner {
 			} 
 		}
 		tiles = tileList.toArray(new TileHolder[tileList.size()]);
-		Mouse.setGrabbed(true);
+		
+		// TODO Grab mouse!
+		//Mouse.setGrabbed(true);
 		tileRenderer = new TileRenderer();
 		window.setMainComponent(gui);
+		window.setRenderContinuously(true);
 		MouseInput.setGuiState(new RelativeComponentState.Static(gui.getState(), 0, 0, 1, 1));
 		load();
 	}
 	
 	private static void init(){
-		Game.createProjectionMatrix();
+		window = new GLGuiWindow();
+		Game.setWindow(window);
 		//camera = new CameraFlying(new Vector3f(WIDTH * 32, 80, DEPTH * 32), 90, 0);
 		random = new Random();
 		
-		window = new GLGuiWindow();
 		window.setWindowListener(new AreaWindowListener());
 		gui = new GuiAreaDesigner();
 		//window.setMainComponent(gui);
@@ -172,7 +186,7 @@ public class AreaDesigner {
 	}
 	
 	private static boolean shouldContinue(){
-		return !Display.isCloseRequested() && !KeyInput.isKeyDown(KeyCode.KEY_ESCAPE);
+		return !GLFW.glfwWindowShouldClose(window.getWindowID()) && !KeyInput.isKeyDown(KeyCode.KEY_ESCAPE);
 	}
 	
 	private static void update(){
@@ -183,14 +197,14 @@ public class AreaDesigner {
 		if(!moveTileState){
 			Facing facing = Facing.fromYaw(camera.getDegYaw());
 			if(KeyInput.isKeyDown(KeyCode.KEY_UP)){
-				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+				if(GLFW.glfwGetKey(window.getWindowID(), GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS)
 					moveTileUp();
 				else
 					moveTile(facing);
 				gui.updateSelectedPosition();
 			}
 			if(KeyInput.isKeyDown(KeyCode.KEY_DOWN)){
-				if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+				if(GLFW.glfwGetKey(window.getWindowID(), GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS)
 					moveTileDown();
 				else
 					moveTile(Facing.fromYaw(facing.getDegreeYaw() + 180));
@@ -253,22 +267,10 @@ public class AreaDesigner {
 			stackAmount = 9;
 		if(KeyInput.isKeyDown(KeyCode.KEY_C))
 			area.getTiles().clearDuplicates();
-		boolean pressed = false;
-		int button = -1;
-		while (Mouse.next()) {
-			if (Mouse.getEventButtonState()) {
-				pressed = true;
-				button = Mouse.getEventButton();
-			}
-		}
-		/*
-		ArrayList<MouseClickEvent> clicks = MouseInput.getMouseClicks();
-		for(MouseClickEvent click : clicks){
-			if(click.wasPressed()){
-				pressed = true;
-				button = click.getButton();
-			}
-		}*/
+		boolean pressed = pressedMouseRecently;
+		pressedMouseRecently = false;
+		int button = previousMouseButton;
+		previousMouseButton = -1;
 		if(pressed && targetX < area.getTiles().getWidth() && targetX >= 0 && targetY >= 0 && targetZ < area.getTiles().getDepth() && targetZ >= 0){
 			if(KeyInput.isKeyDown(KeyCode.KEY_F)){
 				markedX = targetX;
@@ -311,12 +313,13 @@ public class AreaDesigner {
 			tileRenderer.renderGreenTop(camera, tiles[tileIndex].getTile(random), markedX, markedY, markedZ);
 		tileRenderer.unprepare();
 		window.render();
-		Display.sync(Game.fps());
 	}
 	
 	private static void finish(){
 		save();
-		Mouse.setGrabbed(false);
+		
+		// TODO Ungrab mouse
+		//Mouse.setGrabbed(false);
 	}
 	
 	private static void close(){
@@ -463,6 +466,8 @@ public class AreaDesigner {
 
 		@Override
 		public boolean preClick(float x, float y, int button) {
+			pressedMouseRecently = true;
+			previousMouseButton = button;
 			return false;
 		}
 

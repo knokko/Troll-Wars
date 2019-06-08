@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import nl.knokko.input.KeyInput;
 import nl.knokko.input.MouseInput;
 import nl.knokko.input.MouseMoveEvent;
+import nl.knokko.main.Game;
 import nl.knokko.util.Maths;
 import nl.knokko.util.position.SpawnPosition;
 import nl.knokko.gui.keycode.KeyCode;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class CameraFlying implements Camera {
@@ -143,7 +145,7 @@ public class CameraFlying implements Camera {
 		}
 		if(KeyInput.isKeyDown(KeyCode.KEY_SPACE))
 			position.y += speed;
-		if(KeyInput.isKeyDown(KeyCode.KEY_SHIFT))
+		if(GLFW.glfwGetKey(Game.getWindow().getWindowID(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS)
 			position.y -= speed;
 	}
 }
