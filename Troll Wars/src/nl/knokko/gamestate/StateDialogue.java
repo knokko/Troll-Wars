@@ -108,6 +108,7 @@ public class StateDialogue implements GameState {
 		} else {
 			currentGui = null;
 		}
+		Game.getWindow().markChange();
 	}
 
 	@Override

@@ -69,6 +69,7 @@ public class StateInteracting implements GameState {
 		this.gui = gui;
 		gui.setState(Game.getGuiState());
 		gui.init();
+		Game.getWindow().markChange();
 	}
 	
 	@Override

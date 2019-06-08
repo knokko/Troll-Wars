@@ -95,11 +95,13 @@ public class GuiPlayerEquipment extends GuiMenu {
 			closeItemSelection();
 		}));
 		equipmentEmpty.activeEquipment = button;
+		Game.getWindow().markChange();
 	}
 	
 	private void closeItemSelection(){
 		equipmentEmpty.activeEquipment = null;
 		equipmentSelect.setComponent(null);
+		Game.getWindow().markChange();
 	}
 	
 	private static final GuiColor EMPTY_COLOR = new SimpleGuiColor(200, 100, 0);
@@ -172,6 +174,7 @@ public class GuiPlayerEquipment extends GuiMenu {
 				updateItem(getItem());
 			else
 				texture = null;
+			Game.getWindow().markChange();
 		}
 		
 		private void updateItem(Item item){
@@ -220,7 +223,13 @@ public class GuiPlayerEquipment extends GuiMenu {
 		public EquipmentEmptyButton() {
 			super("Empty slot", BUTTON_PROPS, HOVER_PROPS, null, null);
 			clickAction = () -> {
-				activeEquipment.setItem(null);
+				Item current = activeEquipment.getItem();
+				if (current != null) {
+					Game.getPlayerInventory().addItem(current);
+					activeEquipment.setItem(null);
+				} else {
+					closeItemSelection();
+				}
 			};
 			condition = () -> {
 				return activeEquipment != null;

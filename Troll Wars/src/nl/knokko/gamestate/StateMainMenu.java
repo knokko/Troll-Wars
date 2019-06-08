@@ -77,6 +77,7 @@ public class StateMainMenu implements GameState {
 	@Override
 	public void setCurrentGui(GuiComponent gui){
 		currentGui = gui;
+		Game.getWindow().markChange();
 	}
 	
 	@Override

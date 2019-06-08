@@ -28,6 +28,7 @@ import nl.knokko.gui.dialogue.GuiDialogue;
 import nl.knokko.gui.keycode.KeyCode;
 import nl.knokko.gui.render.GuiRenderer;
 import nl.knokko.gui.texture.GuiTexture;
+import nl.knokko.main.Game;
 import nl.knokko.story.dialogue.SimpleDialoguePart;
 import nl.knokko.util.resources.Resources;
 
@@ -97,5 +98,6 @@ public class SimpleDialogueComponent extends AbstractGuiComponent {
 		if (gui.getDialogue().current() != part) {
 			gui.changePart();
 		}
+		Game.getWindow().markChange();
 	}
 }

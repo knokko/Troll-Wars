@@ -194,6 +194,7 @@ public class Game {
 		currentStates.add(state);
 		state.open();
 		refreshStates();
+		window.markChange();
 	}
 	
 	public static void removeState(){

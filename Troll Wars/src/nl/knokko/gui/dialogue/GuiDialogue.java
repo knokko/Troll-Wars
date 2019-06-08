@@ -28,6 +28,7 @@ import nl.knokko.gui.component.GuiComponent;
 import nl.knokko.gui.component.dialogue.ChoiseDialogueComponent;
 import nl.knokko.gui.component.dialogue.SimpleDialogueComponent;
 import nl.knokko.gui.component.menu.GuiMenu;
+import nl.knokko.main.Game;
 import nl.knokko.story.dialogue.ChoiseDialoguePart;
 import nl.knokko.story.dialogue.Dialogue;
 import nl.knokko.story.dialogue.DialoguePart;
@@ -60,6 +61,7 @@ public class GuiDialogue extends GuiMenu {
 	
 	public void changePart() {
 		partComponent.setComponent(createPartComponent());
+		Game.getWindow().markChange();
 	}
 	
 	private GuiComponent createPartComponent() {

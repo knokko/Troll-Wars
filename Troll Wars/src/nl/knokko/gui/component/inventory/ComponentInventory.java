@@ -40,6 +40,7 @@ import nl.knokko.gui.util.TextBuilder.Properties;
 import nl.knokko.gui.util.TextBuilder.VerAlignment;
 import nl.knokko.inventory.Inventory;
 import nl.knokko.items.Item;
+import nl.knokko.main.Game;
 
 public class ComponentInventory extends GuiMenu {
 	
@@ -75,6 +76,7 @@ public class ComponentInventory extends GuiMenu {
 		clearComponents();
 		items = newItemsToShow;
 		addComponents();
+		Game.getWindow().markChange();
 	}
 	
 	private class ItemComponent extends AbstractGuiComponent {

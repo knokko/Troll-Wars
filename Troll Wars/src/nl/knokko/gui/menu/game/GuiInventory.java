@@ -108,6 +108,7 @@ public class GuiInventory extends GuiMenu {
 	private void addTypeButton(InventoryType type, float minY) {
 		addComponent(new CondivatableTextButton(type.toString(), BUTTON_PROPS, HOVER_PROPS, ACTIVE_PROPS, () -> {
 			selectedType = type;
+			Game.getWindow().markChange();
 		}, () -> {
 			return selectedBaseType == type.getParent();
 		}, () -> {
@@ -119,6 +120,7 @@ public class GuiInventory extends GuiMenu {
 		addComponent(new ActivatableTextButton(text, BUTTON_PROPS, HOVER_PROPS, ACTIVE_PROPS, () -> {
 			selectedBaseType = type;
 			selectedType = null;
+			Game.getWindow().markChange();
 		}, () -> {
 			return selectedBaseType == type;
 		}), 0.3f, minY, 0.5f, minY + 0.1f);
