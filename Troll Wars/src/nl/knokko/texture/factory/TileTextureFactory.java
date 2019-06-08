@@ -91,6 +91,35 @@ public class TileTextureFactory {
 		}
 		return coords;
 	}
+	
+	public static void createBigRockTexture2(Color darkColor, Color lightColor, Color...gemColors) {
+		int AMOUNT = 20;
+		int[][] coordsX = new int[AMOUNT][AMOUNT];
+		int[][] coordsY = new int[AMOUNT][AMOUNT];
+		int SIZE = 1024;
+		Random random = new Random();
+		TextureBuilder texture = new TextureBuilder(SIZE, SIZE, false);
+		for (int x = 0; x < AMOUNT; x++) {
+			int baseX = x * SIZE / AMOUNT;
+			for (int y = 0; y < AMOUNT; y++) {
+				int baseY = y * SIZE / AMOUNT;
+				coordsX[x][y] = baseX + 50 - random.nextInt(100);
+				coordsY[x][y] = baseY + 50 - random.nextInt(100);
+			}
+		}
+		
+		for (int indexX = 0; indexX < AMOUNT; indexX++) {
+			for (int indexY = 0; indexY < AMOUNT; indexY++) {
+				texture.fillCircle(coordsX[indexX][indexY], coordsY[indexX][indexY], 20, Color.GREEN);
+			}
+		}
+		
+		try {
+			ImageIO.write(texture.createBufferedImage(), "PNG", new File("rocktest.png"));
+		} catch (IOException ioex) {
+			ioex.printStackTrace();
+		}
+	}
 
 	public static Texture createBigRockTexture(Color darkColor, Color lightColor, Color... gemColors) {
 
