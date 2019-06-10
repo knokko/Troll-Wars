@@ -98,7 +98,7 @@ public class TileHalfSlope extends Tile {
 	
 	@Override
 	public ShaderType getShaderType(){
-		return ShaderType.NORMAL;
+		return bigTexture == null ? ShaderType.NORMAL : ShaderType.BIG_NORMAL;
 	}
 
 	@Override

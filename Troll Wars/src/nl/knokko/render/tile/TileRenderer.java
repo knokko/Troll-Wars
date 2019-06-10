@@ -310,17 +310,27 @@ public class TileRenderer extends WorldRenderer {
 		}
 	}
 	
-	public void renderWhiteTop(Camera camera, Tile tile, int tileX, int tileY, int tileZ){
-		if(tile.getShaderType() == ShaderType.NORMAL){
+	public void renderTop(Camera camera, ModelTexture texture, Tile tile, int tileX, int tileY, int tileZ){
+		ShaderType st = tile.getShaderType();
+		if(st == ShaderType.NORMAL){
 			prepareDefaultTileShader(camera);
 			prepareDefaultTileModel(tile.getModel());
-			prepareNormalTileTexture(SimpleTextureFactory.white());
-			DEFAULT_TILE_SHADER.loadTilePosition(new Vector3f(tileX * 64, tileY * 16, tileZ * 64));
+			prepareNormalTileTexture(texture);
+			DEFAULT_TILE_SHADER.loadTilePosition(new Vector3f(
+					tileX * 64 - camera.getPosition().x, tileY * 16 - camera.getPosition().y, tileZ * 64 - camera.getPosition().z));
 			GL11.glDrawElements(GL11.GL_TRIANGLES, tile.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			unbindDefaultTileModel();
 			stopDefaultTileShader();
-		}
-		if(tile.getShaderType() == ShaderType.LIQUID){
+		} else if (st == ShaderType.BIG_NORMAL) {
+			prepareBigTileShader(camera);
+			prepareBigTileModel(tile.getModel());
+			prepareTileTexture(texture, ShaderType.BIG_NORMAL);
+			BIG_TILE_SHADER.loadTilePosition(new Vector3f(
+					tileX * 64 - camera.getPosition().x, tileY * 16 - camera.getPosition().y, tileZ * 64 - camera.getPosition().z));
+			GL11.glDrawElements(GL11.GL_TRIANGLES, tile.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			unbindDefaultTileModel();
+			BIG_TILE_SHADER.stop();
+		} else if(tile.getShaderType() == ShaderType.LIQUID){
 			prepareLiquidTileShader(camera);
 			prepareLiquidTileModel(tile.getModel());
 			//TODO think a little about this...
@@ -328,26 +338,18 @@ public class TileRenderer extends WorldRenderer {
 	}
 	
 	public void renderGreenTop(Camera camera, Tile tile, int tileX, int tileY, int tileZ){
-		if(tile.getShaderType() == ShaderType.NORMAL){
-			prepareDefaultTileShader(camera);
-			prepareDefaultTileModel(tile.getModel());
-			prepareNormalTileTexture(GREEN);
-			DEFAULT_TILE_SHADER.loadTilePosition(new Vector3f(tileX * 64, tileY * 16, tileZ * 64));
-			GL11.glDrawElements(GL11.GL_TRIANGLES, tile.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			unbindDefaultTileModel();
-			stopDefaultTileShader();
-		}
-		if(tile.getShaderType() == ShaderType.LIQUID){
-			prepareLiquidTileShader(camera);
-			prepareLiquidTileModel(tile.getModel());
-			//TODO think a little about this...
-		}
+		renderTop(camera, GREEN, tile, tileX, tileY, tileZ);
 	}
 	
-	public void renderEdge(int maxX, int maxY, int maxZ){
+	public void renderWhiteTop(Camera camera, Tile tile, int tileX, int tileY, int tileZ){
+		renderTop(camera, SimpleTextureFactory.white(), tile, tileX, tileY, tileZ);
+	}
+	
+	public void renderEdge(Camera camera, int maxX, int maxY, int maxZ){
 		prepareNormalTexture(RED);
 		prepareNormalModel(QUAD);
-		WORLD_SHADER.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(maxX * 32 - 32, -1f, maxZ * 32 - 32), 0, 0, 0, maxX * 32, 1, maxZ * 32));
+		WORLD_SHADER.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(
+				maxX * 32 - 32 - camera.getPosition().x, -1f - camera.getPosition().y, maxZ * 32 - 32 - camera.getPosition().z), 0, 0, 0, maxX * 32, 1, maxZ * 32));
 		GL11.glDrawElements(GL11.GL_TRIANGLES, QUAD.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
 	

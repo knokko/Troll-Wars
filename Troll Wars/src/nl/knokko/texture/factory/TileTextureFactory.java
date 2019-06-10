@@ -93,6 +93,7 @@ public class TileTextureFactory {
 	}
 	
 	public static void createBigRockTexture2(Color darkColor, Color lightColor, Color...gemColors) {
+		long startTime = System.currentTimeMillis();
 		int AMOUNT = 20;
 		int[][] coordsX = new int[AMOUNT][AMOUNT];
 		int[][] coordsY = new int[AMOUNT][AMOUNT];
@@ -114,6 +115,9 @@ public class TileTextureFactory {
 			}
 		}
 		
+		long endTime = System.currentTimeMillis();
+		System.out.println("Creating big rock texture 2 took " + (endTime - startTime) + " ms");
+		
 		try {
 			ImageIO.write(texture.createBufferedImage(), "PNG", new File("rocktest.png"));
 		} catch (IOException ioex) {
@@ -128,6 +132,7 @@ public class TileTextureFactory {
 		int textureWidth = 1024;
 		int textureHeight = 1024;
 		TextureBuilder texture = new TextureBuilder(textureWidth, textureHeight, false);
+		
 		Collection<ColorModifier> modifiers = new ArrayList<ColorModifier>(2);
 
 		modifiers.add(new ConstantColorModifier(1f, darkColor.getRedF(), darkColor.getGreenF(), darkColor.getBlueF(), 0,
@@ -198,8 +203,9 @@ public class TileTextureFactory {
 		ColorTable.sumModifiers(texture, modifiers, 0, 1);
 
 		long endTime = System.currentTimeMillis();
-		System.out.println("Took " + (endTime - startTime) + " ms");
+		System.out.println("Creating big rock texture took " + (endTime - startTime) + " ms");
 
+		/*
 		try {
 			BufferedImage image = texture.createBufferedImage();
 			BufferedImage multiple = new BufferedImage(3 * textureWidth, 3 * textureHeight, image.getType());
@@ -218,7 +224,11 @@ public class TileTextureFactory {
 		} catch (IOException io) {
 			io.printStackTrace();
 		}
+		
+		long endTime2 = System.currentTimeMillis();
+		System.out.println("Saving big rock image took " + (endTime2 - endTime) + " ms");
 
+		*/
 		return new Texture(texture.loadNormal());
 	}
 
@@ -236,6 +246,8 @@ public class TileTextureFactory {
 	}
 
 	public static Texture createBigGrassTexture(Color grassColor, Color brightGrassColor, Color groundColor) {
+		
+		long startTime = System.currentTimeMillis();
 
 		// Calculate and define the most used variables before starting the actual stuff
 		int textureWidth = 1024;
@@ -352,6 +364,8 @@ public class TileTextureFactory {
 				}
 			}
 		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("Creating big grass texture took " + (endTime - startTime) + " ms");
 		return new Texture(builder.loadNormal());
 	}
 

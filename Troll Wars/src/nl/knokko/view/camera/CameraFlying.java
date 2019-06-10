@@ -143,7 +143,9 @@ public class CameraFlying implements Camera {
 			position.x += forward.z * speed;
 			position.z -= forward.x * speed;
 		}
-		if(KeyInput.isKeyDown(KeyCode.KEY_SPACE))
+		
+		// It appears something is wrong with checking if the space key is down
+		if(GLFW.glfwGetKey(Game.getWindow().getWindowID(), GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS)
 			position.y += speed;
 		if(GLFW.glfwGetKey(Game.getWindow().getWindowID(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS)
 			position.y -= speed;

@@ -104,8 +104,8 @@ public class AreaDesigner {
 		open();
 		postInit();
 		
-		// 30 fps
-		long delayTime = 1000000000 / 30;
+		// 60 fps
+		long delayTime = 1000000000 / 60;
 		while(shouldContinue()){
 			long startTime = System.nanoTime();
 			update();
@@ -235,7 +235,7 @@ public class AreaDesigner {
 		}
 		ArrayList<MouseScrollEvent> scrolls = MouseInput.getMouseScrolls();
 		for(MouseScrollEvent event : scrolls){
-			tileIndex += event.getDeltaScroll() / 120;
+			tileIndex += event.getDeltaScroll() * 25;
 			if(tileIndex < 0)
 				tileIndex = 0;
 			if(tileIndex >= tiles.length)
@@ -307,12 +307,10 @@ public class AreaDesigner {
 		WorldShader.WORLD_SHADER.start();
 		WorldShader.WORLD_SHADER.loadViewMatrix(camera);
 		// TODO Upgrade the commented rendering part below
-		/*
-		tileRenderer.renderEdge(area.getTiles().getWidth(), 255, area.getTiles().getDepth());
+		tileRenderer.renderEdge(camera, area.getTiles().getWidth(), 255, area.getTiles().getDepth());
 		tileRenderer.renderWhiteTop(camera, tiles[tileIndex].getTile(random), targetX, targetY, targetZ);
 		if(markedY != -1)
 			tileRenderer.renderGreenTop(camera, tiles[tileIndex].getTile(random), markedX, markedY, markedZ);
-			*/
 		tileRenderer.unprepare();
 		window.render();
 	}
