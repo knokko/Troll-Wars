@@ -27,7 +27,8 @@ import nl.knokko.model.ModelPart;
 import nl.knokko.model.factory.ModelBuilder;
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.Texture;
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
+import nl.knokko.texture.factory.MyTextureLoader;
 import nl.knokko.util.Maths;
 import nl.knokko.util.color.Color;
 
@@ -60,10 +61,10 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		// Build the cave wall
 		WallBuilder wall = new WallBuilder(random);
 		
-		TextureBuilder textureBuilder = new TextureBuilder(4096, 512, false);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(4096, 512, false);
 		
 		// TODO create a proper texture later
-		textureBuilder.addDecayingCirclePattern(new Color(150, 200, 50), 0.25f, 5, 10, 0.003f, random);
+		textureBuilder.decaying().addDecayingCirclePattern(new Color(150, 200, 50), 0.25f, 5, 10, 0.003f, random);
 		//textureBuilder.fillAverage(0, 0, textureBuilder.width() - 1, textureBuilder.height() - 1, Color.IRON, 0.2f, random);
 		for (int progressXZ = 0; progressXZ < 1000; progressXZ++) {
 			float currentProgress = progressXZ * 0.001f;
@@ -104,7 +105,7 @@ public class DecorationSorgCave extends SimpleBattleDecoration {
 		}
 		
 		// Finally create the wall model part
-		result[0] = new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), 0f, 0f), new Vector3f());
+		result[0] = new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), 0f, 0f), new Vector3f());
 		return result;
 	}
 	

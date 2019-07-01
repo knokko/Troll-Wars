@@ -25,6 +25,7 @@ package nl.knokko.texture.factory;
 
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.util.color.Color;
 import nl.knokko.util.color.ColorAlpha;
 
@@ -43,8 +44,8 @@ public class SimpleTextureFactory {
 	}
 	
 	public static Texture createFilledTexture(Color color){
-		TextureBuilder builder = new TextureBuilder(8, 8, color instanceof ColorAlpha);
-		builder.fillRect(0, 0, 7, 7, color);
-		return new Texture(builder.loadNormal());
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(8, 8, color instanceof ColorAlpha);
+		builder.geometry().fillRect(0, 0, 7, 7, color);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 }

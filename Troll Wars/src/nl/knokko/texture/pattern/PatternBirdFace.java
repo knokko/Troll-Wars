@@ -23,7 +23,7 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.util.color.Color;
 
 public class PatternBirdFace extends PatternAverage {
@@ -39,11 +39,11 @@ public class PatternBirdFace extends PatternAverage {
 		int deltaY = maxY - minY;
 		int faceX = ((minX + maxX) / 2 + maxX) / 2;
 		int eyeY = maxY - deltaY / 4;
-		tb.fillOval(faceX - deltaX / 12, eyeY, deltaX / 16, deltaY / 12, Color.WHITE);
-		tb.fillOval(faceX + deltaX / 12, eyeY, deltaX / 16, deltaY / 12, Color.WHITE);
-		tb.fillOval(faceX - deltaX / 12, eyeY, deltaX / 24, deltaY / 18, Color.GREEN);
-		tb.fillOval(faceX + deltaX / 12, eyeY, deltaX / 24, deltaY / 18, Color.GREEN);
-		tb.fillOval(faceX - deltaX / 12, eyeY, deltaX / 48, deltaY / 36, Color.BLACK);
-		tb.fillOval(faceX + deltaX / 12, eyeY, deltaX / 48, deltaY / 36, Color.BLACK);
+		tb.geometry().fillOval(faceX - deltaX / 12, eyeY, deltaX / 16, deltaY / 12, Color.WHITE);
+		tb.geometry().fillOval(faceX + deltaX / 12, eyeY, deltaX / 16, deltaY / 12, Color.WHITE);
+		tb.geometry().fillOval(faceX - deltaX / 12, eyeY, deltaX / 24, deltaY / 18, Color.GREEN);
+		tb.geometry().fillOval(faceX + deltaX / 12, eyeY, deltaX / 24, deltaY / 18, Color.GREEN);
+		tb.geometry().fillOval(faceX - deltaX / 12, eyeY, deltaX / 48, deltaY / 36, Color.BLACK);
+		tb.geometry().fillOval(faceX + deltaX / 12, eyeY, deltaX / 48, deltaY / 36, Color.BLACK);
 	}
 }

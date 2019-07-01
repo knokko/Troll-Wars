@@ -25,7 +25,7 @@ package nl.knokko.texture.pattern;
 
 import java.util.Random;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.util.color.Color;
 
 public class PatternAverage extends TexturePattern {
@@ -44,9 +44,6 @@ public class PatternAverage extends TexturePattern {
 
 	@Override
 	public void paintBetween(TextureBuilder texture, int minX, int minY, int maxX, int maxY) {
-		Random random = new Random(seed);
-		for(int x = minX; x <= maxX; x++)
-			for(int y = minY; y <= maxY; y++)
-				texture.setPixel(x, y, TextureBuilder.getDifColor(random, color, maxDifference));
+		texture.average().fillAverage(minX, minY, maxX, maxY, color, maxDifference, new Random(seed));
 	}
 }

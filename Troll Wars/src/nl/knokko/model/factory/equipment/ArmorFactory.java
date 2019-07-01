@@ -47,8 +47,9 @@ import nl.knokko.model.factory.ModelBuilder;
 import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.Texture;
 import nl.knokko.texture.area.TextureArea;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.equipment.ArmorTexture;
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.factory.MyTextureLoader;
 import nl.knokko.texture.marker.TextureMarker;
 import nl.knokko.util.Maths;
 
@@ -61,13 +62,13 @@ public class ArmorFactory {
 		ModelBuilder builder = new ModelBuilder();
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		at.getHelmet().paint(textureBuilder, area);
 		float radiusX = head.headWidth() * armor.distanceToHeadFactor() / 2;
 		float radiusY = head.headHeight() * armor.distanceToHeadFactor() / 2;
 		float radiusZ = head.headDepth() * armor.distanceToHeadFactor() / 2;
 		builder.addSphere(20, 0, head.headHeight() / 2, 0, radiusX, radiusY, radiusZ, area.getMinU(tw), area.getMinV(th), area.getMaxU(tw), area.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorGlobe(ModelArmorGlobe armor, HumanoidHandProperties hand, ArmorTexture at, boolean left){
@@ -77,7 +78,7 @@ public class ArmorFactory {
 		ModelBuilder builder = new ModelBuilder();
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		at.getGlobe().paint(textureBuilder, ta);
 		float minU = ta.getMinU(tw);
 		float minV = ta.getMinV(th);
@@ -155,7 +156,7 @@ public class ArmorFactory {
 		builder.bindFourangle(indexFinger2 + 2, indexFinger2 + 3, indexFinger3 + 3, indexFinger3 + 2);
 		builder.bindFourangle(indexFinger2 + 3, indexFinger2 + 4, indexFinger3 + 4, indexFinger3 + 3);
 		builder.bindFourangle(indexFinger3, indexFinger3 + 1, indexFinger3 + 2, indexFinger3 + 3);
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorBelly(ModelArmorBelly armor, HumanoidBelly belly, ArmorTexture texture){
@@ -163,7 +164,7 @@ public class ArmorFactory {
 		TextureMarker marker = new TextureMarker(TextureMarker.createCilinder(belly.bellyHeight() * f, belly.bellyWidth() * f, belly.bellyWidth() * f, Game.getOptions().pixelsPerMeter), TextureMarker.createHalfSphere(belly.bellyDepth() * f, belly.bellyWidth() * f, belly.bellyDepth() * f, Game.getOptions().pixelsPerMeter));
 		TextureArea areaCil = marker.getArea(0);
 		TextureArea areaTop = marker.getArea(1);
-		TextureBuilder textureBuilder = new TextureBuilder(marker.getWidth(), marker.getHeight(), true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(marker.getWidth(), marker.getHeight(), true);
 		texture.getChestplate().paint(textureBuilder, areaCil);
 		texture.getChestplateTop().paint(textureBuilder, areaTop);
 		ModelBuilder builder = new ModelBuilder();
@@ -171,7 +172,7 @@ public class ArmorFactory {
 		int th = marker.getHeight();
 		builder.addSphereTop(10, 0, belly.bellyHeight() / 2, 0, belly.bellyWidth() / 2 * f, belly.bellyDepth() / 2 * f, belly.bellyDepth() / 2 * f, areaTop.getMinU(tw), areaTop.getMinV(th), areaTop.getMaxU(tw), areaTop.getMaxV(th));
 		builder.addVerticalCilinder(10, 0, 0, belly.bellyWidth() / 2 * f, belly.bellyDepth() / 2 * f, -belly.bellyHeight() * 0.5f * f, belly.bellyHeight() * 0.5f * f, areaCil.getMinU(tw), areaCil.getMinV(th), areaCil.getMaxU(tw), areaCil.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), texture.getShineDamper(), texture.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), texture.getShineDamper(), texture.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorUpperArm(ModelArmorUpperArm armor, HumanoidArm arm, ArmorTexture at){
@@ -182,13 +183,13 @@ public class ArmorFactory {
 		int th = marker.getHeight();
 		TextureArea elbow = marker.getArea(0);
 		TextureArea upperArm = marker.getArea(1);
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		at.getElbow().paint(textureBuilder, elbow);
 		at.getUpperArm().paint(textureBuilder, upperArm);
 		ModelBuilder builder = new ModelBuilder();
 		builder.addSphereSouth(10, 0, 0, 0, arm.shoulderRadius() * sf, arm.shoulderRadius() * sf, arm.shoulderRadius() * sf, elbow.getMinU(tw), elbow.getMinV(th), elbow.getMaxU(tw), elbow.getMaxV(th));
 		builder.addHorizontalCilinder(10, 0f, 0f, arm.shoulderRadius() * af, arm.shoulderRadius() * af, arm.elbowRadius() * af, arm.elbowRadius() * af, 0, -arm.upperArmLength(), upperArm.getMinU(tw), upperArm.getMinV(th), upperArm.getMaxU(tw), upperArm.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorUnderArm(ModelArmorUnderArm armor, HumanoidArm arm, ArmorTexture at){
@@ -196,12 +197,12 @@ public class ArmorFactory {
 		TextureMarker marker = new TextureMarker(TextureMarker.createCilinder(arm.underArmLength(), arm.elbowRadius() * 2 * f, arm.elbowRadius() * 2 * f, Game.getOptions().pixelsPerMeter));
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		TextureArea ta = marker.getArea(0);
 		at.getUnderArm().paint(textureBuilder, ta);
 		ModelBuilder builder = new ModelBuilder();
 		builder.addHorizontalCilinder(10, 0f, 0f, arm.elbowRadius() * f, arm.elbowRadius() * f, arm.wristRadius() * f, arm.wristRadius() * f, 0, -arm.underArmLength(), ta.getMinU(tw), ta.getMinV(th), ta.getMaxU(tw), ta.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorUpperLeg(ModelArmorUpperLeg armor, HumanoidLeg leg, ArmorTexture at){
@@ -211,10 +212,10 @@ public class ArmorFactory {
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
 		TextureArea ta = marker.getArea(0);
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		at.getUpperLeg().paint(textureBuilder, ta);
 		builder.addVerticalCilinder(10, 0f, 0f, leg.legUpperRadius() * f, leg.legUpperRadius() * f, leg.kneeRadius() * f, leg.kneeRadius() * f, 0, -leg.upperLegLength(), ta.getMinU(tw), ta.getMinV(th), ta.getMaxU(tw), ta.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorUnderLeg(ModelArmorUnderLeg armor, HumanoidLeg leg, ArmorTexture at){
@@ -223,11 +224,11 @@ public class ArmorFactory {
 		TextureMarker marker = new TextureMarker(TextureMarker.createCilinder(leg.underLegLength(), leg.kneeRadius() * 2 * f, leg.kneeRadius() * 2 * f, Game.getOptions().pixelsPerMeter));
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		TextureArea ta = marker.getArea(0);
 		at.getUnderLeg().paint(textureBuilder, ta);
 		builder.addVerticalCilinder(10, 0f, 0f, leg.kneeRadius() * f, leg.kneeRadius() * f, leg.legUnderRadius() * f, leg.legUnderRadius() * f, 0, -leg.underLegLength(), ta.getMinU(tw), ta.getMinV(th), ta.getMaxU(tw), ta.getMaxV(th));
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 	
 	public static ModelPart createModelArmorFoot(ModelArmorFoot armor, HumanoidFootProperties foot, HumanoidLeg leg, ArmorTexture at, boolean right){
@@ -238,7 +239,7 @@ public class ArmorFactory {
 		int tw = marker.getWidth();
 		int th = marker.getHeight();
 		TextureArea ta = marker.getArea(0);
-		TextureBuilder textureBuilder = new TextureBuilder(tw, th, true);
+		TextureBuilder textureBuilder = MyTextureLoader.createTextureBuilder(tw, th, true);
 		at.getShoe().paint(textureBuilder, ta);
 		float minV = ta.getMinV(th);
 		float minU = ta.getMinU(tw);
@@ -277,6 +278,6 @@ public class ArmorFactory {
 		builder.bindFourangle(indexLowFront, indexLowFront + 1, indexLowFront + 2, indexLowFront + 3);
 		for(int i = 0; i < midParts; i++)
 			builder.bindFourangle(indexLowerCircle + i, indexLowerCircle + i + 1, indexUpperCircle + i + 1, indexUpperCircle + i);
-		return new ModelPart(builder.load(), new ModelTexture(new Texture(textureBuilder.loadNormal()), at.getShineDamper(), at.getReflectivity()), new Vector3f());
+		return new ModelPart(builder.load(), new ModelTexture(new Texture(MyTextureLoader.loadTexture(textureBuilder)), at.getShineDamper(), at.getReflectivity()), new Vector3f());
 	}
 }

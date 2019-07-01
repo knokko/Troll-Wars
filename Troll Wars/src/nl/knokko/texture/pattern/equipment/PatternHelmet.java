@@ -23,7 +23,7 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern.equipment;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.pattern.TexturePattern;
 import nl.knokko.util.color.Color;
 
@@ -42,6 +42,6 @@ public class PatternHelmet extends TexturePattern {
 		int deltaY = maxY - minY;
 		int faceX = ((minX + maxX) / 2 + maxX) / 2;
 		int eyeY = maxY - deltaY / 2;
-		texture.fillOval(faceX, eyeY, deltaX / 12 + deltaX / 16, deltaY / 12, Color.TRANSPARENT);
+		texture.geometry().fillOval(faceX, eyeY, deltaX / 12 + deltaX / 16, deltaY / 12, Color.TRANSPARENT);
 	}
 }

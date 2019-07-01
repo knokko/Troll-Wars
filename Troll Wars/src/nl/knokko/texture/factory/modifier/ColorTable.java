@@ -2,7 +2,7 @@ package nl.knokko.texture.factory.modifier;
 
 import java.util.Collection;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 
 public class ColorTable {
 	

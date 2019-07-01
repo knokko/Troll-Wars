@@ -29,7 +29,7 @@ import nl.knokko.gui.color.GuiColor;
 import nl.knokko.util.bits.BitInput;
 import nl.knokko.util.bits.BitOutput;
 
-public class Color implements Comparable<Color>, GuiColor {
+public class Color implements Comparable<Color>, GuiColor, nl.knokko.texture.color.Color {
 	
 	public static final Color BLACK = new Color(0, 0, 0);
 	public static final Color DARK_GRAY = new Color(63, 63, 63);
@@ -254,5 +254,25 @@ public class Color implements Comparable<Color>, GuiColor {
 	
 	public boolean isSpecial(){
 		return false;
+	}
+
+	@Override
+	public double getRedD() {
+		return getRedI() / 255.0;
+	}
+
+	@Override
+	public double getGreenD() {
+		return getGreenI() / 255.0;
+	}
+
+	@Override
+	public double getBlueD() {
+		return getBlueI() / 255.0;
+	}
+
+	@Override
+	public double getAlphaD() {
+		return 1.0;
 	}
 }

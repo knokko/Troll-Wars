@@ -23,7 +23,7 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern.equipment;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.pattern.TexturePattern;
 
 public class PatternUnderArm extends TexturePattern {

@@ -50,6 +50,8 @@ import org.lwjgl.opengl.GL12;
 
 import nl.knokko.main.Game;
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.builder.ByteArrayTextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 
 public class MyTextureLoader {
 	
@@ -87,6 +89,14 @@ public class MyTextureLoader {
 		 glTexImage2D(GL_TEXTURE_2D, 0, alpha ? GL_RGBA8 : GL_RGB8, width, height, 0, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer)BufferUtils.createByteBuffer(data.length).put(data).flip());
 		 textures.add(textureID);
 		 return textureID;
+	}
+	
+	public static int loadTexture(TextureBuilder textureBuilder) {
+		return loadTexture(textureBuilder.createArrrayRGBA(), textureBuilder.width(), textureBuilder.height(), textureBuilder.useAlpha());
+	}
+	
+	public static TextureBuilder createTextureBuilder(int width, int height, boolean useAlpha) {
+		return new ByteArrayTextureBuilder(width, height, useAlpha);
 	}
 	
 	public static int loadTexture(BufferedImage image, boolean allowAlpha){

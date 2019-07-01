@@ -24,6 +24,7 @@
 package nl.knokko.texture.factory;
 
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.marker.TextureMarkerBird;
 import nl.knokko.texture.marker.TextureMarkerHuman;
 import nl.knokko.texture.marker.TextureMarkerMyrre;
@@ -36,7 +37,7 @@ import nl.knokko.texture.painter.TrollPainter;
 public class CreatureTextureFactory {
 	
 	public static Texture createMyrreTexture(TextureMarkerMyrre tm, MyrrePainter p){
-		TextureBuilder builder = new TextureBuilder(tm.getWidth(), tm.getHeight(), true);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(tm.getWidth(), tm.getHeight(), true);
 		p.getBelly().paint(builder, tm.getBelly());
 		p.getLeftArm().paint(builder, tm.getLeftArm());
 		p.getRightArm().paint(builder, tm.getRightArm());
@@ -46,11 +47,11 @@ public class CreatureTextureFactory {
 		p.getRightLeg().paint(builder, tm.getRightLeg());
 		p.getLeftFootClaw().paint(builder, tm.getLeftFootClaws());
 		p.getRightFootClaw().paint(builder, tm.getRightFootClaws());
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 	
 	public static Texture createTrollTexture(TextureMarkerTroll tt, TrollPainter painter){
-		TextureBuilder builder = new TextureBuilder(tt.getWidth(), tt.getHeight(), false);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(tt.getWidth(), tt.getHeight(), false);
 		painter.getHead().paint(builder, tt.getHead());
 		painter.getBelly().paint(builder, tt.getBelly());
 		painter.getLeftUpperArm().paint(builder, tt.getLeftUpperArm());
@@ -71,11 +72,11 @@ public class CreatureTextureFactory {
 		painter.getNose().paint(builder, tt.getNose());
 		painter.getLeftHand().paint(builder, tt.getLeftHand());
 		painter.getRightHand().paint(builder, tt.getRightHand());
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 	
 	public static Texture createHumanTexture(TextureMarkerHuman t, HumanPainter p){
-		TextureBuilder b = new TextureBuilder(t.getWidth(), t.getHeight(), false);
+		TextureBuilder b = MyTextureLoader.createTextureBuilder(t.getWidth(), t.getHeight(), false);
 		p.getHead().paint(b, t.getHead());
 		p.getBelly().paint(b, t.getBelly());
 		p.getLeftUpperArm().paint(b, t.getLeftUpperArm());
@@ -95,11 +96,11 @@ public class CreatureTextureFactory {
 		p.getBellyTop().paint(b, t.getBellyTop());
 		p.getLeftHand().paint(b, t.getLeftHand());
 		p.getRightHand().paint(b, t.getRightHand());
-		return new Texture(b.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(b));
 	}
 	
 	public static Texture createBirdTexture(TextureMarkerBird tb, BirdPainter painter){
-		TextureBuilder builder = new TextureBuilder(tb.getWidth(), tb.getHeight(), true);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(tb.getWidth(), tb.getHeight(), true);
 		painter.getHead().paint(builder, tb.getHead());
 		painter.getSnail().paint(builder, tb.getSnail());
 		painter.getBelly().paint(builder, tb.getBelly());
@@ -109,6 +110,6 @@ public class CreatureTextureFactory {
 		painter.getRightLeg().paint(builder, tb.getRightLeg());
 		painter.getLeftClaw().paint(builder, tb.getLeftClaw());
 		painter.getRightClaw().paint(builder, tb.getRightClaw());
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 }

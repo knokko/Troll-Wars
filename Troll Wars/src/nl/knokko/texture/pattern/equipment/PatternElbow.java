@@ -23,9 +23,10 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern.equipment;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
+import nl.knokko.texture.color.Color;
+import nl.knokko.texture.color.SimpleRGBColor;
 import nl.knokko.texture.pattern.TexturePattern;
-import nl.knokko.util.color.Color;
 
 public class PatternElbow extends TexturePattern {
 	
@@ -41,7 +42,7 @@ public class PatternElbow extends TexturePattern {
 		for(int x = minX; x <= maxX; x++){
 			for(int y = minY; y <= maxY; y++){
 				Color pixel = texture.getPixel(x, y);
-				texture.setPixel(x, y, new Color(pixel.getRedI() / 2, pixel.getGreenI() / 2, pixel.getBlueI() / 2));
+				texture.setPixel(x, y, SimpleRGBColor.fromInts(pixel.getRedI() / 2, pixel.getGreenI() / 2, pixel.getBlueI() / 2));
 			}
 		}
 	}

@@ -23,7 +23,7 @@
  *******************************************************************************/
 package nl.knokko.texture.pattern;
 
-import nl.knokko.texture.factory.TextureBuilder;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.util.color.Color;
 
 public class PatternFill extends TexturePattern {
@@ -36,9 +36,7 @@ public class PatternFill extends TexturePattern {
 
 	@Override
 	public void paintBetween(TextureBuilder texture, int minX, int minY, int maxX, int maxY) {
-		for(int x = minX; x <= maxX; x++)
-			for(int y = minY; y <= maxY; y++)
-				texture.setPixel(x, y, color);
+		texture.geometry().fillRect(minX, minY, maxX, maxY, color);
 	}
 
 }

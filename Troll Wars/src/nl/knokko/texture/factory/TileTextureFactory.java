@@ -23,8 +23,6 @@
  *******************************************************************************/
 package nl.knokko.texture.factory;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +32,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import nl.knokko.texture.Texture;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.factory.modifier.CircleFunctionFloatMod;
 import nl.knokko.texture.factory.modifier.ColorModifier;
 import nl.knokko.texture.factory.modifier.ColorTable;
@@ -46,7 +45,7 @@ import nl.knokko.util.color.Color;
 
 public class TileTextureFactory {
 
-	private static int[] spreadCircles(Random random, int minX, int minY, int maxX, int maxY, int amount,
+	public static int[] spreadCircles(Random random, int minX, int minY, int maxX, int maxY, int amount,
 			int attemptsPerCircle) {
 		int[] coords = new int[amount * 2];
 		int width = maxX - minX + 1;
@@ -99,7 +98,7 @@ public class TileTextureFactory {
 		int[][] coordsY = new int[AMOUNT][AMOUNT];
 		int SIZE = 1024;
 		Random random = new Random();
-		TextureBuilder texture = new TextureBuilder(SIZE, SIZE, false);
+		TextureBuilder texture = MyTextureLoader.createTextureBuilder(SIZE, SIZE, false);
 		for (int x = 0; x < AMOUNT; x++) {
 			int baseX = x * SIZE / AMOUNT;
 			for (int y = 0; y < AMOUNT; y++) {
@@ -111,7 +110,7 @@ public class TileTextureFactory {
 		
 		for (int indexX = 0; indexX < AMOUNT; indexX++) {
 			for (int indexY = 0; indexY < AMOUNT; indexY++) {
-				texture.fillCircle(coordsX[indexX][indexY], coordsY[indexX][indexY], 20, Color.GREEN);
+				texture.geometry().fillCircle(coordsX[indexX][indexY], coordsY[indexX][indexY], 20, Color.GREEN);
 			}
 		}
 		
@@ -131,7 +130,7 @@ public class TileTextureFactory {
 
 		int textureWidth = 1024;
 		int textureHeight = 1024;
-		TextureBuilder texture = new TextureBuilder(textureWidth, textureHeight, false);
+		TextureBuilder texture = MyTextureLoader.createTextureBuilder(textureWidth, textureHeight, false);
 		
 		Collection<ColorModifier> modifiers = new ArrayList<ColorModifier>(2);
 
@@ -229,7 +228,7 @@ public class TileTextureFactory {
 		System.out.println("Saving big rock image took " + (endTime2 - endTime) + " ms");
 
 		*/
-		return new Texture(texture.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(texture));
 	}
 
 	private static final Color GREEN_GRASS_COLOR = new Color(100, 200, 50);
@@ -265,7 +264,7 @@ public class TileTextureFactory {
 		byte greenGround = groundColor.getGreen();
 		byte blueGround = groundColor.getBlue();
 
-		TextureBuilder builder = new TextureBuilder(textureWidth, textureHeight, false);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(textureWidth, textureHeight, false);
 
 		// First color the ground
 		for (int x = 0; x < textureWidth; x++) {
@@ -290,6 +289,7 @@ public class TileTextureFactory {
 
 			// A dirty trick that should work
 			length *= Maths.sin(vertAngle);
+			System.out.println(length);
 
 			int width = 4 + random.nextInt(3);
 			int endX = startX + (int) (Maths.cos(angle) * length);
@@ -316,6 +316,14 @@ public class TileTextureFactory {
 			int effectiveHeight = maxY - minY + 1;
 			int fictiveStartX = startX - minX;
 			int fictiveStartY = startY - minY;
+			
+			//System.out.println(effectiveWidth);
+			//System.out.println(endX - startX1);
+			//System.out.println(endX - startX2);
+			//System.out.println();
+			
+			//System.out.println("startX is " + startX + " and startY is " + startY + " and effective dims is (" + effectiveWidth + "," + effectiveHeight + ")");
+			//System.out.println("fictive start is (" + fictiveStartX + "," + fictiveStartY + ") and local coords are (" + minX + "," + minY + "," + maxX + "," + maxY + ")");
 
 			// Loop over all relevant coordinates
 			for (int x = 0; x < effectiveWidth; x++) {
@@ -366,7 +374,12 @@ public class TileTextureFactory {
 		}
 		long endTime = System.currentTimeMillis();
 		System.out.println("Creating big grass texture took " + (endTime - startTime) + " ms");
-		return new Texture(builder.loadNormal());
+		try {
+			ImageIO.write(builder.createBufferedImage(), "PNG", new File("grass" + grassColor.getRed() + ".png"));
+		} catch (IOException ioex) {
+			throw new RuntimeException(ioex);
+		}
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	private static float grassWidth(float progress, int maxWidth) {
@@ -382,9 +395,9 @@ public class TileTextureFactory {
 	}
 
 	private static Texture createGrassTexture(long seed, Color color) {
-		TextureBuilder builder = new TextureBuilder(32, 32, false);
-		builder.fillAverage(0, 0, builder.width() - 1, builder.height() - 1, color, 0.3f, new Random(seed));
-		return new Texture(builder.loadNormal());
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, false);
+		builder.average().fillAverage(0, 0, builder.width() - 1, builder.height() - 1, color, 0.3f, new Random(seed));
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createRockTextures(int amount, Color baseColor, Color[] extraColors, int[] extraChances) {
@@ -395,13 +408,13 @@ public class TileTextureFactory {
 	}
 
 	private static Texture createRockTexture(Color baseColor, Color[] extraColors, int[] extraChances, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, false);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, false);
 		Random random = new Random(seed);
-		builder.fillAverage(0, 0, builder.width() - 1, builder.height() - 1, baseColor, 0.2f, random);
+		builder.average().fillAverage(0, 0, builder.width() - 1, builder.height() - 1, baseColor, 0.2f, random);
 		for (int i = 0; i < extraColors.length; i++)
-			builder.fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, extraColors[i], 0.2f, random,
+			builder.average().fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, extraColors[i], 0.2f, random,
 					extraChances[i]);
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createBrickTriLeftTextures(int amount, Color brickColor, Color edgeColor, int brickLength,
@@ -414,12 +427,12 @@ public class TileTextureFactory {
 
 	private static Texture createBrickTriLeftTexture(Color brickColor, Color edgeColor, int brickLength,
 			int brickHeight, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
-		builder.fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
+		builder.materials().fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
 				edgeColor, 0.2f, new Random(seed));
 		for (int y = 0; y < 32; y++)
-			builder.fillRect(Math.max(0, y * 2 - 32), y, 31, y, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-		return new Texture(builder.loadNormal());
+			builder.geometry().fillRect(Math.max(0, y * 2 - 32), y, 31, y, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createBrickTriRightTextures(int amount, Color brickColor, Color edgeColor, int brickLength,
@@ -432,12 +445,12 @@ public class TileTextureFactory {
 
 	private static Texture createBrickTriRightTexture(Color brickColor, Color edgeColor, int brickLength,
 			int brickHeight, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
-		builder.fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
+		builder.materials().fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
 				edgeColor, 0.2f, new Random(seed));
 		for (int y = 0; y < 32; y++)
-			builder.fillRect(0, y, 31 - Math.max(0, y * 2 - 32), y, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-		return new Texture(builder.loadNormal());
+			builder.geometry().fillRect(0, y, 31 - Math.max(0, y * 2 - 32), y, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createBrickTextures(int amount, Color brickColor, Color edgeColor, int brickLength,
@@ -450,10 +463,10 @@ public class TileTextureFactory {
 
 	private static Texture createBrickTexture(Color brickColor, Color edgeColor, int brickLength, int brickHeight,
 			long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, false);
-		builder.fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, false);
+		builder.materials().fillBrickPattern(0, 0, builder.width() - 1, builder.height() - 1, brickLength, brickHeight, brickColor,
 				edgeColor, 0.2f, new Random(seed));
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createPlanksTextures(int amount, Color plankColor, Color edgeColor, int plankLength,
@@ -466,10 +479,10 @@ public class TileTextureFactory {
 
 	private static Texture createPlanksTexture(Color plankColor, Color edgeColor, int plankLength, int plankHeight,
 			int plankShift, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, false);
-		builder.fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, false);
+		builder.materials().fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
 				plankShift, plankColor, edgeColor, 0.3f, new Random(seed));
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createFenceTextures(int amount, Color plankColor, Color edgeColor, int plankLength,
@@ -482,16 +495,16 @@ public class TileTextureFactory {
 
 	private static Texture createFenceTexture(Color plankColor, Color edgeColor, int plankLength, int plankHeight,
 			int plankShift, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
-		builder.fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
+		builder.materials().fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
 				plankShift, plankColor, edgeColor, 0.3f, new Random(seed));
-		builder.fillRect(0, 0, 31, 3, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+		builder.geometry().fillRect(0, 0, 31, 3, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
 		for (int x = 1; x < 32; x += 4) {
-			builder.fillRect(x, 4, x + 1, 6, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-			builder.fillRect(x, 10, x + 1, 17, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
-			builder.fillRect(x, 20, x + 1, 27, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+			builder.geometry().fillRect(x, 4, x + 1, 6, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+			builder.geometry().fillRect(x, 10, x + 1, 17, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
+			builder.geometry().fillRect(x, 20, x + 1, 27, (byte) 0, (byte) 0, (byte) 0, (byte) 0);
 		}
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createHoleTextures(int amount, Color baseColor, Color[] extraColors, int[] extraChances) {
@@ -502,19 +515,19 @@ public class TileTextureFactory {
 	}
 
 	private static Texture createHoleTexture(Color baseColor, Color[] extraColors, int[] extraChances, long seed) {
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
 		Random random = new Random(seed);
-		builder.fillAverage(0, 0, builder.width() - 1, builder.height() - 1, baseColor, 0.2f, random);
+		builder.average().fillAverage(0, 0, builder.width() - 1, builder.height() - 1, baseColor, 0.2f, random);
 		for (int i = 0; i < extraColors.length; i++)
-			builder.fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, extraColors[i], 0.2f, random,
+			builder.average().fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, extraColors[i], 0.2f, random,
 					extraChances[i]);
 		for (int y = 0; y < builder.width(); y++) {
 			// builder.drawHorizontalLine(0, random.nextInt(5), y, Color.TRANSPARENT);
 			// builder.drawHorizontalLine(31 - random.nextInt(5), builder.width - 1, y,
 			// Color.TRANSPARENT);
-			builder.drawHorizontalLine(random.nextInt(5), 31 - random.nextInt(5), y, Color.TRANSPARENT);
+			builder.geometry().drawHorizontalLine(random.nextInt(5), 31 - random.nextInt(5), y, Color.TRANSPARENT);
 		}
-		return new Texture(builder.loadNormal());
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createDoorTextures(int amount, Color plankColor, Color edgeColor, Color holderColor,
@@ -529,11 +542,11 @@ public class TileTextureFactory {
 	private static Texture createDoorTexture(Color plankColor, Color edgeColor, Color holderColor, int plankLength,
 			int plankHeight, int plankShift, long seed) {
 		Random random = new Random(seed);
-		TextureBuilder builder = new TextureBuilder(32, 32, false);
-		builder.fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, false);
+		builder.materials().fillWoodPlanksPattern(0, 0, builder.width() - 1, builder.height() - 1, plankLength, plankHeight,
 				plankShift, plankColor, edgeColor, 0.3f, random);
-		builder.fillCircle(25, 25, 5, holderColor);
-		return new Texture(builder.loadNormal());
+		builder.geometry().fillCircle(25, 25, 5, holderColor);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 
 	public static Texture[] createLadderTextures(int amount, Color verticalColor, Color horizontalColor) {
@@ -544,11 +557,11 @@ public class TileTextureFactory {
 	}
 
 	private static Texture createLadderTexture(Color verticalColor, Color horizontalColor) {
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
-		builder.fillRect(0, 0, 3, 31, verticalColor);
-		builder.fillRect(28, 0, 31, 31, verticalColor);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
+		builder.geometry().fillRect(0, 0, 3, 31, verticalColor);
+		builder.geometry().fillRect(28, 0, 31, 31, verticalColor);
 		for (int i = 0; i < 32; i += 4)
-			builder.drawHorizontalLine(0, 31, i, horizontalColor);
-		return new Texture(builder.loadNormal());
+			builder.geometry().drawHorizontalLine(0, 31, i, horizontalColor);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 }

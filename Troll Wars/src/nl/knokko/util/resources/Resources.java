@@ -47,8 +47,8 @@ import nl.knokko.texture.ModelTexture;
 import nl.knokko.texture.SizedTexture;
 import nl.knokko.texture.Texture;
 import nl.knokko.texture.area.TextureArea;
+import nl.knokko.texture.builder.TextureBuilder;
 import nl.knokko.texture.factory.MyTextureLoader;
-import nl.knokko.texture.factory.TextureBuilder;
 import nl.knokko.texture.marker.TextureMarker;
 import nl.knokko.texture.pattern.TexturePattern;
 import nl.knokko.util.bits.BitInput;
@@ -400,16 +400,16 @@ public final class Resources {
 	}
 	
 	private static Texture createThinPathTexture(Color color, float maxDifference, long seed){
-		TextureBuilder builder = new TextureBuilder(32, 32, true);
-		builder.fillRect(0, 0, builder.width() - 1, builder.height() - 1, ColorAlpha.TRANSPARENT);
-		builder.fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, color, maxDifference, new Random(seed), 1, 6);
-		return new Texture(builder.loadNormal());
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(32, 32, true);
+		builder.geometry().fillRect(0, 0, builder.width() - 1, builder.height() - 1, ColorAlpha.TRANSPARENT);
+		builder.average().fillAverageChance(0, 0, builder.width() - 1, builder.height() - 1, color, maxDifference, new Random(seed), 0.167);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 	
 	public static Texture createLiquidTexture(Color color){
-		TextureBuilder builder = new TextureBuilder(8, 8, false);
-		builder.fillRect(0, 0, builder.width() - 1, builder.height() - 1, color);
-		return new Texture(builder.loadNormal());
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(8, 8, false);
+		builder.geometry().fillRect(0, 0, builder.width() - 1, builder.height() - 1, color);
+		return new Texture(MyTextureLoader.loadTexture(builder));
 	}
 	
 	public static void createBluePrintImage(TextureMarker marker){
@@ -428,8 +428,8 @@ public final class Resources {
 	}
 	
 	public static ModelTexture getTextureFromPattern(TexturePattern pattern, int width, int height, boolean alpha, float shineDamper, float reflectivity){
-		TextureBuilder builder = new TextureBuilder(width, height, alpha);
+		TextureBuilder builder = MyTextureLoader.createTextureBuilder(width, height, alpha);
 		pattern.paint(builder, 0, 0, width, height);
-		return new ModelTexture(new Texture(builder.loadNormal()), shineDamper, reflectivity);
+		return new ModelTexture(new Texture(MyTextureLoader.loadTexture(builder)), shineDamper, reflectivity);
 	}
 }
