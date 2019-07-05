@@ -1,4 +1,4 @@
-#version 400 core
+#defaultversion
 
 in vec2 modelPosition;
 in vec2 textureCoords;

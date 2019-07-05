@@ -39,6 +39,7 @@ public class WorldShader extends ShaderProgram {
 	
 	private int locationTransformationMatrix;
 	private int locationViewMatrix;
+	private int locationInvViewMatrix;
 	private int locationReflectivity;
 	private int locationShineDamper;
 	private int locationEffectColor;
@@ -58,6 +59,7 @@ public class WorldShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		locationTransformationMatrix = getUniformLocation("transformationMatrix");
 		locationViewMatrix = getUniformLocation("viewMatrix");
+		locationInvViewMatrix = getUniformLocation("inverseViewMatrix");
 		locationReflectivity = getUniformLocation("reflectivity");
 		locationShineDamper = getUniformLocation("shineDamper");
 		locationEffectColor = getUniformLocation("effectColor");
@@ -73,7 +75,9 @@ public class WorldShader extends ShaderProgram {
 	}
 	
 	public void loadViewMatrix(Camera camera){
-		loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null));
+		Matrix4f viewMatrix = Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null);
+		loadMatrix(locationViewMatrix, viewMatrix);
+		loadMatrix(locationInvViewMatrix, Matrix4f.invert(viewMatrix, viewMatrix));
 	}
 	
 	public void loadEffectColor(Vector4f color){

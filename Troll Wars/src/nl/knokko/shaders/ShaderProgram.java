@@ -131,7 +131,7 @@ public abstract class ShaderProgram {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
             String line;
             while((line = reader.readLine())!=null){
-                shaderSource.append(line).append("//\n");
+                shaderSource.append(line.replaceAll("#defaultversion", "#version 130")).append("//\n");
             }
             reader.close();
         }catch(IOException e){

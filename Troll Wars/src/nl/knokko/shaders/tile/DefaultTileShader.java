@@ -39,6 +39,7 @@ public class DefaultTileShader extends TileShader {
 	
 	private int locationTilePosition;
 	private int locationViewMatrix;
+	private int locationInvViewMatrix;
 	private int locationShineDamper;
 	private int locationReflectivity;
 
@@ -50,6 +51,7 @@ public class DefaultTileShader extends TileShader {
 	protected void getAllUniformLocations() {
 		locationTilePosition = getUniformLocation("tilePosition");
 		locationViewMatrix = getUniformLocation("viewMatrix");
+		locationInvViewMatrix = getUniformLocation("inverseViewMatrix");
 		locationShineDamper = getUniformLocation("shineDamper");
 		locationReflectivity = getUniformLocation("reflectivity");
 	}
@@ -68,7 +70,9 @@ public class DefaultTileShader extends TileShader {
 	}
 	
 	public void loadViewMatrix(Camera camera){
-		loadMatrix(locationViewMatrix, Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null));
+		Matrix4f viewMatrix = Matrix4f.mul(Game.getProjectionMatrix(), Maths.createOriginViewMatrix(camera), null);
+		loadMatrix(locationViewMatrix, viewMatrix);
+		loadMatrix(locationInvViewMatrix, Matrix4f.invert(viewMatrix, viewMatrix));
 	}
 	
 	public void loadShine(float shineDamper, float reflectivity){

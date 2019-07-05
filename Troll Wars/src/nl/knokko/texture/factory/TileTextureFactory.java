@@ -289,7 +289,6 @@ public class TileTextureFactory {
 
 			// A dirty trick that should work
 			length *= Maths.sin(vertAngle);
-			System.out.println(length);
 
 			int width = 4 + random.nextInt(3);
 			int endX = startX + (int) (Maths.cos(angle) * length);

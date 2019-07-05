@@ -1,4 +1,4 @@
-#version 140
+#defaultversion
 
 in vec2 modelPosition;
 

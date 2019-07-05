@@ -1,4 +1,4 @@
-#version 400 core
+#defaultversion
 
 uniform vec3 color;
 
